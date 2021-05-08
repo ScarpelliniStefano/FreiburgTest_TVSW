@@ -9,36 +9,41 @@ import libFSTest.session.Test_session.Result;
  * Algoritmo PEST 
  */
 
-public class BestPestElaborator extends PestBase {
+public class BestPestElaboratorNew extends PestBase {
 
-	private int nextDepth;
+	private int nextDepth=-1;
 	public int getNextDepth() {
 		return nextDepth;
 	}
 
 	public void setNextDepth(int nextDepth) {
-		this.nextDepth = nextDepth;
+		if(nextDepth<=maxDepth && nextDepth>=rightLimit)
+			this.nextDepth = nextDepth;
+		else
+			throw new IllegalArgumentException();
 	}
 
-	private int maxDepth;
-	private int leftLimit;
-	private int rightLimit;
-	private int chance;
-	private double value;
+	private int maxDepth=-1;
+	private int leftLimit=-1;
+	protected int rightLimit=-1;
+	private int chance=-1;
+	private double value=-1;
 
 	
 
-	public BestPestElaborator(int maxValue,int minValue) {
+	public BestPestElaboratorNew(int maxValue,int minValue) {
 		certifierStatus = new CertifierStatus();
-
 		if (maxValue >= 1)
 			certifierStatus.currentDepth = maxValue;
 		else
 			throw new IllegalArgumentException();
-
+		if(minValue<1 || minValue>maxValue) {
+			minValue=maxValue;
+		}
 		maxDepth = maxValue;
 		leftLimit = maxValue;
 		rightLimit = minValue;
+		nextDepth=maxValue;
 		chance = 1;
 
 		certifierStatus.currentResult = Result.CONTINUA;
@@ -47,6 +52,7 @@ public class BestPestElaborator extends PestBase {
 	
 	@Override
 	void computeNextDepth(PestBase.Soluzione solution) {
+		
 
 		if (solution == PestBase.Soluzione.SBAGLIATA && chance > 0 && certifierStatus.currentDepth == maxDepth) {
 			chance--;
@@ -55,6 +61,7 @@ public class BestPestElaborator extends PestBase {
 			certifierStatus.currentResult = Result.FINE_NON_CERTIFICATA;
 		} else if (solution == PestBase.Soluzione.STOP) {
 			// Nothing (end button)
+			certifierStatus.currentResult=Result.FINE_NON_CERTIFICATA;
 		} else if (solution == PestBase.Soluzione.GIUSTA) {
 			leftLimit = certifierStatus.currentDepth;
 
@@ -69,7 +76,7 @@ public class BestPestElaborator extends PestBase {
 				certifierStatus.currentResult = Result.FINE_CERTIFICATA;
 				certifierStatus.currentDepth = leftLimit;
 			}
-		} else if (solution == PestBase.Soluzione.SBAGLIATA) {
+		} else {
 			rightLimit = certifierStatus.currentDepth;
 
 			// Numerical rounding (Ceil: round up)
@@ -88,6 +95,7 @@ public class BestPestElaborator extends PestBase {
 
 	@Override
 	public CertifierStatus getCurrentStatus() {
+		assert maxDepth!=-1;
 		return certifierStatus;
 	}
 }

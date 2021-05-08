@@ -1,26 +1,39 @@
 package libFSTest.draw;
 
+import java.awt.Dimension;
+
 import libFSTest.test.DatiGenerazione;
 
 public class AngleCalculus {
 	/**
 	* funzione di calcolo angolo
 	*
-	* @param diag    diagonale schermo
-	* @param xBar    distanza barre
-	* @param wFin    larghezza finestra (pixel)
-	* @param dist    distanza utente dallo schermo (mm)
+	* @param data    dati di generazione
 	* 
 	* @return      angolo (secondi d'arco)
 	*/	
 	public static int calcolaAngolo(DatiGenerazione data) {
-		        //calcolo angolo
-				double distanzaBarreMM=(MonitorWidthMM(data.getMonitorSize(),(int)data.getDimensione().getWidth(),(int)data.getDimensione().getHeight())*data.getXBar())/(int)data.getDimensione().getWidth();
-				double angRad=Math.atan((distanzaBarreMM/2)/data.getDistSchermo());
 				
-				int angle=(int)(angRad*206265);
+				int angle=calcolaAngolo(data.getMonitorSize(),data.getDimensione(),data.getXBar(),data.getDistSchermo()/10);
 				data.setAngolo(angle);
 				return angle;
+	}
+	
+	/**
+	* funzione di calcolo angolo
+	*
+	* @param data    dati di generazione
+	* 
+	* @return      angolo (secondi d'arco)
+	*/	
+	public static int calcolaAngolo(int monitorSize,Dimension dimenSchermo, int XBar,int distSchermo) {
+		distSchermo*=10;       
+		//calcolo angolo
+		double distanzaBarreMM=(MonitorWidthMM(monitorSize,(int)dimenSchermo.getWidth(),(int)dimenSchermo.getHeight())*XBar)/(int)dimenSchermo.getWidth();
+		double angRad=Math.atan((distanzaBarreMM/2)/distSchermo);
+				
+		int angle=(int)(angRad*206265);
+		return angle;
 	}
 	
 	/**

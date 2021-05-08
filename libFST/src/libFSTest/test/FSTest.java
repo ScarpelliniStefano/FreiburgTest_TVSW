@@ -12,11 +12,12 @@ import java.util.Random;
 
 import javax.imageio.ImageIO;
 
-import libFSTest.draw.*;
 import libFSTest.session.PestBase.CertifierStatus;
+import libFSTest.draw.AngleCalculus;
+import libFSTest.draw.GeneraImg;
 import libFSTest.session.Test_session;
 import libFSTest.session.Test_session.Result;
-import libFSTest.test.DatiGenerazione;
+import libFSTest.test.*;
 
 public class FSTest extends Observable {
 	

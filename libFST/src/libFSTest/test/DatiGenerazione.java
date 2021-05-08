@@ -4,7 +4,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.Random;
+import java.util.Locale;
+import java.util.TimeZone;
 
 public class DatiGenerazione {
 	private Dimension dimensione;
@@ -33,7 +34,7 @@ public class DatiGenerazione {
 		dimensione=new Dimension(1,1);
 		Nome="Unnamed";
 		Sesso="null";
-		dataNasc=Calendar.getInstance();
+		dataNasc=Calendar.getInstance(TimeZone.getTimeZone("Europe/Rome"),Locale.ITALY);
 		MonitorSize=0;
 		WRect=-1;
 		HRect=-1;
@@ -42,6 +43,8 @@ public class DatiGenerazione {
 		distSchermo=0;
 		c1=Color.RED;
 		c2=Color.BLUE;
+		livMin=-1;
+		livMax=-2;
 		Pos=false;
 		Livello=-1;
 		Angolo=-1;
@@ -85,21 +88,30 @@ public class DatiGenerazione {
 	 * @param dn the dataNasc to set
 	 */
 	public void setDataNasc(Calendar dn) {
-		if(dataNasc.after(dn)) {
+		Calendar dateNow=Calendar.getInstance(TimeZone.getTimeZone("Europe/Rome"),Locale.ITALY);
+		if(dateNow.after(dn)) {
 		this.dataNasc = dn;}
 	}
 	/**
 	 * @param dataNasc the dataNasc to set in dd/mm/yyyy
 	 */
 	public void setDataNasc(String dataNascString) {
-		Calendar d = Calendar.getInstance();
-		GregorianCalendar data=new GregorianCalendar();
-		DataEsame=dataNasc;
-		DataEsame.setTime(data.getTime());
-		char[] cD=dataNascString.toCharArray();
-		d.set(Integer.parseInt(String.valueOf(cD[6]+cD[7]+cD[8]+cD[9])),Integer.parseInt(String.valueOf(cD[3]+cD[4])), Integer.parseInt(String.valueOf(cD[0]+cD[1])));
-		if(dataNasc.after(d)) {
-		this.dataNasc = d;
+		if(dataNascString.charAt(2)=='/' && dataNascString.charAt(5)=='/') {
+			Calendar d = Calendar.getInstance(TimeZone.getTimeZone("Europe/Rome"),Locale.ITALY);
+			GregorianCalendar data=new GregorianCalendar();
+			DataEsame=dataNasc;
+			DataEsame.setTime(data.getTime());
+			char[] cD=dataNascString.toCharArray();
+			String a=""+cD[6]+cD[7]+cD[8]+cD[9];
+			String m=""+cD[3]+cD[4];
+			String g=""+cD[0]+cD[1];
+			if(Integer.parseInt(m)<=11&&Integer.parseInt(g)<=31) {
+				data=new GregorianCalendar(Integer.parseInt(a),Integer.parseInt(m)-1, Integer.parseInt(g));
+		
+				if(DataEsame.getTime().after(data.getTime())) {
+					this.dataNasc.setTime(data.getTime());
+				}
+			}
 		}
 	}
 	/**
@@ -112,6 +124,7 @@ public class DatiGenerazione {
 	 * @param d the monitorSize to set
 	 */
 	public void setMonitorSize(int d) {
+		if(d>0)
 		MonitorSize = d;
 	}
 	/**
@@ -124,7 +137,7 @@ public class DatiGenerazione {
 	 * @param wRect the wRect to set
 	 */
 	public void setWRect(int wRect) {
-		if(wRect<(dimensione.getWidth()-20)) WRect = wRect;
+		if(wRect<(dimensione.getWidth()-20)&&wRect>0) WRect = wRect;
 		else WRect=(int) (dimensione.getWidth()-20);
 	}
 	/**
@@ -137,7 +150,7 @@ public class DatiGenerazione {
 	 * @param hRect the hRect to set
 	 */
 	public void setHRect(int hRect) {
-		if(hRect<(dimensione.getHeight()-20)) HRect = hRect;
+		if(hRect<(dimensione.getHeight()-20)&&hRect>0) HRect = hRect;
 		else HRect=(int) (dimensione.getHeight()-20);
 	}
 	/**
@@ -150,7 +163,7 @@ public class DatiGenerazione {
 	 * @param hBar the hBar to set
 	 */
 	public void setHBar(int hBar) {
-		if(hBar<(HRect-10))	HBar = hBar;
+		if(hBar<(HRect-10)&&hBar>0)	HBar = hBar;
 		else HBar=HRect-10;
 	}
 	/**
@@ -162,9 +175,14 @@ public class DatiGenerazione {
 	/**
 	 * @param xBar the xBar to set
 	 */
-	public void setXBar(int xBar) {
-		if(xBar<(WRect-10))	XBar = xBar;
-		else XBar=WRect-10;
+	public void setXBar(int xBar) throws ArithmeticException {
+		if(livMin==-1&&livMax>=livMin)
+			this.livMin=livMax;
+		if(xBar<=livMax && xBar>=livMin)	this.XBar = xBar;
+		else if(livMax==-2) 
+				throw new ArithmeticException("Inserisci un livello massimo corretto");
+			else
+				this.XBar=livMax;
 	}
 	/**
 	 * @return the livMax
@@ -178,8 +196,9 @@ public class DatiGenerazione {
 	 * @param livMax the livMax to set
 	 */
 	public void setLivMax(int livMax) {
-		if(livMax<(WRect-10))	this.livMax = livMax;
+		if(livMax<(WRect-10)&&livMax>0)	this.livMax = livMax;
 		else this.livMax = WRect-10;
+		this.XBar=this.livMax;
 	}
 
 
@@ -195,8 +214,10 @@ public class DatiGenerazione {
 	 * @param livMin the livMin to set
 	 */
 	public void setLivMin(int livMin) {
-		if(livMin<(WRect-10))	this.livMin = livMin;
-		else this.livMin = WRect-10;
+		if(livMax==-2)
+			livMax=livMin;
+		if(livMin<(WRect-10)&&livMin>0&&livMin<=livMax)	this.livMin = livMin;
+		else this.livMin=livMax;
 	}
 
 

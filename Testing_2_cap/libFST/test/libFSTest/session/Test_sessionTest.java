@@ -13,6 +13,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import libFSTest.draw.AngleCalculus;
 import libFSTest.session.Test_session.Result;
 import libFSTest.session.Test_session.rispostaSingola;
 import libFSTest.test.DatiGenerazione;
@@ -83,7 +84,7 @@ public class Test_sessionTest {
 		session=new Test_session();
 		Scelta choice=session.IniziaTest(dgen);
 		assertEquals(choice,Scelta.CORRETTO);
-		choice=Test_session.IniziaTest(dgen); //controllo in caso di richiamata
+		choice=Test_session.IniziaTest(dgen);//controllo in caso di richiamata
 		assertEquals(choice,Scelta.CORRETTO);
 	}
 

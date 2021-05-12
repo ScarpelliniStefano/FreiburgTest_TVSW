@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><TestSessionContainer xmlns="http://www.codecover.org/xml/testsession-container" Date="1620808477391" TestSessionContainerId="bd8c05dd-d14e-4ea7-9027-bfcb07ea50a4" version="1.0">
+<?xml version="1.0" encoding="UTF-8"?><TestSessionContainer xmlns="http://www.codecover.org/xml/testsession-container" Date="1620809579690" TestSessionContainerId="9929b7b5-7b9b-4ebd-92bd-19f29ba5ffe7" version="1.0">
 <SrcFileList>
 <SrcFile Content="package libFSTest.session;&#13;&#10;&#13;&#10;&#13;&#10;&#13;&#10;import libFSTest.session.Test_session.Result;&#13;&#10;&#13;&#10;&#13;&#10;/**&#13;&#10; * Algoritmo PEST &#13;&#10; */&#13;&#10;&#13;&#10;public class BestPestElaboratorNew extends PestBase {&#13;&#10;&#13;&#10;&#9;private int nextDepth=-1;&#13;&#10;&#9;public int getNextDepth() {&#13;&#10;&#9;&#9;return nextDepth;&#13;&#10;&#9;}&#13;&#10;&#13;&#10;&#9;public void setNextDepth(int nextDepth) {&#13;&#10;&#9;&#9;if(nextDepth&lt;=maxDepth &amp;&amp; nextDepth&gt;=rightLimit)&#13;&#10;&#9;&#9;&#9;this.nextDepth = nextDepth;&#13;&#10;&#9;&#9;else&#13;&#10;&#9;&#9;&#9;throw new IllegalArgumentException();&#13;&#10;&#9;}&#13;&#10;&#13;&#10;&#9;private int maxDepth=-1;&#13;&#10;&#9;private int leftLimit=-1;&#13;&#10;&#9;protected int rightLimit=-1;&#13;&#10;&#9;private int chance=-1;&#13;&#10;&#9;private double value=-1;&#13;&#10;&#13;&#10;&#9;&#13;&#10;&#13;&#10;&#9;public BestPestElaboratorNew(int maxValue,int minValue) {&#13;&#10;&#9;&#9;certifierStatus = new CertifierStatus();&#13;&#10;&#9;&#9;if (maxValue &gt;= 1)&#13;&#10;&#9;&#9;&#9;certifierStatus.currentDepth = maxValue;&#13;&#10;&#9;&#9;else&#13;&#10;&#9;&#9;&#9;throw new IllegalArgumentException();&#13;&#10;&#9;&#9;if(minValue&lt;1 || minValue&gt;maxValue) {&#13;&#10;&#9;&#9;&#9;minValue=maxValue;&#13;&#10;&#9;&#9;}&#13;&#10;&#9;&#9;maxDepth = maxValue;&#13;&#10;&#9;&#9;leftLimit = maxValue;&#13;&#10;&#9;&#9;rightLimit = minValue;&#13;&#10;&#9;&#9;nextDepth=maxValue;&#13;&#10;&#9;&#9;chance = 1;&#13;&#10;&#13;&#10;&#9;&#9;certifierStatus.currentResult = Result.CONTINUA;&#13;&#10;&#9;}&#13;&#10;&#13;&#10;&#9;&#13;&#10;&#9;@Override&#13;&#10;&#9;void computeNextDepth(PestBase.Soluzione solution) {&#13;&#10;&#9;&#9;&#13;&#10;&#13;&#10;&#9;&#9;if (solution == PestBase.Soluzione.SBAGLIATA &amp;&amp; chance &gt; 0 &amp;&amp; certifierStatus.currentDepth == maxDepth) {&#13;&#10;&#9;&#9;&#9;chance--;&#13;&#10;&#9;&#9;} else if (solution == PestBase.Soluzione.SBAGLIATA &amp;&amp; chance == 0&#13;&#10;&#9;&#9;&#9;&#9;&amp;&amp; certifierStatus.currentDepth == maxDepth) {&#13;&#10;&#9;&#9;&#9;certifierStatus.currentResult = Result.FINE_NON_CERTIFICATA;&#13;&#10;&#9;&#9;} else if (solution == PestBase.Soluzione.STOP) {&#13;&#10;&#9;&#9;&#9;// Nothing (end button)&#13;&#10;&#9;&#9;&#9;certifierStatus.currentResult=Result.FINE_NON_CERTIFICATA;&#13;&#10;&#9;&#9;} else if (solution == PestBase.Soluzione.GIUSTA) {&#13;&#10;&#9;&#9;&#9;leftLimit = certifierStatus.currentDepth;&#13;&#10;&#13;&#10;&#9;&#9;&#9;// Numerical rounding (Floor: round down)&#13;&#10;&#9;&#9;&#9;value = ((double) leftLimit + rightLimit) / 2;&#13;&#10;&#9;&#9;&#9;nextDepth = (int) (Math.floor(value));&#13;&#10;&#13;&#10;&#9;&#9;&#9;// Next depth&#13;&#10;&#9;&#9;&#9;certifierStatus.currentDepth = nextDepth;&#13;&#10;&#13;&#10;&#9;&#9;&#9;if ((leftLimit - rightLimit) &lt;= 1) {&#13;&#10;&#9;&#9;&#9;&#9;certifierStatus.currentResult = Result.FINE_CERTIFICATA;&#13;&#10;&#9;&#9;&#9;&#9;certifierStatus.currentDepth = leftLimit;&#13;&#10;&#9;&#9;&#9;}&#13;&#10;&#9;&#9;} else {&#13;&#10;&#9;&#9;&#9;rightLimit = certifierStatus.currentDepth;&#13;&#10;&#13;&#10;&#9;&#9;&#9;// Numerical rounding (Ceil: round up)&#13;&#10;&#9;&#9;&#9;value = ((double) leftLimit + rightLimit) / 2;&#13;&#10;&#9;&#9;&#9;nextDepth = (int) (Math.ceil(value));&#13;&#10;&#13;&#10;&#9;&#9;&#9;// Next depth&#13;&#10;&#9;&#9;&#9;certifierStatus.currentDepth = nextDepth;&#13;&#10;&#13;&#10;&#9;&#9;&#9;if ((leftLimit - rightLimit) &lt;= 1) {&#13;&#10;&#9;&#9;&#9;&#9;certifierStatus.currentResult = Result.FINE_CERTIFICATA;&#13;&#10;&#9;&#9;&#9;&#9;certifierStatus.currentDepth = leftLimit;&#13;&#10;&#9;&#9;&#9;}&#13;&#10;&#9;&#9;}&#13;&#10;&#9;}&#13;&#10;&#13;&#10;&#9;@Override&#13;&#10;&#9;public CertifierStatus getCurrentStatus() {&#13;&#10;&#9;&#9;assert maxDepth!=-1;&#13;&#10;&#9;&#9;return certifierStatus;&#13;&#10;&#9;}&#13;&#10;}&#13;&#10;" Filename="BestPestElaboratorNew.java" Intrnl_Id="1"/>
 </SrcFileList>
@@ -31,16 +31,16 @@
 <HierarchyLvlType EnglishName="default package" IntrnlName="default package" Intrnl_Id="7"/>
 </HierarchyLvlTypeList>
 <MASTRoot>
-<HierarchyLvl HierarchyLvlId="12" HierarchyLvlTypeId="7" Intrnl_Id="8" Name="default package">
+<HierarchyLvl HierarchyLvlId="160" HierarchyLvlTypeId="7" Intrnl_Id="8" Name="default package">
 <Header/>
 <LocList/>
-<HierarchyLvl HierarchyLvlId="11" HierarchyLvlTypeId="4" Intrnl_Id="9" Name="libFSTest">
+<HierarchyLvl HierarchyLvlId="159" HierarchyLvlTypeId="4" Intrnl_Id="9" Name="libFSTest">
 <Header/>
 <LocList/>
-<HierarchyLvl HierarchyLvlId="10" HierarchyLvlTypeId="4" Intrnl_Id="10" Name="session">
+<HierarchyLvl HierarchyLvlId="158" HierarchyLvlTypeId="4" Intrnl_Id="10" Name="session">
 <Header/>
 <LocList/>
-<HierarchyLvl HierarchyLvlId="9" HierarchyLvlTypeId="6" Intrnl_Id="11" Name="BestPestElaboratorNew">
+<HierarchyLvl HierarchyLvlId="157" HierarchyLvlTypeId="6" Intrnl_Id="11" Name="BestPestElaboratorNew">
 <Header>
 <Loc EndOffset="168" SrcFileId="1" StartOffset="117"/>
 </Header>
@@ -87,7 +87,7 @@
 </LocList>
 </BasicStmnt>
 </StmntSeq>
-<HierarchyLvl HierarchyLvlId="4" HierarchyLvlTypeId="5" Intrnl_Id="19" Name="getNextDepth">
+<HierarchyLvl HierarchyLvlId="152" HierarchyLvlTypeId="5" Intrnl_Id="19" Name="getNextDepth">
 <Header>
 <Loc EndOffset="228" SrcFileId="1" StartOffset="203"/>
 </Header>
@@ -105,7 +105,7 @@
 </BasicStmnt>
 </StmntSeq>
 </HierarchyLvl>
-<HierarchyLvl HierarchyLvlId="5" HierarchyLvlTypeId="5" Intrnl_Id="22" Name="setNextDepth">
+<HierarchyLvl HierarchyLvlId="153" HierarchyLvlTypeId="5" Intrnl_Id="22" Name="setNextDepth">
 <Header>
 <Loc EndOffset="299" SrcFileId="1" StartOffset="260"/>
 </Header>
@@ -175,7 +175,7 @@
 </CondStmnt>
 </StmntSeq>
 </HierarchyLvl>
-<HierarchyLvl HierarchyLvlId="6" HierarchyLvlTypeId="5" Intrnl_Id="35" Name="BestPestElaboratorNew">
+<HierarchyLvl HierarchyLvlId="154" HierarchyLvlTypeId="5" Intrnl_Id="35" Name="BestPestElaboratorNew">
 <Header>
 <Loc EndOffset="644" SrcFileId="1" StartOffset="589"/>
 </Header>
@@ -324,7 +324,7 @@
 </BasicStmnt>
 </StmntSeq>
 </HierarchyLvl>
-<HierarchyLvl HierarchyLvlId="7" HierarchyLvlTypeId="5" Intrnl_Id="63" Name="computeNextDepth">
+<HierarchyLvl HierarchyLvlId="155" HierarchyLvlTypeId="5" Intrnl_Id="63" Name="computeNextDepth">
 <Header>
 <Loc EndOffset="1117" SrcFileId="1" StartOffset="1055"/>
 </Header>
@@ -672,7 +672,7 @@
 </CondStmnt>
 </StmntSeq>
 </HierarchyLvl>
-<HierarchyLvl HierarchyLvlId="8" HierarchyLvlTypeId="5" Intrnl_Id="130" Name="getCurrentStatus">
+<HierarchyLvl HierarchyLvlId="156" HierarchyLvlTypeId="5" Intrnl_Id="130" Name="getCurrentStatus">
 <Header>
 <Loc EndOffset="2534" SrcFileId="1" StartOffset="2481"/>
 </Header>
@@ -695,298 +695,4 @@
 </HierarchyLvl>
 </HierarchyLvl>
 </MASTRoot>
-<TestSession Comment="" Date="1620808483341" Name="12-mag-2021 10.34.43">
-<TestCase Comment="" Date="1620808483237" Name="libFSTest.session.BestPestElabTest:testGetNextDepth">
-<CovList>
-<CovPrefix CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java">
-<Cov CovItemId="B1" Value="1"/>
-<Cov CovItemId="B3" Value="1"/>
-<Cov CovItemId="B6" Value="1"/>
-<Cov CovItemId="S1" Value="1"/>
-<Cov CovItemId="S10" Value="1"/>
-<Cov CovItemId="S11" Value="1"/>
-<Cov CovItemId="S12" Value="1"/>
-<Cov CovItemId="S13" Value="1"/>
-<Cov CovItemId="S15" Value="1"/>
-<Cov CovItemId="S17" Value="1"/>
-<Cov CovItemId="S18" Value="1"/>
-<Cov CovItemId="S19" Value="1"/>
-<Cov CovItemId="S2" Value="2"/>
-<Cov CovItemId="S20" Value="1"/>
-<Cov CovItemId="S21" Value="1"/>
-<Cov CovItemId="S22" Value="1"/>
-<Cov CovItemId="S3" Value="1"/>
-<Cov CovItemId="S4" Value="1"/>
-<Cov CovItemId="S6" Value="1"/>
-<Cov CovItemId="S7" Value="1"/>
-<Cov CovItemId="S8" Value="1"/>
-<Cov CovItemId="S9" Value="1"/>
-</CovPrefix>
-</CovList>
-<AssgnmntList>
-<AssgnmntPrefix RootTermCovItemPrefix="libFSTest.session.BestPestElaboratorNew.java">
-<AssgnmntListEntry Length="2" RootTermCovItemId="C1">
-<MapEntry BoolAssgnmnt="11" Value="1"/>
-</AssgnmntListEntry>
-<AssgnmntListEntry Length="1" RootTermCovItemId="C2">
-<MapEntry BoolAssgnmnt="1" Value="1"/>
-</AssgnmntListEntry>
-<AssgnmntListEntry Length="2" RootTermCovItemId="C3">
-<MapEntry BoolAssgnmnt="00" Value="1"/>
-</AssgnmntListEntry>
-</AssgnmntPrefix>
-</AssgnmntList>
-<ObjMetaDataList/>
-<MetaDataList/>
-</TestCase>
-<TestCase Comment="" Date="1620808483242" Name="libFSTest.session.BestPestElabTest:testSetNextDepth">
-<CovList>
-<CovPrefix CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java">
-<Cov CovItemId="B1" Value="2"/>
-<Cov CovItemId="B2" Value="2"/>
-<Cov CovItemId="B3" Value="1"/>
-<Cov CovItemId="B6" Value="1"/>
-<Cov CovItemId="S1" Value="1"/>
-<Cov CovItemId="S10" Value="1"/>
-<Cov CovItemId="S11" Value="1"/>
-<Cov CovItemId="S12" Value="1"/>
-<Cov CovItemId="S13" Value="1"/>
-<Cov CovItemId="S15" Value="1"/>
-<Cov CovItemId="S17" Value="1"/>
-<Cov CovItemId="S18" Value="1"/>
-<Cov CovItemId="S19" Value="1"/>
-<Cov CovItemId="S2" Value="2"/>
-<Cov CovItemId="S20" Value="1"/>
-<Cov CovItemId="S21" Value="1"/>
-<Cov CovItemId="S22" Value="1"/>
-<Cov CovItemId="S3" Value="4"/>
-<Cov CovItemId="S4" Value="2"/>
-<Cov CovItemId="S5" Value="2"/>
-<Cov CovItemId="S6" Value="1"/>
-<Cov CovItemId="S7" Value="1"/>
-<Cov CovItemId="S8" Value="1"/>
-<Cov CovItemId="S9" Value="1"/>
-</CovPrefix>
-</CovList>
-<AssgnmntList>
-<AssgnmntPrefix RootTermCovItemPrefix="libFSTest.session.BestPestElaboratorNew.java">
-<AssgnmntListEntry Length="2" RootTermCovItemId="C1">
-<MapEntry BoolAssgnmnt="02" Value="1"/>
-<MapEntry BoolAssgnmnt="10" Value="1"/>
-<MapEntry BoolAssgnmnt="11" Value="2"/>
-</AssgnmntListEntry>
-<AssgnmntListEntry Length="1" RootTermCovItemId="C2">
-<MapEntry BoolAssgnmnt="1" Value="1"/>
-</AssgnmntListEntry>
-<AssgnmntListEntry Length="2" RootTermCovItemId="C3">
-<MapEntry BoolAssgnmnt="00" Value="1"/>
-</AssgnmntListEntry>
-</AssgnmntPrefix>
-</AssgnmntList>
-<ObjMetaDataList/>
-<MetaDataList/>
-</TestCase>
-<TestCase Comment="" Date="1620808483244" Name="libFSTest.session.BestPestElabTest:testGetCurrentStatus">
-<CovList>
-<CovPrefix CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java">
-<Cov CovItemId="B3" Value="1"/>
-<Cov CovItemId="B6" Value="1"/>
-<Cov CovItemId="S1" Value="1"/>
-<Cov CovItemId="S10" Value="1"/>
-<Cov CovItemId="S11" Value="1"/>
-<Cov CovItemId="S12" Value="1"/>
-<Cov CovItemId="S13" Value="1"/>
-<Cov CovItemId="S15" Value="1"/>
-<Cov CovItemId="S17" Value="1"/>
-<Cov CovItemId="S18" Value="1"/>
-<Cov CovItemId="S19" Value="1"/>
-<Cov CovItemId="S20" Value="1"/>
-<Cov CovItemId="S21" Value="1"/>
-<Cov CovItemId="S22" Value="1"/>
-<Cov CovItemId="S44" Value="1"/>
-<Cov CovItemId="S6" Value="1"/>
-<Cov CovItemId="S7" Value="1"/>
-<Cov CovItemId="S8" Value="1"/>
-<Cov CovItemId="S9" Value="1"/>
-</CovPrefix>
-</CovList>
-<AssgnmntList>
-<AssgnmntPrefix RootTermCovItemPrefix="libFSTest.session.BestPestElaboratorNew.java">
-<AssgnmntListEntry Length="1" RootTermCovItemId="C2">
-<MapEntry BoolAssgnmnt="1" Value="1"/>
-</AssgnmntListEntry>
-<AssgnmntListEntry Length="2" RootTermCovItemId="C3">
-<MapEntry BoolAssgnmnt="00" Value="1"/>
-</AssgnmntListEntry>
-</AssgnmntPrefix>
-</AssgnmntList>
-<ObjMetaDataList/>
-<MetaDataList/>
-</TestCase>
-<TestCase Comment="" Date="1620808483245" Name="libFSTest.session.BestPestElabTest:testComputeNextDepthSoluzione">
-<CovList>
-<CovPrefix CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java">
-<Cov CovItemId="B10" Value="13"/>
-<Cov CovItemId="B11" Value="1"/>
-<Cov CovItemId="B12" Value="12"/>
-<Cov CovItemId="B13" Value="7"/>
-<Cov CovItemId="B14" Value="5"/>
-<Cov CovItemId="B15" Value="1"/>
-<Cov CovItemId="B16" Value="6"/>
-<Cov CovItemId="B17" Value="1"/>
-<Cov CovItemId="B18" Value="4"/>
-<Cov CovItemId="B3" Value="6"/>
-<Cov CovItemId="B6" Value="6"/>
-<Cov CovItemId="B7" Value="2"/>
-<Cov CovItemId="B8" Value="14"/>
-<Cov CovItemId="B9" Value="1"/>
-<Cov CovItemId="S1" Value="6"/>
-<Cov CovItemId="S10" Value="6"/>
-<Cov CovItemId="S11" Value="6"/>
-<Cov CovItemId="S12" Value="6"/>
-<Cov CovItemId="S13" Value="6"/>
-<Cov CovItemId="S15" Value="6"/>
-<Cov CovItemId="S17" Value="6"/>
-<Cov CovItemId="S18" Value="6"/>
-<Cov CovItemId="S19" Value="6"/>
-<Cov CovItemId="S20" Value="6"/>
-<Cov CovItemId="S21" Value="6"/>
-<Cov CovItemId="S22" Value="6"/>
-<Cov CovItemId="S23" Value="16"/>
-<Cov CovItemId="S24" Value="2"/>
-<Cov CovItemId="S25" Value="14"/>
-<Cov CovItemId="S26" Value="1"/>
-<Cov CovItemId="S27" Value="13"/>
-<Cov CovItemId="S28" Value="1"/>
-<Cov CovItemId="S29" Value="12"/>
-<Cov CovItemId="S30" Value="7"/>
-<Cov CovItemId="S31" Value="7"/>
-<Cov CovItemId="S32" Value="7"/>
-<Cov CovItemId="S33" Value="7"/>
-<Cov CovItemId="S34" Value="7"/>
-<Cov CovItemId="S35" Value="1"/>
-<Cov CovItemId="S36" Value="1"/>
-<Cov CovItemId="S37" Value="5"/>
-<Cov CovItemId="S38" Value="5"/>
-<Cov CovItemId="S39" Value="5"/>
-<Cov CovItemId="S40" Value="5"/>
-<Cov CovItemId="S41" Value="5"/>
-<Cov CovItemId="S42" Value="1"/>
-<Cov CovItemId="S43" Value="1"/>
-<Cov CovItemId="S44" Value="10"/>
-<Cov CovItemId="S6" Value="6"/>
-<Cov CovItemId="S7" Value="6"/>
-<Cov CovItemId="S8" Value="6"/>
-<Cov CovItemId="S9" Value="6"/>
-</CovPrefix>
-</CovList>
-<AssgnmntList>
-<AssgnmntPrefix RootTermCovItemPrefix="libFSTest.session.BestPestElaboratorNew.java">
-<AssgnmntListEntry Length="1" RootTermCovItemId="C2">
-<MapEntry BoolAssgnmnt="1" Value="6"/>
-</AssgnmntListEntry>
-<AssgnmntListEntry Length="2" RootTermCovItemId="C3">
-<MapEntry BoolAssgnmnt="00" Value="6"/>
-</AssgnmntListEntry>
-<AssgnmntListEntry Length="3" RootTermCovItemId="C4">
-<MapEntry BoolAssgnmnt="022" Value="8"/>
-<MapEntry BoolAssgnmnt="102" Value="2"/>
-<MapEntry BoolAssgnmnt="110" Value="4"/>
-<MapEntry BoolAssgnmnt="111" Value="2"/>
-</AssgnmntListEntry>
-<AssgnmntListEntry Length="3" RootTermCovItemId="C5">
-<MapEntry BoolAssgnmnt="022" Value="8"/>
-<MapEntry BoolAssgnmnt="102" Value="4"/>
-<MapEntry BoolAssgnmnt="110" Value="1"/>
-<MapEntry BoolAssgnmnt="111" Value="1"/>
-</AssgnmntListEntry>
-<AssgnmntListEntry Length="1" RootTermCovItemId="C6">
-<MapEntry BoolAssgnmnt="0" Value="12"/>
-<MapEntry BoolAssgnmnt="1" Value="1"/>
-</AssgnmntListEntry>
-<AssgnmntListEntry Length="1" RootTermCovItemId="C7">
-<MapEntry BoolAssgnmnt="0" Value="5"/>
-<MapEntry BoolAssgnmnt="1" Value="7"/>
-</AssgnmntListEntry>
-<AssgnmntListEntry Length="1" RootTermCovItemId="C8">
-<MapEntry BoolAssgnmnt="0" Value="6"/>
-<MapEntry BoolAssgnmnt="1" Value="1"/>
-</AssgnmntListEntry>
-<AssgnmntListEntry Length="1" RootTermCovItemId="C9">
-<MapEntry BoolAssgnmnt="0" Value="4"/>
-<MapEntry BoolAssgnmnt="1" Value="1"/>
-</AssgnmntListEntry>
-</AssgnmntPrefix>
-</AssgnmntList>
-<ObjMetaDataList/>
-<MetaDataList/>
-</TestCase>
-<TestCase Comment="" Date="1620808483250" Name="libFSTest.session.BestPestElabTest:testBestPestElaborator">
-<CovList>
-<CovPrefix CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java">
-<Cov CovItemId="B3" Value="3"/>
-<Cov CovItemId="B5" Value="2"/>
-<Cov CovItemId="B6" Value="1"/>
-<Cov CovItemId="S1" Value="3"/>
-<Cov CovItemId="S10" Value="3"/>
-<Cov CovItemId="S11" Value="3"/>
-<Cov CovItemId="S12" Value="3"/>
-<Cov CovItemId="S13" Value="3"/>
-<Cov CovItemId="S15" Value="3"/>
-<Cov CovItemId="S16" Value="2"/>
-<Cov CovItemId="S17" Value="3"/>
-<Cov CovItemId="S18" Value="3"/>
-<Cov CovItemId="S19" Value="3"/>
-<Cov CovItemId="S20" Value="3"/>
-<Cov CovItemId="S21" Value="3"/>
-<Cov CovItemId="S22" Value="3"/>
-<Cov CovItemId="S44" Value="1"/>
-<Cov CovItemId="S6" Value="3"/>
-<Cov CovItemId="S7" Value="3"/>
-<Cov CovItemId="S8" Value="3"/>
-<Cov CovItemId="S9" Value="3"/>
-</CovPrefix>
-</CovList>
-<AssgnmntList>
-<AssgnmntPrefix RootTermCovItemPrefix="libFSTest.session.BestPestElaboratorNew.java">
-<AssgnmntListEntry Length="1" RootTermCovItemId="C2">
-<MapEntry BoolAssgnmnt="1" Value="3"/>
-</AssgnmntListEntry>
-<AssgnmntListEntry Length="2" RootTermCovItemId="C3">
-<MapEntry BoolAssgnmnt="00" Value="1"/>
-<MapEntry BoolAssgnmnt="01" Value="1"/>
-<MapEntry BoolAssgnmnt="12" Value="1"/>
-</AssgnmntListEntry>
-</AssgnmntPrefix>
-</AssgnmntList>
-<ObjMetaDataList/>
-<MetaDataList/>
-</TestCase>
-<TestCase Comment="" Date="1620808483251" Name="libFSTest.session.BestPestElabTest:testBestPestElaboratorExcept">
-<CovList>
-<CovPrefix CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java">
-<Cov CovItemId="B4" Value="1"/>
-<Cov CovItemId="S1" Value="1"/>
-<Cov CovItemId="S10" Value="1"/>
-<Cov CovItemId="S11" Value="1"/>
-<Cov CovItemId="S12" Value="1"/>
-<Cov CovItemId="S14" Value="1"/>
-<Cov CovItemId="S6" Value="1"/>
-<Cov CovItemId="S7" Value="1"/>
-<Cov CovItemId="S8" Value="1"/>
-<Cov CovItemId="S9" Value="1"/>
-</CovPrefix>
-</CovList>
-<AssgnmntList>
-<AssgnmntPrefix RootTermCovItemPrefix="libFSTest.session.BestPestElaboratorNew.java">
-<AssgnmntListEntry Length="1" RootTermCovItemId="C2">
-<MapEntry BoolAssgnmnt="0" Value="1"/>
-</AssgnmntListEntry>
-</AssgnmntPrefix>
-</AssgnmntList>
-<ObjMetaDataList/>
-<MetaDataList/>
-</TestCase>
-<MetaDataList/>
-</TestSession>
 </TestSessionContainer>

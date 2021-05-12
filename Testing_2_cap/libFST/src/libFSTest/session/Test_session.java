@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import libFSTest.draw.AngleCalculus;
 import libFSTest.session.PestBase.CertifierStatus;
 import libFSTest.test.DatiGenerazione;
 import libFSTest.test.FSTest.Scelta;
@@ -46,7 +47,7 @@ public class Test_session{
 		FINE_NON_CERTIFICATA // non può essere registrata profondità
 	}
 	
-	static List<rispostaSingola> sessionStory = new ArrayList<>();	
+	static List<rispostaSingola> sessionStory = new ArrayList<rispostaSingola>();	
 	
 	/**
 	 * costruttore
@@ -97,6 +98,7 @@ public class Test_session{
 		}
 		
 		testElab=new BestPestElaboratorNew(risultato.getLivMax(), risultato.getLivMin());
+		risultato.setAngolo(AngleCalculus.calcolaAngolo(risultato));
 		return Scelta.CORRETTO;
 		
 				
@@ -144,7 +146,7 @@ public class Test_session{
 	 * @return result
 	 */
 	public List<String> getSessionResults() {
-		List<String> result = new ArrayList<>();
+		List<String> result = new ArrayList<String>();
 		for (rispostaSingola sa : sessionStory) {
 			result.add(sa.toString());
 		}

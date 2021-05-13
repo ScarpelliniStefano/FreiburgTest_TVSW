@@ -57,7 +57,12 @@ public class DatiGenerazione {
 	 * @return the nome
 	 */
 	public String getNome() {
-		return Nome;
+		if(Nome!="") {
+				return Nome;
+		}else {
+			return "No Name";
+		}
+		
 	}
 	/**
 	 * @param nome the nome to set

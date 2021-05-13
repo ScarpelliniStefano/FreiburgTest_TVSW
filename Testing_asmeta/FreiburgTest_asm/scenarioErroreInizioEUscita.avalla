@@ -1,0 +1,20 @@
+scenario scenarioCorr
+
+load modelFreiburgTest_scenari.asm
+
+check reset = RESET_MINMAX;
+check continuaTest = true;
+set limiteMax := 6;
+set limiteMin := 7;
+step
+check reset=RESET_MINMAX;
+check continuaTest = true;
+set limiteMax := 12;
+set limiteMin := 1;
+step until control=RICHIESTA_POSIZIONE;
+check control=RICHIESTA_POSIZIONE;
+set posizioneScelta:=ESCI;
+step until continuaTest=false;
+check continuaTest=false;
+check livelloCertificato(testCert)=13;
+

@@ -1,4 +1,4 @@
-asm modelFreiburgTest
+asm modelFreiburgTest_scenari
 
 import StandardLibrary
 import CTLlibrary
@@ -15,24 +15,25 @@ signature:
 	enum domain Soluzione={GIUSTA, SBAGLIATA,STOP}
 	enum domain ResetDom={RESET_MINMAX,RESET_ASSIGN,STARTED}
 		
-	domain LivelloCert subsetof Integer
 	domain Livello subsetof Integer
+	domain LivelloBis subsetof Integer
 	domain ChanceTimes subsetof Integer
 
 
 // FUNCTIONS
 	static ceil : Real -> Integer
-	derived livToLivCert : Livello -> LivelloCert
+	derived livBisToLiv : LivelloBis -> Livello
 	
 	dynamic monitored posizioneScelta : Posizione
 	dynamic monitored rifai : Boolean	
-	monitored limiteMin : Livello
-	monitored limiteMax : Livello
+	monitored limiteMin : LivelloBis
+	monitored limiteMax : LivelloBis
 	
 	dynamic controlled continuaTest : Boolean
 	dynamic controlled outMessage : CertifierStatus -> Result
 	dynamic controlled posizioneGiusta : Posizione
-	dynamic controlled livelloCertificato : CertifierStatus -> LivelloCert
+	dynamic controlled livelloTest : Livello
+	dynamic controlled livelloCertificato : CertifierStatus -> Livello
 	dynamic controlled chance : ChanceTimes
 	dynamic controlled rightLimit : Livello
 	dynamic controlled leftLimit : Livello
@@ -47,24 +48,25 @@ signature:
   
 definitions:
 // DOMAIN DEFINITIONS
-	domain LivelloCert={1 : 13} //13 non certificato 1..12 livello certificato
-	domain Livello={1 : 12}
+	domain Livello={1 : 13} //13 non certificato 1..12 livello certificato
+	domain LivelloBis={1 : 12}
 	domain ChanceTimes={0:1}
 
 // FUNCTION DEFINITIONS
 	 function ceil($numberR in Real)= if itor(rtoi($numberR))>=$numberR then rtoi($numberR) else rtoi($numberR)+1 endif
-	 function livToLivCert($numb in Livello)=$numb
+	 function livBisToLiv($numb in LivelloBis)=$numb
 	 	
 	   
 // RULE DEFINITIONS
-	rule r_generaRisp=
-		choose $x in PositionRight with true do
-    	if $x = FORWARD then posizioneGiusta:=AVANTI else posizioneGiusta:=INDIETRO endif
-   
+	 rule r_generaRisp=
+		//if posizioneGiusta=AVANTI then posizioneGiusta:=INDIETRO else posizioneGiusta:=AVANTI endif
+   			posizioneGiusta:=INDIETRO
+   			
 	rule r_esci=
 		par
 			continuaTest:=false
 			livelloCertificato(testCert):=13
+			livelloTest:=currentDepth
 			outMessage(testCert):=FINE_NON_CERTIFICATA
 		endpar
 	
@@ -75,7 +77,7 @@ definitions:
 								par
 									outMessage(testCert):=FINE_CERTIFICATA
 									currentDepth:=leftLimit
-									livelloCertificato(testCert):=livToLivCert(leftLimit)
+									livelloCertificato(testCert):=leftLimit
 									continuaTest:=false
 								endpar
 							else
@@ -185,6 +187,9 @@ definitions:
 					if $s then
 						par
 							continuaTest:=true
+							if livelloTest!=12 then
+								livelloTest:=12
+							endif
 							if livelloCertificato(testCert)!=13 then
 								livelloCertificato(testCert):=13
 							endif
@@ -215,6 +220,9 @@ definitions:
 							if leftLimit!=12 then
 								leftLimit:=12
 							endif
+							if reset!=RESET_MINMAX then
+								reset:=RESET_MINMAX
+							endif
 							outMessage(testCert):=CONTINUA
 						endpar
 					else
@@ -222,6 +230,7 @@ definitions:
 					endif
 				endlet
 
+CTLSPEC ag(continuaTest=true or continuaTest=false)
 
 // MAIN RULE
 	main rule r_Main =
@@ -230,8 +239,8 @@ definitions:
 					let ($max=limiteMax,$min=limiteMin) in 
 						if $max>0 and $min<=$max then
 							par
-								leftLimit:=$max
-								rightLimit:=$min
+								leftLimit:=livBisToLiv($max) 
+								rightLimit:=livBisToLiv($min)
 								reset:=RESET_ASSIGN
 							endpar
 						endif
@@ -239,6 +248,9 @@ definitions:
 			else
 				if reset=RESET_ASSIGN then
 					par
+							if livelloTest!=leftLimit then
+								livelloTest:=leftLimit
+							endif
 							if currentDepth!=leftLimit then
 								currentDepth:=leftLimit
 							endif
@@ -277,6 +289,7 @@ definitions:
 // INITIAL STATE
 default init s0:
 	function continuaTest = true
+	function livelloTest=12
 	function livelloCertificato($t in CertifierStatus)=13
 	function chance=1
 	function sol=GIUSTA
@@ -288,3 +301,4 @@ default init s0:
 	function rightLimit=1
 	function leftLimit=12
 	function reset=RESET_MINMAX
+	   

@@ -8,7 +8,6 @@
 
     <artifactId>app-ui</artifactId>
     <name>app-ui</name>
-    <packaging>war</packaging>
 
     <dependencies>
         <!-- Versions for these are configured in the parent POM -->

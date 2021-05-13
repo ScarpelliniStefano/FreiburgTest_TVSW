@@ -1,4 +1,4 @@
-asm modelFreiburgTest
+asm modelFreiburgTestCTL
 
 import StandardLibrary
 import CTLlibrary
@@ -6,33 +6,41 @@ import CTLlibrary
 
 signature:
 // DOMAINS
-	abstract domain CertifierStatus
 	enum domain Control={RICHIESTA_POSIZIONE, CONTROLLO_RISPOSTA,GENERA_NUOVA_RISPOSTA}
 	enum domain ControlRW={INIZIO_RW,SETTAGGI_LEFT_OR_RIGHT,SETTAGGI_PROF_CURR,CONTROLLO_FINE}
 	enum domain Result={CONTINUA,FINE_CERTIFICATA,FINE_NON_CERTIFICATA}
 	enum domain PositionRight={FORWARD,BEHIND}
 	enum domain Posizione={AVANTI,INDIETRO,ESCI}
 	enum domain Soluzione={GIUSTA, SBAGLIATA,STOP}
-	enum domain ResetDom={RESET_MINMAX,RESET_ASSIGN,STARTED}
 		
+
+	domain RealCeil subsetof Integer
 	domain LivelloCert subsetof Integer
 	domain Livello subsetof Integer
 	domain ChanceTimes subsetof Integer
 
 
 // FUNCTIONS
-	static ceil : Real -> Integer
+	static ceil : RealCeil -> Livello
 	derived livToLivCert : Livello -> LivelloCert
+	//derived livCertToLiv : LivelloCert -> Livello
+	derived intToLivello : Integer -> Livello
+	derived realCeilToReal : RealCeil -> Integer
+	derived realToRealCeil : Integer -> RealCeil
+	
+	derived limitSuper:Boolean
+	
 	
 	dynamic monitored posizioneScelta : Posizione
 	dynamic monitored rifai : Boolean	
-	monitored limiteMin : Livello
-	monitored limiteMax : Livello
+	//monitored limiteMin : Livello
+	//monitored limiteMax : Livello
 	
 	dynamic controlled continuaTest : Boolean
-	dynamic controlled outMessage : CertifierStatus -> Result
+	dynamic controlled outMessage : Result
 	dynamic controlled posizioneGiusta : Posizione
-	dynamic controlled livelloCertificato : CertifierStatus -> LivelloCert
+	dynamic controlled livelloTest : Livello
+	dynamic controlled livelloCertificato : LivelloCert
 	dynamic controlled chance : ChanceTimes
 	dynamic controlled rightLimit : Livello
 	dynamic controlled leftLimit : Livello
@@ -41,20 +49,28 @@ signature:
 	dynamic controlled currentDepth : Livello
 	dynamic controlled control : Control
 	dynamic controlled controlRightWrong : ControlRW
-	dynamic controlled reset: ResetDom
-	dynamic controlled testCert : CertifierStatus
 	
   
 definitions:
 // DOMAIN DEFINITIONS
-	domain LivelloCert={1 : 13} //13 non certificato 1..12 livello certificato
-	domain Livello={1 : 12}
-	domain ChanceTimes={0:1}
+	domain LivelloCert={+1 : +13} //13 non certificato 1..12 livello certificato
+	domain Livello={+1 : +12}
+	domain RealCeil={+1 : +30}
+	domain ChanceTimes={+0:+1}
+
+
+
 
 // FUNCTION DEFINITIONS
-	 function ceil($numberR in Real)= if itor(rtoi($numberR))>=$numberR then rtoi($numberR) else rtoi($numberR)+1 endif
+	 function ceil($numberR in RealCeil)= if ge(itor(realCeilToReal($numberR)),itor(realCeilToReal($numberR))) then realCeilToReal($numberR) else realCeilToReal($numberR)+1 endif
 	 function livToLivCert($numb in Livello)=$numb
+	// function livCertToLiv($numb in LivelloCert)=$numb
+	 function intToLivello($numb in Integer)=$numb
+	 function realCeilToReal($numb in RealCeil)=$numb
+	 function realToRealCeil($numb in Integer)=$numb
 	 	
+	 	
+	 function limitSuper=leftLimit>=1 and rightLimit>=1 and leftLimit<=12 and rightLimit<=12
 	   
 // RULE DEFINITIONS
 	rule r_generaRisp=
@@ -64,8 +80,9 @@ definitions:
 	rule r_esci=
 		par
 			continuaTest:=false
-			livelloCertificato(testCert):=13
-			outMessage(testCert):=FINE_NON_CERTIFICATA
+			livelloCertificato:=13
+			livelloTest:=currentDepth
+			outMessage:=FINE_NON_CERTIFICATA
 		endpar
 	
 
@@ -73,9 +90,9 @@ definitions:
 
 							if (leftLimit-rightLimit)<=1 then
 								par
-									outMessage(testCert):=FINE_CERTIFICATA
+									outMessage:=FINE_CERTIFICATA
 									currentDepth:=leftLimit
-									livelloCertificato(testCert):=livToLivCert(leftLimit)
+									livelloCertificato:=livToLivCert(leftLimit)
 									continuaTest:=false
 								endpar
 							else
@@ -94,7 +111,12 @@ definitions:
 			else 
 				if controlRightWrong=SETTAGGI_LEFT_OR_RIGHT then
 					par
-						currentDepth:=floor(div(leftLimit+rightLimit,2))
+						//currentDepth:=floor(div(leftLimit+rightLimit,2))
+						if(leftLimit>rightLimit) then
+							currentDepth:=leftLimit-1 
+						else
+							currentDepth:=leftLimit
+						endif
 						controlRightWrong:=SETTAGGI_PROF_CURR
 					endpar
 				else 
@@ -113,7 +135,12 @@ definitions:
 			else 
 				if controlRightWrong=SETTAGGI_LEFT_OR_RIGHT then
 					par
-						currentDepth:=ceil(div(leftLimit+rightLimit,2))
+						//currentDepth:=floor(div(leftLimit+rightLimit,2))
+						if(leftLimit>rightLimit) then
+							currentDepth:=rightLimit+1 
+						else
+							currentDepth:=leftLimit
+						endif
 						controlRightWrong:=SETTAGGI_PROF_CURR
 					endpar
 				else 
@@ -136,7 +163,7 @@ definitions:
 			else 
 				if ($a = SBAGLIATA and chance=0 and currentDepth=maxDepth) or ($a=STOP) then
 					par
-						outMessage(testCert):=FINE_NON_CERTIFICATA
+						outMessage:=FINE_NON_CERTIFICATA
 						continuaTest:=false
 					endpar
 				else 
@@ -185,8 +212,11 @@ definitions:
 					if $s then
 						par
 							continuaTest:=true
-							if livelloCertificato(testCert)!=13 then
-								livelloCertificato(testCert):=13
+							if livelloTest!=12 then
+								livelloTest:=12
+							endif
+							if livelloCertificato!=13 then
+								livelloCertificato:=13
 							endif
 							if chance!=1 then
 								chance:=1
@@ -215,7 +245,7 @@ definitions:
 							if leftLimit!=12 then
 								leftLimit:=12
 							endif
-							outMessage(testCert):=CONTINUA
+							outMessage:=CONTINUA
 						endpar
 					else
 						continuaTest:=false
@@ -223,61 +253,31 @@ definitions:
 				endlet
 
 
+//esiste un caso in cui si giunge a FINE_CERTIFICATA
+CTLSPEC ef(outMessage=FINE_CERTIFICATA) 
+//esiste un caso in cui si giunge a FINE_NON_CERTIFICATA
+CTLSPEC ef(outMessage=FINE_CERTIFICATA) 
+//in ogni caso FINE_NON_CERTIFICATA O FINE_CERTIFICATA implica che ci sarà continuaTest=false
+CTLSPEC ag(outMessage=FINE_NON_CERTIFICATA or outMessage=FINE_CERTIFICATA implies continuaTest=false)
+//per ogni caso in cui sol è SBAGLIATA e chance=0 e currentDepth=maxDepth avremo che nel futuro ci sarà outMessage=FINE_NON_CERTIFICATA
+CTLSPEC af(sol=SBAGLIATA and chance=0 and currentDepth=maxDepth implies af(outMessage=FINE_NON_CERTIFICATA))
+//in nessuno stato deve esserci un valore di leftLimit e rightLimit esterno a 1 e 12
+CTLSPEC ag(not limitSuper)
+
 // MAIN RULE
 	main rule r_Main =
 		if continuaTest then
-			if reset=RESET_MINMAX then
-					let ($max=limiteMax,$min=limiteMin) in 
-						if $max>0 and $min<=$max then
-							par
-								leftLimit:=$max
-								rightLimit:=$min
-								reset:=RESET_ASSIGN
-							endpar
-						endif
-					endlet
-			else
-				if reset=RESET_ASSIGN then
-					par
-							if currentDepth!=leftLimit then
-								currentDepth:=leftLimit
-							endif
-							if maxDepth!=12 then
-								maxDepth:=12
-							endif
-							if control!=RICHIESTA_POSIZIONE then
-								control:=RICHIESTA_POSIZIONE
-							endif
-							if controlRightWrong!=INIZIO_RW then
-								controlRightWrong:=INIZIO_RW
-							endif
-							if posizioneGiusta!=INDIETRO then
-								posizioneGiusta:=INDIETRO
-							endif
-							if rightLimit!=1 then
-								rightLimit:=1
-							endif
-							if leftLimit!=12 then
-								leftLimit:=12
-							endif
-							reset:=STARTED
-						endpar
-				else
 					r_test[]	
-				endif
-			endif
 		else
-			par
-				reset:=RESET_MINMAX
 				r_exit[]
-			endpar
 		endif
 		
 		
 // INITIAL STATE
 default init s0:
 	function continuaTest = true
-	function livelloCertificato($t in CertifierStatus)=13
+	function livelloTest=12
+	function livelloCertificato=13
 	function chance=1
 	function sol=GIUSTA
 	function currentDepth=12
@@ -287,4 +287,3 @@ default init s0:
 	function posizioneGiusta=INDIETRO
 	function rightLimit=1
 	function leftLimit=12
-	function reset=RESET_MINMAX

@@ -1,0 +1,48 @@
+scenario scenarioCorr
+
+load modelFreiburgTest_scenari.asm
+
+check reset = RESET_MINMAX;
+check continuaTest = true;
+set limiteMax := 12;
+set limiteMin := 1;
+step until control=RICHIESTA_POSIZIONE;
+check control=RICHIESTA_POSIZIONE;
+set posizioneScelta:=INDIETRO;
+step
+check control=RICHIESTA_POSIZIONE;
+step until control=CONTROLLO_RISPOSTA;
+check control=CONTROLLO_RISPOSTA;
+check sol=GIUSTA;
+step until control=GENERA_NUOVA_RISPOSTA;
+check control=GENERA_NUOVA_RISPOSTA;
+check controlRightWrong=CONTROLLO_FINE;
+check currentDepth=6;
+step
+check posizioneGiusta=INDIETRO;
+check control=RICHIESTA_POSIZIONE;
+step 
+set posizioneScelta:=INDIETRO;
+check posizioneScelta=INDIETRO;
+step
+check sol=GIUSTA;
+step until control=GENERA_NUOVA_RISPOSTA;
+check control=GENERA_NUOVA_RISPOSTA;
+check controlRightWrong=CONTROLLO_FINE;
+check currentDepth=3;
+step
+check posizioneGiusta=INDIETRO;
+check control=RICHIESTA_POSIZIONE;
+step 
+set posizioneScelta:=INDIETRO;
+check posizioneScelta=INDIETRO;
+step
+check sol=GIUSTA;
+step until control=GENERA_NUOVA_RISPOSTA;
+check control=GENERA_NUOVA_RISPOSTA;
+check controlRightWrong=CONTROLLO_FINE;
+check currentDepth=2;
+step until outMessage(testCert)=FINE_CERTIFICATA;
+check outMessage(testCert)=FINE_CERTIFICATA;
+check livelloCertificato(testCert)=2;
+

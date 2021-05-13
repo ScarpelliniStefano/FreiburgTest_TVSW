@@ -1,0 +1,103 @@
+scenario scenarioScorr
+
+load modelFreiburgTest_scenari.asm
+
+check reset = RESET_MINMAX;
+check continuaTest = true;
+set limiteMax := 12;
+set limiteMin := 1;
+step
+check reset = RESET_ASSIGN;
+check continuaTest = true;
+check leftLimit = 12;
+check rightLimit = 1;
+check maxDepth = 12;
+check controlRightWrong = INIZIO_RW;
+check currentDepth = 12;
+check livelloTest = 12;
+check control = RICHIESTA_POSIZIONE;
+check posizioneGiusta = INDIETRO;
+set limiteMax := 12;
+set limiteMin := 1;
+step
+check reset = STARTED;
+set posizioneScelta := INDIETRO;
+step
+check control = CONTROLLO_RISPOSTA;
+step 
+step
+check sol = GIUSTA;
+step
+check controlRightWrong = CONTROLLO_FINE;
+check currentDepth = 6;
+check control = GENERA_NUOVA_RISPOSTA;
+check posizioneGiusta = INDIETRO;
+check sol = GIUSTA;
+step
+check control = RICHIESTA_POSIZIONE;
+check posizioneGiusta = INDIETRO;
+check sol = GIUSTA;
+set posizioneScelta := AVANTI;
+step
+check sol = SBAGLIATA;
+step
+step
+check currentDepth = 9;
+step
+check controlRightWrong = CONTROLLO_FINE;
+check control = GENERA_NUOVA_RISPOSTA;
+step
+check controlRightWrong = INIZIO_RW;
+check currentDepth = 9;
+check control = RICHIESTA_POSIZIONE;
+set posizioneScelta := INDIETRO;
+step
+check sol = GIUSTA;
+step
+check leftLimit = 9;
+check rightLimit = 6;
+check control = CONTROLLO_RISPOSTA;
+step
+check currentDepth = 7;
+step
+check controlRightWrong = CONTROLLO_FINE;
+check control = GENERA_NUOVA_RISPOSTA;
+step
+check posizioneGiusta = INDIETRO;
+set posizioneScelta := AVANTI;
+step
+check sol = SBAGLIATA;
+step
+step
+check controlRightWrong = SETTAGGI_PROF_CURR;
+check currentDepth = 8;
+check control = CONTROLLO_RISPOSTA;
+step
+check controlRightWrong = CONTROLLO_FINE;
+check currentDepth = 8;
+check control = GENERA_NUOVA_RISPOSTA;
+step
+check controlRightWrong = INIZIO_RW;
+check control = RICHIESTA_POSIZIONE;
+step
+check posizioneGiusta = INDIETRO;
+check sol = SBAGLIATA;
+set posizioneScelta := AVANTI;
+step
+step
+check controlRightWrong = SETTAGGI_PROF_CURR;
+check currentDepth = 9;
+check control = CONTROLLO_RISPOSTA;
+check posizioneGiusta = INDIETRO;
+check sol = SBAGLIATA;
+set posizioneScelta := INDIETRO;
+step
+check currentDepth = 9;
+check chance = 1;
+check outMessage(testCert) = FINE_CERTIFICATA;
+check livelloCertificato(testCert) = 9;
+set rifai := false;
+step
+check reset = RESET_MINMAX;
+check continuaTest = false;
+step

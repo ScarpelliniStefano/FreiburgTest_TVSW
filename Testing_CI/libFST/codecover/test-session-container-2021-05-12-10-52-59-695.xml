@@ -1,0 +1,698 @@
+<?xml version="1.0" encoding="UTF-8"?><TestSessionContainer xmlns="http://www.codecover.org/xml/testsession-container" Date="1620809579690" TestSessionContainerId="9929b7b5-7b9b-4ebd-92bd-19f29ba5ffe7" version="1.0">
+<SrcFileList>
+<SrcFile Content="package libFSTest.session;&#13;&#10;&#13;&#10;&#13;&#10;&#13;&#10;import libFSTest.session.Test_session.Result;&#13;&#10;&#13;&#10;&#13;&#10;/**&#13;&#10; * Algoritmo PEST &#13;&#10; */&#13;&#10;&#13;&#10;public class BestPestElaboratorNew extends PestBase {&#13;&#10;&#13;&#10;&#9;private int nextDepth=-1;&#13;&#10;&#9;public int getNextDepth() {&#13;&#10;&#9;&#9;return nextDepth;&#13;&#10;&#9;}&#13;&#10;&#13;&#10;&#9;public void setNextDepth(int nextDepth) {&#13;&#10;&#9;&#9;if(nextDepth&lt;=maxDepth &amp;&amp; nextDepth&gt;=rightLimit)&#13;&#10;&#9;&#9;&#9;this.nextDepth = nextDepth;&#13;&#10;&#9;&#9;else&#13;&#10;&#9;&#9;&#9;throw new IllegalArgumentException();&#13;&#10;&#9;}&#13;&#10;&#13;&#10;&#9;private int maxDepth=-1;&#13;&#10;&#9;private int leftLimit=-1;&#13;&#10;&#9;protected int rightLimit=-1;&#13;&#10;&#9;private int chance=-1;&#13;&#10;&#9;private double value=-1;&#13;&#10;&#13;&#10;&#9;&#13;&#10;&#13;&#10;&#9;public BestPestElaboratorNew(int maxValue,int minValue) {&#13;&#10;&#9;&#9;certifierStatus = new CertifierStatus();&#13;&#10;&#9;&#9;if (maxValue &gt;= 1)&#13;&#10;&#9;&#9;&#9;certifierStatus.currentDepth = maxValue;&#13;&#10;&#9;&#9;else&#13;&#10;&#9;&#9;&#9;throw new IllegalArgumentException();&#13;&#10;&#9;&#9;if(minValue&lt;1 || minValue&gt;maxValue) {&#13;&#10;&#9;&#9;&#9;minValue=maxValue;&#13;&#10;&#9;&#9;}&#13;&#10;&#9;&#9;maxDepth = maxValue;&#13;&#10;&#9;&#9;leftLimit = maxValue;&#13;&#10;&#9;&#9;rightLimit = minValue;&#13;&#10;&#9;&#9;nextDepth=maxValue;&#13;&#10;&#9;&#9;chance = 1;&#13;&#10;&#13;&#10;&#9;&#9;certifierStatus.currentResult = Result.CONTINUA;&#13;&#10;&#9;}&#13;&#10;&#13;&#10;&#9;&#13;&#10;&#9;@Override&#13;&#10;&#9;void computeNextDepth(PestBase.Soluzione solution) {&#13;&#10;&#9;&#9;&#13;&#10;&#13;&#10;&#9;&#9;if (solution == PestBase.Soluzione.SBAGLIATA &amp;&amp; chance &gt; 0 &amp;&amp; certifierStatus.currentDepth == maxDepth) {&#13;&#10;&#9;&#9;&#9;chance--;&#13;&#10;&#9;&#9;} else if (solution == PestBase.Soluzione.SBAGLIATA &amp;&amp; chance == 0&#13;&#10;&#9;&#9;&#9;&#9;&amp;&amp; certifierStatus.currentDepth == maxDepth) {&#13;&#10;&#9;&#9;&#9;certifierStatus.currentResult = Result.FINE_NON_CERTIFICATA;&#13;&#10;&#9;&#9;} else if (solution == PestBase.Soluzione.STOP) {&#13;&#10;&#9;&#9;&#9;// Nothing (end button)&#13;&#10;&#9;&#9;&#9;certifierStatus.currentResult=Result.FINE_NON_CERTIFICATA;&#13;&#10;&#9;&#9;} else if (solution == PestBase.Soluzione.GIUSTA) {&#13;&#10;&#9;&#9;&#9;leftLimit = certifierStatus.currentDepth;&#13;&#10;&#13;&#10;&#9;&#9;&#9;// Numerical rounding (Floor: round down)&#13;&#10;&#9;&#9;&#9;value = ((double) leftLimit + rightLimit) / 2;&#13;&#10;&#9;&#9;&#9;nextDepth = (int) (Math.floor(value));&#13;&#10;&#13;&#10;&#9;&#9;&#9;// Next depth&#13;&#10;&#9;&#9;&#9;certifierStatus.currentDepth = nextDepth;&#13;&#10;&#13;&#10;&#9;&#9;&#9;if ((leftLimit - rightLimit) &lt;= 1) {&#13;&#10;&#9;&#9;&#9;&#9;certifierStatus.currentResult = Result.FINE_CERTIFICATA;&#13;&#10;&#9;&#9;&#9;&#9;certifierStatus.currentDepth = leftLimit;&#13;&#10;&#9;&#9;&#9;}&#13;&#10;&#9;&#9;} else {&#13;&#10;&#9;&#9;&#9;rightLimit = certifierStatus.currentDepth;&#13;&#10;&#13;&#10;&#9;&#9;&#9;// Numerical rounding (Ceil: round up)&#13;&#10;&#9;&#9;&#9;value = ((double) leftLimit + rightLimit) / 2;&#13;&#10;&#9;&#9;&#9;nextDepth = (int) (Math.ceil(value));&#13;&#10;&#13;&#10;&#9;&#9;&#9;// Next depth&#13;&#10;&#9;&#9;&#9;certifierStatus.currentDepth = nextDepth;&#13;&#10;&#13;&#10;&#9;&#9;&#9;if ((leftLimit - rightLimit) &lt;= 1) {&#13;&#10;&#9;&#9;&#9;&#9;certifierStatus.currentResult = Result.FINE_CERTIFICATA;&#13;&#10;&#9;&#9;&#9;&#9;certifierStatus.currentDepth = leftLimit;&#13;&#10;&#9;&#9;&#9;}&#13;&#10;&#9;&#9;}&#13;&#10;&#9;}&#13;&#10;&#13;&#10;&#9;@Override&#13;&#10;&#9;public CertifierStatus getCurrentStatus() {&#13;&#10;&#9;&#9;assert maxDepth!=-1;&#13;&#10;&#9;&#9;return certifierStatus;&#13;&#10;&#9;}&#13;&#10;}&#13;&#10;" Filename="BestPestElaboratorNew.java" Intrnl_Id="1"/>
+</SrcFileList>
+<CritList>
+<CritListEntry Name="org.codecover.model.utils.criteria.LoopCoverage" PluginName="org.codecover"/>
+<CritListEntry Name="org.codecover.model.utils.criteria.ConditionCoverage" PluginName="org.codecover"/>
+<CritListEntry Name="org.codecover.model.utils.criteria.BranchCoverage" PluginName="org.codecover"/>
+<CritListEntry Name="org.codecover.model.utils.criteria.StatementCoverage" PluginName="org.codecover"/>
+</CritList>
+<BoolOpList>
+<BoolOp Arity="2" Intrnl_Id="2" Name="conditional and (&amp;&amp;)">
+<BoolAssgnmntBoolMapList>
+<MapEntry BoolAssgnmnt="02" Value="false"/>
+<MapEntry BoolAssgnmnt="10" Value="false"/>
+<MapEntry BoolAssgnmnt="11" Value="true"/>
+</BoolAssgnmntBoolMapList>
+</BoolOp>
+<BoolOp Arity="2" Intrnl_Id="3" Name="conditional or (||)">
+<BoolAssgnmntBoolMapList>
+<MapEntry BoolAssgnmnt="00" Value="false"/>
+<MapEntry BoolAssgnmnt="01" Value="true"/>
+<MapEntry BoolAssgnmnt="12" Value="true"/>
+</BoolAssgnmntBoolMapList>
+</BoolOp>
+</BoolOpList>
+<HierarchyLvlTypeList>
+<HierarchyLvlType EnglishName="package" IntrnlName="package" Intrnl_Id="4"/>
+<HierarchyLvlType EnglishName="method" IntrnlName="method" Intrnl_Id="5"/>
+<HierarchyLvlType EnglishName="class" IntrnlName="class" Intrnl_Id="6"/>
+<HierarchyLvlType EnglishName="default package" IntrnlName="default package" Intrnl_Id="7"/>
+</HierarchyLvlTypeList>
+<MASTRoot>
+<HierarchyLvl HierarchyLvlId="160" HierarchyLvlTypeId="7" Intrnl_Id="8" Name="default package">
+<Header/>
+<LocList/>
+<HierarchyLvl HierarchyLvlId="159" HierarchyLvlTypeId="4" Intrnl_Id="9" Name="libFSTest">
+<Header/>
+<LocList/>
+<HierarchyLvl HierarchyLvlId="158" HierarchyLvlTypeId="4" Intrnl_Id="10" Name="session">
+<Header/>
+<LocList/>
+<HierarchyLvl HierarchyLvlId="157" HierarchyLvlTypeId="6" Intrnl_Id="11" Name="BestPestElaboratorNew">
+<Header>
+<Loc EndOffset="168" SrcFileId="1" StartOffset="117"/>
+</Header>
+<LocList>
+<Loc EndOffset="2594" SrcFileId="1" StartOffset="117"/>
+</LocList>
+<StmntSeq Intrnl_Id="12">
+<LocList>
+<Loc EndOffset="200" SrcFileId="1" StartOffset="175"/>
+<Loc EndOffset="468" SrcFileId="1" StartOffset="444"/>
+<Loc EndOffset="496" SrcFileId="1" StartOffset="471"/>
+<Loc EndOffset="527" SrcFileId="1" StartOffset="499"/>
+<Loc EndOffset="552" SrcFileId="1" StartOffset="530"/>
+<Loc EndOffset="579" SrcFileId="1" StartOffset="555"/>
+</LocList>
+<BasicStmnt CovItemId="S1" CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java" Intrnl_Id="13">
+<LocList>
+<Loc EndOffset="200" SrcFileId="1" StartOffset="175"/>
+</LocList>
+</BasicStmnt>
+<BasicStmnt CovItemId="S6" CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java" Intrnl_Id="14">
+<LocList>
+<Loc EndOffset="468" SrcFileId="1" StartOffset="444"/>
+</LocList>
+</BasicStmnt>
+<BasicStmnt CovItemId="S7" CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java" Intrnl_Id="15">
+<LocList>
+<Loc EndOffset="496" SrcFileId="1" StartOffset="471"/>
+</LocList>
+</BasicStmnt>
+<BasicStmnt CovItemId="S8" CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java" Intrnl_Id="16">
+<LocList>
+<Loc EndOffset="527" SrcFileId="1" StartOffset="499"/>
+</LocList>
+</BasicStmnt>
+<BasicStmnt CovItemId="S9" CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java" Intrnl_Id="17">
+<LocList>
+<Loc EndOffset="552" SrcFileId="1" StartOffset="530"/>
+</LocList>
+</BasicStmnt>
+<BasicStmnt CovItemId="S10" CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java" Intrnl_Id="18">
+<LocList>
+<Loc EndOffset="579" SrcFileId="1" StartOffset="555"/>
+</LocList>
+</BasicStmnt>
+</StmntSeq>
+<HierarchyLvl HierarchyLvlId="152" HierarchyLvlTypeId="5" Intrnl_Id="19" Name="getNextDepth">
+<Header>
+<Loc EndOffset="228" SrcFileId="1" StartOffset="203"/>
+</Header>
+<LocList>
+<Loc EndOffset="255" SrcFileId="1" StartOffset="203"/>
+</LocList>
+<StmntSeq Intrnl_Id="20">
+<LocList>
+<Loc EndOffset="251" SrcFileId="1" StartOffset="234"/>
+</LocList>
+<BasicStmnt CovItemId="S2" CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java" Intrnl_Id="21">
+<LocList>
+<Loc EndOffset="251" SrcFileId="1" StartOffset="234"/>
+</LocList>
+</BasicStmnt>
+</StmntSeq>
+</HierarchyLvl>
+<HierarchyLvl HierarchyLvlId="153" HierarchyLvlTypeId="5" Intrnl_Id="22" Name="setNextDepth">
+<Header>
+<Loc EndOffset="299" SrcFileId="1" StartOffset="260"/>
+</Header>
+<LocList>
+<Loc EndOffset="439" SrcFileId="1" StartOffset="260"/>
+</LocList>
+<StmntSeq Intrnl_Id="23">
+<LocList>
+<Loc EndOffset="435" SrcFileId="1" StartOffset="305"/>
+</LocList>
+<CondStmnt CovItemId="S3" CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java" Intrnl_Id="24">
+<Branch CovItemId="B1" CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java" Implct="false" Intrnl_Id="25">
+<Cond/>
+<LocList>
+<Loc EndOffset="385" SrcFileId="1" StartOffset="358"/>
+</LocList>
+<StmntSeq Intrnl_Id="26">
+<LocList>
+<Loc EndOffset="385" SrcFileId="1" StartOffset="358"/>
+</LocList>
+<BasicStmnt CovItemId="S4" CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java" Intrnl_Id="27">
+<LocList>
+<Loc EndOffset="385" SrcFileId="1" StartOffset="358"/>
+</LocList>
+</BasicStmnt>
+</StmntSeq>
+</Branch>
+<Branch CovItemId="B2" CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java" Implct="false" Intrnl_Id="28">
+<Cond>
+<Loc EndOffset="393" SrcFileId="1" StartOffset="389"/>
+</Cond>
+<LocList>
+<Loc EndOffset="435" SrcFileId="1" StartOffset="398"/>
+</LocList>
+<StmntSeq Intrnl_Id="29">
+<LocList>
+<Loc EndOffset="435" SrcFileId="1" StartOffset="398"/>
+</LocList>
+<BasicStmnt CovItemId="S5" CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java" Intrnl_Id="30">
+<LocList>
+<Loc EndOffset="435" SrcFileId="1" StartOffset="398"/>
+</LocList>
+</BasicStmnt>
+</StmntSeq>
+</Branch>
+<Keyword EndOffset="307" SrcFileId="1" StartOffset="305"/>
+<LocList>
+<Loc EndOffset="435" SrcFileId="1" StartOffset="305"/>
+</LocList>
+<RootTerm CovItemId="C1" CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java" Intrnl_Id="31">
+<OpTerm BooleanOpId="2" Intrnl_Id="32">
+<BasicBoolTerm Intrnl_Id="33">
+<LocList>
+<Loc EndOffset="327" SrcFileId="1" StartOffset="308"/>
+</LocList>
+</BasicBoolTerm>
+<BasicBoolTerm Intrnl_Id="34">
+<LocList>
+<Loc EndOffset="352" SrcFileId="1" StartOffset="331"/>
+</LocList>
+</BasicBoolTerm>
+<LocList>
+<Loc EndOffset="330" SrcFileId="1" StartOffset="328"/>
+</LocList>
+</OpTerm>
+</RootTerm>
+</CondStmnt>
+</StmntSeq>
+</HierarchyLvl>
+<HierarchyLvl HierarchyLvlId="154" HierarchyLvlTypeId="5" Intrnl_Id="35" Name="BestPestElaboratorNew">
+<Header>
+<Loc EndOffset="644" SrcFileId="1" StartOffset="589"/>
+</Header>
+<LocList>
+<Loc EndOffset="1047" SrcFileId="1" StartOffset="589"/>
+</LocList>
+<StmntSeq Intrnl_Id="36">
+<LocList>
+<Loc EndOffset="690" SrcFileId="1" StartOffset="650"/>
+<Loc EndOffset="807" SrcFileId="1" StartOffset="694"/>
+<Loc EndOffset="876" SrcFileId="1" StartOffset="811"/>
+<Loc EndOffset="900" SrcFileId="1" StartOffset="880"/>
+<Loc EndOffset="925" SrcFileId="1" StartOffset="904"/>
+<Loc EndOffset="951" SrcFileId="1" StartOffset="929"/>
+<Loc EndOffset="974" SrcFileId="1" StartOffset="955"/>
+<Loc EndOffset="989" SrcFileId="1" StartOffset="978"/>
+<Loc EndOffset="1043" SrcFileId="1" StartOffset="995"/>
+</LocList>
+<BasicStmnt CovItemId="S11" CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java" Intrnl_Id="37">
+<LocList>
+<Loc EndOffset="690" SrcFileId="1" StartOffset="650"/>
+</LocList>
+</BasicStmnt>
+<CondStmnt CovItemId="S12" CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java" Intrnl_Id="38">
+<Branch CovItemId="B3" CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java" Implct="false" Intrnl_Id="39">
+<Cond/>
+<LocList>
+<Loc EndOffset="757" SrcFileId="1" StartOffset="717"/>
+</LocList>
+<StmntSeq Intrnl_Id="40">
+<LocList>
+<Loc EndOffset="757" SrcFileId="1" StartOffset="717"/>
+</LocList>
+<BasicStmnt CovItemId="S13" CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java" Intrnl_Id="41">
+<LocList>
+<Loc EndOffset="757" SrcFileId="1" StartOffset="717"/>
+</LocList>
+</BasicStmnt>
+</StmntSeq>
+</Branch>
+<Branch CovItemId="B4" CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java" Implct="false" Intrnl_Id="42">
+<Cond>
+<Loc EndOffset="765" SrcFileId="1" StartOffset="761"/>
+</Cond>
+<LocList>
+<Loc EndOffset="807" SrcFileId="1" StartOffset="770"/>
+</LocList>
+<StmntSeq Intrnl_Id="43">
+<LocList>
+<Loc EndOffset="807" SrcFileId="1" StartOffset="770"/>
+</LocList>
+<BasicStmnt CovItemId="S14" CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java" Intrnl_Id="44">
+<LocList>
+<Loc EndOffset="807" SrcFileId="1" StartOffset="770"/>
+</LocList>
+</BasicStmnt>
+</StmntSeq>
+</Branch>
+<Keyword EndOffset="696" SrcFileId="1" StartOffset="694"/>
+<LocList>
+<Loc EndOffset="807" SrcFileId="1" StartOffset="694"/>
+</LocList>
+<RootTerm CovItemId="C2" CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java" Intrnl_Id="45">
+<BasicBoolTerm Intrnl_Id="46">
+<LocList>
+<Loc EndOffset="711" SrcFileId="1" StartOffset="698"/>
+</LocList>
+</BasicBoolTerm>
+</RootTerm>
+</CondStmnt>
+<CondStmnt CovItemId="S15" CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java" Intrnl_Id="47">
+<Branch CovItemId="B5" CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java" Implct="false" Intrnl_Id="48">
+<Cond/>
+<LocList>
+<Loc EndOffset="876" SrcFileId="1" StartOffset="847"/>
+</LocList>
+<StmntSeq Intrnl_Id="49">
+<LocList>
+<Loc EndOffset="871" SrcFileId="1" StartOffset="853"/>
+</LocList>
+<BasicStmnt CovItemId="S16" CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java" Intrnl_Id="50">
+<LocList>
+<Loc EndOffset="871" SrcFileId="1" StartOffset="853"/>
+</LocList>
+</BasicStmnt>
+</StmntSeq>
+</Branch>
+<Branch CovItemId="B6" CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java" Implct="true" Intrnl_Id="51">
+<Cond/>
+<LocList/>
+<StmntSeq Intrnl_Id="52">
+<LocList/>
+</StmntSeq>
+</Branch>
+<Keyword EndOffset="813" SrcFileId="1" StartOffset="811"/>
+<LocList>
+<Loc EndOffset="876" SrcFileId="1" StartOffset="811"/>
+</LocList>
+<RootTerm CovItemId="C3" CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java" Intrnl_Id="53">
+<OpTerm BooleanOpId="3" Intrnl_Id="54">
+<BasicBoolTerm Intrnl_Id="55">
+<LocList>
+<Loc EndOffset="824" SrcFileId="1" StartOffset="814"/>
+</LocList>
+</BasicBoolTerm>
+<BasicBoolTerm Intrnl_Id="56">
+<LocList>
+<Loc EndOffset="845" SrcFileId="1" StartOffset="828"/>
+</LocList>
+</BasicBoolTerm>
+<LocList>
+<Loc EndOffset="827" SrcFileId="1" StartOffset="825"/>
+</LocList>
+</OpTerm>
+</RootTerm>
+</CondStmnt>
+<BasicStmnt CovItemId="S17" CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java" Intrnl_Id="57">
+<LocList>
+<Loc EndOffset="900" SrcFileId="1" StartOffset="880"/>
+</LocList>
+</BasicStmnt>
+<BasicStmnt CovItemId="S18" CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java" Intrnl_Id="58">
+<LocList>
+<Loc EndOffset="925" SrcFileId="1" StartOffset="904"/>
+</LocList>
+</BasicStmnt>
+<BasicStmnt CovItemId="S19" CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java" Intrnl_Id="59">
+<LocList>
+<Loc EndOffset="951" SrcFileId="1" StartOffset="929"/>
+</LocList>
+</BasicStmnt>
+<BasicStmnt CovItemId="S20" CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java" Intrnl_Id="60">
+<LocList>
+<Loc EndOffset="974" SrcFileId="1" StartOffset="955"/>
+</LocList>
+</BasicStmnt>
+<BasicStmnt CovItemId="S21" CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java" Intrnl_Id="61">
+<LocList>
+<Loc EndOffset="989" SrcFileId="1" StartOffset="978"/>
+</LocList>
+</BasicStmnt>
+<BasicStmnt CovItemId="S22" CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java" Intrnl_Id="62">
+<LocList>
+<Loc EndOffset="1043" SrcFileId="1" StartOffset="995"/>
+</LocList>
+</BasicStmnt>
+</StmntSeq>
+</HierarchyLvl>
+<HierarchyLvl HierarchyLvlId="155" HierarchyLvlTypeId="5" Intrnl_Id="63" Name="computeNextDepth">
+<Header>
+<Loc EndOffset="1117" SrcFileId="1" StartOffset="1055"/>
+</Header>
+<LocList>
+<Loc EndOffset="2476" SrcFileId="1" StartOffset="1055"/>
+</LocList>
+<StmntSeq Intrnl_Id="64">
+<LocList>
+<Loc EndOffset="2472" SrcFileId="1" StartOffset="1129"/>
+</LocList>
+<CondStmnt CovItemId="S23" CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java" Intrnl_Id="65">
+<Branch CovItemId="B7" CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java" Implct="false" Intrnl_Id="66">
+<Cond/>
+<LocList>
+<Loc EndOffset="1253" SrcFileId="1" StartOffset="1233"/>
+</LocList>
+<StmntSeq Intrnl_Id="67">
+<LocList>
+<Loc EndOffset="1248" SrcFileId="1" StartOffset="1239"/>
+</LocList>
+<BasicStmnt CovItemId="S24" CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java" Intrnl_Id="68">
+<LocList>
+<Loc EndOffset="1248" SrcFileId="1" StartOffset="1239"/>
+</LocList>
+</BasicStmnt>
+</StmntSeq>
+</Branch>
+<Branch CovItemId="B8" CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java" Implct="false" Intrnl_Id="69">
+<Cond>
+<Loc EndOffset="1258" SrcFileId="1" StartOffset="1254"/>
+</Cond>
+<LocList>
+<Loc EndOffset="2472" SrcFileId="1" StartOffset="1259"/>
+</LocList>
+<StmntSeq Intrnl_Id="70">
+<LocList>
+<Loc EndOffset="2472" SrcFileId="1" StartOffset="1259"/>
+</LocList>
+<CondStmnt CovItemId="S25" CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java" Intrnl_Id="71">
+<Branch CovItemId="B9" CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java" Implct="false" Intrnl_Id="72">
+<Cond/>
+<LocList>
+<Loc EndOffset="1440" SrcFileId="1" StartOffset="1369"/>
+</LocList>
+<StmntSeq Intrnl_Id="73">
+<LocList>
+<Loc EndOffset="1435" SrcFileId="1" StartOffset="1375"/>
+</LocList>
+<BasicStmnt CovItemId="S26" CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java" Intrnl_Id="74">
+<LocList>
+<Loc EndOffset="1435" SrcFileId="1" StartOffset="1375"/>
+</LocList>
+</BasicStmnt>
+</StmntSeq>
+</Branch>
+<Branch CovItemId="B10" CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java" Implct="false" Intrnl_Id="75">
+<Cond>
+<Loc EndOffset="1445" SrcFileId="1" StartOffset="1441"/>
+</Cond>
+<LocList>
+<Loc EndOffset="2472" SrcFileId="1" StartOffset="1446"/>
+</LocList>
+<StmntSeq Intrnl_Id="76">
+<LocList>
+<Loc EndOffset="2472" SrcFileId="1" StartOffset="1446"/>
+</LocList>
+<CondStmnt CovItemId="S27" CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java" Intrnl_Id="77">
+<Branch CovItemId="B11" CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java" Implct="false" Intrnl_Id="78">
+<Cond/>
+<LocList>
+<Loc EndOffset="1584" SrcFileId="1" StartOffset="1487"/>
+</LocList>
+<StmntSeq Intrnl_Id="79">
+<LocList>
+<Loc EndOffset="1579" SrcFileId="1" StartOffset="1521"/>
+</LocList>
+<BasicStmnt CovItemId="S28" CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java" Intrnl_Id="80">
+<LocList>
+<Loc EndOffset="1579" SrcFileId="1" StartOffset="1521"/>
+</LocList>
+</BasicStmnt>
+</StmntSeq>
+</Branch>
+<Branch CovItemId="B12" CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java" Implct="false" Intrnl_Id="81">
+<Cond>
+<Loc EndOffset="1589" SrcFileId="1" StartOffset="1585"/>
+</Cond>
+<LocList>
+<Loc EndOffset="2472" SrcFileId="1" StartOffset="1590"/>
+</LocList>
+<StmntSeq Intrnl_Id="82">
+<LocList>
+<Loc EndOffset="2472" SrcFileId="1" StartOffset="1590"/>
+</LocList>
+<CondStmnt CovItemId="S29" CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java" Intrnl_Id="83">
+<Branch CovItemId="B13" CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java" Implct="false" Intrnl_Id="84">
+<Cond/>
+<LocList>
+<Loc EndOffset="2051" SrcFileId="1" StartOffset="1633"/>
+</LocList>
+<StmntSeq Intrnl_Id="85">
+<LocList>
+<Loc EndOffset="1680" SrcFileId="1" StartOffset="1639"/>
+<Loc EndOffset="1779" SrcFileId="1" StartOffset="1733"/>
+<Loc EndOffset="1822" SrcFileId="1" StartOffset="1784"/>
+<Loc EndOffset="1888" SrcFileId="1" StartOffset="1847"/>
+<Loc EndOffset="2046" SrcFileId="1" StartOffset="1895"/>
+</LocList>
+<BasicStmnt CovItemId="S30" CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java" Intrnl_Id="86">
+<LocList>
+<Loc EndOffset="1680" SrcFileId="1" StartOffset="1639"/>
+</LocList>
+</BasicStmnt>
+<BasicStmnt CovItemId="S31" CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java" Intrnl_Id="87">
+<LocList>
+<Loc EndOffset="1779" SrcFileId="1" StartOffset="1733"/>
+</LocList>
+</BasicStmnt>
+<BasicStmnt CovItemId="S32" CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java" Intrnl_Id="88">
+<LocList>
+<Loc EndOffset="1822" SrcFileId="1" StartOffset="1784"/>
+</LocList>
+</BasicStmnt>
+<BasicStmnt CovItemId="S33" CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java" Intrnl_Id="89">
+<LocList>
+<Loc EndOffset="1888" SrcFileId="1" StartOffset="1847"/>
+</LocList>
+</BasicStmnt>
+<CondStmnt CovItemId="S34" CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java" Intrnl_Id="90">
+<Branch CovItemId="B15" CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java" Implct="false" Intrnl_Id="91">
+<Cond/>
+<LocList>
+<Loc EndOffset="2046" SrcFileId="1" StartOffset="1930"/>
+</LocList>
+<StmntSeq Intrnl_Id="92">
+<LocList>
+<Loc EndOffset="1993" SrcFileId="1" StartOffset="1937"/>
+<Loc EndOffset="2040" SrcFileId="1" StartOffset="1999"/>
+</LocList>
+<BasicStmnt CovItemId="S35" CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java" Intrnl_Id="93">
+<LocList>
+<Loc EndOffset="1993" SrcFileId="1" StartOffset="1937"/>
+</LocList>
+</BasicStmnt>
+<BasicStmnt CovItemId="S36" CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java" Intrnl_Id="94">
+<LocList>
+<Loc EndOffset="2040" SrcFileId="1" StartOffset="1999"/>
+</LocList>
+</BasicStmnt>
+</StmntSeq>
+</Branch>
+<Branch CovItemId="B16" CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java" Implct="true" Intrnl_Id="95">
+<Cond/>
+<LocList/>
+<StmntSeq Intrnl_Id="96">
+<LocList/>
+</StmntSeq>
+</Branch>
+<Keyword EndOffset="1897" SrcFileId="1" StartOffset="1895"/>
+<LocList>
+<Loc EndOffset="2046" SrcFileId="1" StartOffset="1895"/>
+</LocList>
+<RootTerm CovItemId="C8" CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java" Intrnl_Id="97">
+<BasicBoolTerm Intrnl_Id="98">
+<LocList>
+<Loc EndOffset="1928" SrcFileId="1" StartOffset="1899"/>
+</LocList>
+</BasicBoolTerm>
+</RootTerm>
+</CondStmnt>
+</StmntSeq>
+</Branch>
+<Branch CovItemId="B14" CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java" Implct="false" Intrnl_Id="99">
+<Cond>
+<Loc EndOffset="2056" SrcFileId="1" StartOffset="2052"/>
+</Cond>
+<LocList>
+<Loc EndOffset="2472" SrcFileId="1" StartOffset="2057"/>
+</LocList>
+<StmntSeq Intrnl_Id="100">
+<LocList>
+<Loc EndOffset="2105" SrcFileId="1" StartOffset="2063"/>
+<Loc EndOffset="2201" SrcFileId="1" StartOffset="2155"/>
+<Loc EndOffset="2243" SrcFileId="1" StartOffset="2206"/>
+<Loc EndOffset="2309" SrcFileId="1" StartOffset="2268"/>
+<Loc EndOffset="2467" SrcFileId="1" StartOffset="2316"/>
+</LocList>
+<BasicStmnt CovItemId="S37" CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java" Intrnl_Id="101">
+<LocList>
+<Loc EndOffset="2105" SrcFileId="1" StartOffset="2063"/>
+</LocList>
+</BasicStmnt>
+<BasicStmnt CovItemId="S38" CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java" Intrnl_Id="102">
+<LocList>
+<Loc EndOffset="2201" SrcFileId="1" StartOffset="2155"/>
+</LocList>
+</BasicStmnt>
+<BasicStmnt CovItemId="S39" CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java" Intrnl_Id="103">
+<LocList>
+<Loc EndOffset="2243" SrcFileId="1" StartOffset="2206"/>
+</LocList>
+</BasicStmnt>
+<BasicStmnt CovItemId="S40" CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java" Intrnl_Id="104">
+<LocList>
+<Loc EndOffset="2309" SrcFileId="1" StartOffset="2268"/>
+</LocList>
+</BasicStmnt>
+<CondStmnt CovItemId="S41" CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java" Intrnl_Id="105">
+<Branch CovItemId="B17" CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java" Implct="false" Intrnl_Id="106">
+<Cond/>
+<LocList>
+<Loc EndOffset="2467" SrcFileId="1" StartOffset="2351"/>
+</LocList>
+<StmntSeq Intrnl_Id="107">
+<LocList>
+<Loc EndOffset="2414" SrcFileId="1" StartOffset="2358"/>
+<Loc EndOffset="2461" SrcFileId="1" StartOffset="2420"/>
+</LocList>
+<BasicStmnt CovItemId="S42" CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java" Intrnl_Id="108">
+<LocList>
+<Loc EndOffset="2414" SrcFileId="1" StartOffset="2358"/>
+</LocList>
+</BasicStmnt>
+<BasicStmnt CovItemId="S43" CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java" Intrnl_Id="109">
+<LocList>
+<Loc EndOffset="2461" SrcFileId="1" StartOffset="2420"/>
+</LocList>
+</BasicStmnt>
+</StmntSeq>
+</Branch>
+<Branch CovItemId="B18" CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java" Implct="true" Intrnl_Id="110">
+<Cond/>
+<LocList/>
+<StmntSeq Intrnl_Id="111">
+<LocList/>
+</StmntSeq>
+</Branch>
+<Keyword EndOffset="2318" SrcFileId="1" StartOffset="2316"/>
+<LocList>
+<Loc EndOffset="2467" SrcFileId="1" StartOffset="2316"/>
+</LocList>
+<RootTerm CovItemId="C9" CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java" Intrnl_Id="112">
+<BasicBoolTerm Intrnl_Id="113">
+<LocList>
+<Loc EndOffset="2349" SrcFileId="1" StartOffset="2320"/>
+</LocList>
+</BasicBoolTerm>
+</RootTerm>
+</CondStmnt>
+</StmntSeq>
+</Branch>
+<Keyword EndOffset="1592" SrcFileId="1" StartOffset="1590"/>
+<LocList>
+<Loc EndOffset="2472" SrcFileId="1" StartOffset="1590"/>
+</LocList>
+<RootTerm CovItemId="C7" CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java" Intrnl_Id="114">
+<BasicBoolTerm Intrnl_Id="115">
+<LocList>
+<Loc EndOffset="1631" SrcFileId="1" StartOffset="1594"/>
+</LocList>
+</BasicBoolTerm>
+</RootTerm>
+</CondStmnt>
+</StmntSeq>
+</Branch>
+<Keyword EndOffset="1448" SrcFileId="1" StartOffset="1446"/>
+<LocList>
+<Loc EndOffset="2472" SrcFileId="1" StartOffset="1446"/>
+</LocList>
+<RootTerm CovItemId="C6" CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java" Intrnl_Id="116">
+<BasicBoolTerm Intrnl_Id="117">
+<LocList>
+<Loc EndOffset="1485" SrcFileId="1" StartOffset="1450"/>
+</LocList>
+</BasicBoolTerm>
+</RootTerm>
+</CondStmnt>
+</StmntSeq>
+</Branch>
+<Keyword EndOffset="1261" SrcFileId="1" StartOffset="1259"/>
+<LocList>
+<Loc EndOffset="2472" SrcFileId="1" StartOffset="1259"/>
+</LocList>
+<RootTerm CovItemId="C5" CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java" Intrnl_Id="118">
+<OpTerm BooleanOpId="2" Intrnl_Id="119">
+<OpTerm BooleanOpId="2" Intrnl_Id="120">
+<BasicBoolTerm Intrnl_Id="121">
+<LocList>
+<Loc EndOffset="1303" SrcFileId="1" StartOffset="1263"/>
+</LocList>
+</BasicBoolTerm>
+<BasicBoolTerm Intrnl_Id="122">
+<LocList>
+<Loc EndOffset="1318" SrcFileId="1" StartOffset="1307"/>
+</LocList>
+</BasicBoolTerm>
+<LocList>
+<Loc EndOffset="1306" SrcFileId="1" StartOffset="1304"/>
+</LocList>
+</OpTerm>
+<BasicBoolTerm Intrnl_Id="123">
+<LocList>
+<Loc EndOffset="1367" SrcFileId="1" StartOffset="1327"/>
+</LocList>
+</BasicBoolTerm>
+<LocList>
+<Loc EndOffset="1326" SrcFileId="1" StartOffset="1324"/>
+</LocList>
+</OpTerm>
+</RootTerm>
+</CondStmnt>
+</StmntSeq>
+</Branch>
+<Keyword EndOffset="1131" SrcFileId="1" StartOffset="1129"/>
+<LocList>
+<Loc EndOffset="2472" SrcFileId="1" StartOffset="1129"/>
+</LocList>
+<RootTerm CovItemId="C4" CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java" Intrnl_Id="124">
+<OpTerm BooleanOpId="2" Intrnl_Id="125">
+<OpTerm BooleanOpId="2" Intrnl_Id="126">
+<BasicBoolTerm Intrnl_Id="127">
+<LocList>
+<Loc EndOffset="1173" SrcFileId="1" StartOffset="1133"/>
+</LocList>
+</BasicBoolTerm>
+<BasicBoolTerm Intrnl_Id="128">
+<LocList>
+<Loc EndOffset="1187" SrcFileId="1" StartOffset="1177"/>
+</LocList>
+</BasicBoolTerm>
+<LocList>
+<Loc EndOffset="1176" SrcFileId="1" StartOffset="1174"/>
+</LocList>
+</OpTerm>
+<BasicBoolTerm Intrnl_Id="129">
+<LocList>
+<Loc EndOffset="1231" SrcFileId="1" StartOffset="1191"/>
+</LocList>
+</BasicBoolTerm>
+<LocList>
+<Loc EndOffset="1190" SrcFileId="1" StartOffset="1188"/>
+</LocList>
+</OpTerm>
+</RootTerm>
+</CondStmnt>
+</StmntSeq>
+</HierarchyLvl>
+<HierarchyLvl HierarchyLvlId="156" HierarchyLvlTypeId="5" Intrnl_Id="130" Name="getCurrentStatus">
+<Header>
+<Loc EndOffset="2534" SrcFileId="1" StartOffset="2481"/>
+</Header>
+<LocList>
+<Loc EndOffset="2591" SrcFileId="1" StartOffset="2481"/>
+</LocList>
+<StmntSeq Intrnl_Id="131">
+<LocList>
+<Loc EndOffset="2587" SrcFileId="1" StartOffset="2564"/>
+</LocList>
+<BasicStmnt CovItemId="S44" CovItemPrefix="libFSTest.session.BestPestElaboratorNew.java" Intrnl_Id="132">
+<LocList>
+<Loc EndOffset="2587" SrcFileId="1" StartOffset="2564"/>
+</LocList>
+</BasicStmnt>
+</StmntSeq>
+</HierarchyLvl>
+</HierarchyLvl>
+</HierarchyLvl>
+</HierarchyLvl>
+</HierarchyLvl>
+</MASTRoot>
+</TestSessionContainer>

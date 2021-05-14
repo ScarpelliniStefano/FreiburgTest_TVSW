@@ -6,35 +6,33 @@ import CTLlibrary
 
 signature:
 // DOMAINS
+	
 	enum domain Control={RICHIESTA_POSIZIONE, CONTROLLO_RISPOSTA,GENERA_NUOVA_RISPOSTA}
 	enum domain ControlRW={INIZIO_RW,SETTAGGI_LEFT_OR_RIGHT,SETTAGGI_PROF_CURR,CONTROLLO_FINE}
 	enum domain Result={CONTINUA,FINE_CERTIFICATA,FINE_NON_CERTIFICATA}
-	enum domain PositionRight={FORWARD,BEHIND}
 	enum domain Posizione={AVANTI,INDIETRO,ESCI}
+	enum domain PosizioneGiusta={AVANTIG,INDIETROG}
 	enum domain Soluzione={GIUSTA, SBAGLIATA,STOP}
-		
+	enum domain ChanceTimes={UNA, NESSUNA}
+	enum domain ResetDom={RESET_MINMAX,STARTED}
 
-	domain RealCeil subsetof Integer
-	domain LivelloCert subsetof Integer
-	domain Livello subsetof Integer
-	domain ChanceTimes subsetof Integer
+	enum domain Livello={UNO, DUE, TRE, QUATTRO, CINQUE}
+	//domain RealCeil subsetof Integer
+	enum domain LivelloCert={TRECERT, CINQUE_NCERT}
+	//domain Livello subsetof Integer
 
 
 // FUNCTIONS
-	static ceil : RealCeil -> Livello
-	derived livToLivCert : Livello -> LivelloCert
-	//derived livCertToLiv : LivelloCert -> Livello
-	derived intToLivello : Integer -> Livello
-	derived realCeilToReal : RealCeil -> Integer
-	derived realToRealCeil : Integer -> RealCeil
+	//static ceil : Livello -> Livello
+	//static livToLivCert:Livello->LivelloCert
 	
-	derived limitSuper:Boolean
+	//derived limitSuper:Boolean
 	
 	
 	dynamic monitored posizioneScelta : Posizione
 	dynamic monitored rifai : Boolean	
-	//monitored limiteMin : Livello
-	//monitored limiteMax : Livello
+	monitored limiteMin : Livello
+	monitored limiteMax : Livello
 	
 	dynamic controlled continuaTest : Boolean
 	dynamic controlled outMessage : Result
@@ -49,51 +47,62 @@ signature:
 	dynamic controlled currentDepth : Livello
 	dynamic controlled control : Control
 	dynamic controlled controlRightWrong : ControlRW
-	
+	dynamic controlled reset: ResetDom
+	dynamic controlled posG:PosizioneGiusta
   
 definitions:
 // DOMAIN DEFINITIONS
-	domain LivelloCert={+1 : +13} //13 non certificato 1..12 livello certificato
-	domain Livello={+1 : +12}
-	domain RealCeil={+1 : +30}
-	domain ChanceTimes={+0:+1}
+	//domain LivelloCert={+1 : +13} //13 non certificato 1..12 livello certificato
+	//domain Livello={+1 : +13}
+	//domain RealCeil={+1 : +30}
 
 
 
 
 // FUNCTION DEFINITIONS
-	 function ceil($numberR in RealCeil)= if ge(itor(realCeilToReal($numberR)),itor(realCeilToReal($numberR))) then realCeilToReal($numberR) else realCeilToReal($numberR)+1 endif
-	 function livToLivCert($numb in Livello)=$numb
+	 //function ceil($numberR in Livello)= if $numberR>=$numberR then $numberR else $numberR+1 endif
+	 //function livToLivCert($numb in Livello)=$numb
 	// function livCertToLiv($numb in LivelloCert)=$numb
-	 function intToLivello($numb in Integer)=$numb
-	 function realCeilToReal($numb in RealCeil)=$numb
-	 function realToRealCeil($numb in Integer)=$numb
+	 //function intToLivello($numb in Integer)=$numb
+	 //function realCeilToReal($numb in RealCeil)=$numb
+	 //function realToRealCeil($numb in Integer)=$numb
 	 	
 	 	
-	 function limitSuper=leftLimit>=1 and rightLimit>=1 and leftLimit<=12 and rightLimit<=12
+	// function limitSuper=leftLimit!=UNO and rightLimit>=1 and leftLimit<=12 and rightLimit<=12
 	   
 // RULE DEFINITIONS
 	rule r_generaRisp=
-		choose $x in PositionRight with true do
-    	if $x = FORWARD then posizioneGiusta:=AVANTI else posizioneGiusta:=INDIETRO endif
+		choose $x in PosizioneGiusta with true do
+    	if $x = AVANTIG then 
+    		par
+    			posizioneGiusta:=AVANTI 
+    			posG:=AVANTIG
+    		endpar
+    		else
+    		par
+    			posG:=INDIETROG
+    			posizioneGiusta:=INDIETRO 
+    		endpar
+    		endif
    
 	rule r_esci=
 		par
 			continuaTest:=false
-			livelloCertificato:=13
+			livelloCertificato:=CINQUE_NCERT
 			livelloTest:=currentDepth
 			outMessage:=FINE_NON_CERTIFICATA
+			sol:=STOP
 		endpar
 	
 
 		rule r_answerChange=
-
-							if (leftLimit-rightLimit)<=1 then
+							if leftLimit=TRE and rightLimit=DUE then
 								par
 									outMessage:=FINE_CERTIFICATA
 									currentDepth:=leftLimit
-									livelloCertificato:=livToLivCert(leftLimit)
+									livelloCertificato:=TRECERT
 									continuaTest:=false
+									posizioneGiusta:=ESCI
 								endpar
 							else
 								par
@@ -112,10 +121,10 @@ definitions:
 				if controlRightWrong=SETTAGGI_LEFT_OR_RIGHT then
 					par
 						//currentDepth:=floor(div(leftLimit+rightLimit,2))
-						if(leftLimit>rightLimit) then
-							currentDepth:=leftLimit-1 
+						if(leftLimit=TRE)then
+							currentDepth:=DUE
 						else
-							currentDepth:=leftLimit
+							currentDepth:=TRE
 						endif
 						controlRightWrong:=SETTAGGI_PROF_CURR
 					endpar
@@ -135,12 +144,13 @@ definitions:
 			else 
 				if controlRightWrong=SETTAGGI_LEFT_OR_RIGHT then
 					par
-						//currentDepth:=floor(div(leftLimit+rightLimit,2))
-						if(leftLimit>rightLimit) then
-							currentDepth:=rightLimit+1 
+						//currentDepth:=ceil(rtoi(div(leftLimit+rightLimit,2)))
+						if(rightLimit=TRE)then
+							currentDepth:=DUE
 						else
-							currentDepth:=leftLimit
+							currentDepth:=TRE
 						endif
+						
 						controlRightWrong:=SETTAGGI_PROF_CURR
 					endpar
 				else 
@@ -154,14 +164,14 @@ definitions:
 
 	rule r_controlloRisposta($a in Soluzione)=
 		if control=CONTROLLO_RISPOSTA then
-			if ($a = SBAGLIATA and chance>0 and currentDepth=maxDepth) then
+			if ($a = SBAGLIATA and chance=UNA and currentDepth=maxDepth) then
 				par
-					chance:=chance-1
+					chance:=NESSUNA
 					control:=GENERA_NUOVA_RISPOSTA
 					sol:=GIUSTA
 				endpar
 			else 
-				if ($a = SBAGLIATA and chance=0 and currentDepth=maxDepth) or ($a=STOP) then
+				if ($a = SBAGLIATA and chance=NESSUNA and currentDepth=maxDepth) or ($a=STOP) then
 					par
 						outMessage:=FINE_NON_CERTIFICATA
 						continuaTest:=false
@@ -212,23 +222,23 @@ definitions:
 					if $s then
 						par
 							continuaTest:=true
-							if livelloTest!=12 then
-								livelloTest:=12
+							if livelloTest!=QUATTRO then
+								livelloTest:=QUATTRO
 							endif
-							if livelloCertificato!=13 then
-								livelloCertificato:=13
+							if livelloCertificato!=CINQUE_NCERT then
+								livelloCertificato:=CINQUE_NCERT
 							endif
-							if chance!=1 then
-								chance:=1
+							if chance!=UNA then
+								chance:=UNA
 							endif
 							if sol!=GIUSTA then
 								sol:=GIUSTA
 							endif
-							if currentDepth!=12 then
-								currentDepth:=12
+							if currentDepth!=QUATTRO then
+								currentDepth:=QUATTRO
 							endif
-							if maxDepth!=12 then
-								maxDepth:=12
+							if maxDepth!=QUATTRO then
+								maxDepth:=QUATTRO
 							endif
 							if control!=RICHIESTA_POSIZIONE then
 								control:=RICHIESTA_POSIZIONE
@@ -237,13 +247,16 @@ definitions:
 								controlRightWrong:=INIZIO_RW
 							endif
 							if posizioneGiusta!=INDIETRO then
-								posizioneGiusta:=INDIETRO
+								par
+									posizioneGiusta:=INDIETRO
+									posG:=INDIETROG
+								endpar
 							endif
-							if rightLimit!=1 then
-								rightLimit:=1
+							if rightLimit!=UNO then
+								rightLimit:=UNO
 							endif
-							if leftLimit!=12 then
-								leftLimit:=12
+							if leftLimit!=QUATTRO then
+								leftLimit:=QUATTRO
 							endif
 							outMessage:=CONTINUA
 						endpar
@@ -260,30 +273,51 @@ CTLSPEC ef(outMessage=FINE_CERTIFICATA)
 //in ogni caso FINE_NON_CERTIFICATA O FINE_CERTIFICATA implica che ci sarà continuaTest=false
 CTLSPEC ag(outMessage=FINE_NON_CERTIFICATA or outMessage=FINE_CERTIFICATA implies continuaTest=false)
 //per ogni caso in cui sol è SBAGLIATA e chance=0 e currentDepth=maxDepth avremo che nel futuro ci sarà outMessage=FINE_NON_CERTIFICATA
-CTLSPEC af(sol=SBAGLIATA and chance=0 and currentDepth=maxDepth implies af(outMessage=FINE_NON_CERTIFICATA))
-//in nessuno stato deve esserci un valore di leftLimit e rightLimit esterno a 1 e 12
-CTLSPEC ag(not limitSuper)
+CTLSPEC af(sol=SBAGLIATA and chance=NESSUNA and currentDepth=maxDepth implies ax(outMessage=FINE_NON_CERTIFICATA))
+//non è vero che ogni caso in cui controlRightWrong sia iniziato fin quando diventa SETTAGGI_LEFT_OR_RIGHT  --> falsa
+CTLSPEC not a(controlRightWrong=INIZIO_RW,controlRightWrong=SETTAGGI_LEFT_OR_RIGHT)
+//è vero che ogni caso in cui controlRightWrong sia iniziato fin quando diventa SETTAGGI_LEFT_OR_RIGHT  --> falsa
+CTLSPEC a(controlRightWrong=INIZIO_RW,controlRightWrong=SETTAGGI_LEFT_OR_RIGHT)
+//in ogni stato deve esserci una soluzione sbagliata, giusta o stop
+CTLSPEC ag(sol=SBAGLIATA or sol=GIUSTA or sol=STOP)
+//in ogni caso in cui posizioneScelta non è uguale a posizioneGiusta che porti nello stato successivo a avere FINE_NON_CERTIFICATA e che in ogni futuro di quello stato continuaTest sia falso
+CTLSPEC af(posizioneScelta!=posizioneGiusta implies ax(outMessage=FINE_NON_CERTIFICATA and af(continuaTest=false)))
+
 
 // MAIN RULE
 	main rule r_Main =
 		if continuaTest then
+			if reset=RESET_MINMAX then
+					let ($max=limiteMax,$min=limiteMin) in 
+							par
+								leftLimit:=$max
+								rightLimit:=$min
+								reset:=STARTED
+							endpar
+					endlet
+			else
 					r_test[]	
+			endif
 		else
+			par
+				reset:=RESET_MINMAX
 				r_exit[]
+			endpar
 		endif
 		
 		
 // INITIAL STATE
 default init s0:
 	function continuaTest = true
-	function livelloTest=12
-	function livelloCertificato=13
-	function chance=1
+	function livelloTest=QUATTRO
+	function livelloCertificato=CINQUE_NCERT
+	function chance=UNA
 	function sol=GIUSTA
-	function currentDepth=12
-	function maxDepth=12
+	function currentDepth=limiteMax
+	function maxDepth=limiteMax
 	function control=RICHIESTA_POSIZIONE
 	function controlRightWrong=INIZIO_RW
 	function posizioneGiusta=INDIETRO
-	function rightLimit=1
-	function leftLimit=12
+	function rightLimit=limiteMin
+	function leftLimit=limiteMax
+	function posG=INDIETROG

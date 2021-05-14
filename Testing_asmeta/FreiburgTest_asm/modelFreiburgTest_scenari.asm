@@ -60,7 +60,7 @@ definitions:
 // RULE DEFINITIONS
 	 rule r_generaRisp=
 		//if posizioneGiusta=AVANTI then posizioneGiusta:=INDIETRO else posizioneGiusta:=AVANTI endif
-   			posizioneGiusta:=INDIETRO
+   			posizioneGiusta:=INDIETRO //semplificazione per rendere deterministico il valore della posizione giusta
    			
 	rule r_esci=
 		par

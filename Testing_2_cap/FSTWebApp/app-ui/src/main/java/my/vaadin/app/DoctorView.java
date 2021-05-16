@@ -1,22 +1,20 @@
 package my.vaadin.app;
 
+import java.sql.Connection;
 import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Optional;
 
-import org.jooq.DSLContext;
-import org.jooq.InsertValuesStep4;
-import org.jooq.Record1;
-import org.jooq.Record2;
-import org.jooq.Record4;
-import org.jooq.SelectConditionStep;
 import org.jooq.types.UInteger;
+import org.json.JSONException;
 import org.json.JSONObject;
-import org.vaadin.ui.NumberField;
 
 import com.vaadin.navigator.View;
 import com.vaadin.server.Page;
@@ -40,12 +38,9 @@ import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.renderers.ButtonRenderer;
 
-import static se4med.jooq.tables.Doctorapp.DOCTORAPP;
-import static se4med.jooq.tables.Patientdoc.PATIENTDOC;
-import static se4med.jooq.tables.ResultNotRegistered.RESULT_NOT_REGISTERED;
+
 import unibg.se4med.FSTdatabase;
 import my.vaadin.app.Person;
-import se4med.jooq.tables.records.PatientdocRecord;
 import se4med.json.FreiburgTestJson;
 
   
@@ -60,9 +55,12 @@ import se4med.json.FreiburgTestJson;
 
     protected VerticalLayout layout = new VerticalLayout();
   	
-	public DoctorView(){
-		  DSLContext database=FSTdatabase.getDB();
+    
+    
+	public DoctorView() throws SQLException{
 		  
+		  Connection connection = FSTdatabase.getConn();
+		 
 		  layout.addComponent(new  Label("<h1><b>Benvenuto dottor "+FSTdatabase.nomeUtente+"</b></h1>",ContentMode.HTML));
 		  TabSheet tabsheet = new TabSheet();
 		  
@@ -80,28 +78,44 @@ import se4med.json.FreiburgTestJson;
 		       case "Visualizza pazienti": 
 		    	// Have some data 
 		 		  List<Person> people = new ArrayList<>();
-		 		   
-		 		   
-		 		  SelectConditionStep<Record4<String,String,Date,UInteger>> result=database.select(PATIENTDOC.NAME,PATIENTDOC.SURNAME,PATIENTDOC.DATEOFBIRTH,PATIENTDOC.ID).from(PATIENTDOC).where(PATIENTDOC.EMAILDOC.eq(FSTdatabase.email));
+				  
+				try { 
+					Statement stmt = connection.createStatement();
+					String query="SELECT patientdoc.name, patientdoc.surname, patientdoc.dateofbirth,patientdoc.id FROM patientdoc WHERE patientdoc.emaildoc=\""+FSTdatabase.email+"\" ";
+					ResultSet rs = stmt.executeQuery(query);
+				
+				
 		 		  boolean TestDone=false;
-		 		  for(Record4<String, String, Date, UInteger> r:result) {
-		    		       Person p=new Person((String)r.getValue(0),(String)r.getValue(1),(Date)r.getValue(2),(UInteger)r.getValue(3));
-		    		       SelectConditionStep<Record2<Timestamp,String>> risultatoPersona=database.select(RESULT_NOT_REGISTERED.DATEANDTIME,RESULT_NOT_REGISTERED.RESULT).from(RESULT_NOT_REGISTERED).where(RESULT_NOT_REGISTERED.IDUTENTE.eq(p.getId()).and(RESULT_NOT_REGISTERED.IDAPP.eq("Freiburg")));
-		    		       List<String> risultatiTest = new ArrayList<>();
-		    		       JSONObject Resultfreiburg=new JSONObject();
-		    		       TestDone=false;
-		    		       for(Record2<Timestamp, String> rResult:risultatoPersona) {
-			    		       Resultfreiburg=new JSONObject(rResult.getValue(1).toString());
-			    		       risultatiTest.add(((Timestamp)rResult.getValue(0)).toString() + " - Angolo: " + Resultfreiburg.getInt("angle") + "'' , M= " + Resultfreiburg.getInt("m") + "µm , "+Resultfreiburg.getString("status"));
-			    		       TestDone=true;
-			    	      }
-		    		       if(TestDone) {
-		    		    	   p=new Person((String)r.getValue(0),(String)r.getValue(1),(Date)r.getValue(2),(UInteger)r.getValue(3),risultatiTest);
-		    		       }else {
-		    		           p=new Person((String)r.getValue(0),(String)r.getValue(1),(Date)r.getValue(2),(UInteger)r.getValue(3));
-		    		       }
-		    		       people.add(p);
-		    	      }
+					while(rs.next()) {
+							       Person p=new Person(rs.getString(1),rs.getString(2),rs.getDate(3),rs.getInt(4));
+							       
+							       Statement stmtInterno=connection.createStatement();
+							       String timestampR="SELECT dateandtime,result FROM result_not_registered WHERE (idutente=\""+p.getId()+"\" AND idapp=\"Freiburg\")";
+							       ResultSet risultatoPersona=stmtInterno.executeQuery(timestampR);
+							       List<String> risultatiTest = new ArrayList<>();
+							       JSONObject Resultfreiburg=new JSONObject();
+							       TestDone=false;
+							       while(risultatoPersona.next()) {
+								       Resultfreiburg=new JSONObject(risultatoPersona.getString(2));
+								       risultatiTest.add((risultatoPersona.getTimestamp(1)).toString() + " - Angolo: " + Resultfreiburg.getInt("angle") + "'' , M= " + Resultfreiburg.getInt("m") + "µm , "+Resultfreiburg.getString("status"));
+								       TestDone=true;
+							      }
+							       risultatoPersona.close();
+							       stmtInterno.close();
+							       if(TestDone) {
+							    	   p.setResultTest(risultatiTest);
+							       }
+							       people.add(p);
+						      }
+					rs.close();
+				    stmt.close();
+				} catch (JSONException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 		    	   	 
 		    	   	  
 		    	   	  if(!people.isEmpty()) {
@@ -115,14 +129,14 @@ import se4med.json.FreiburgTestJson;
 		    	      // reorder the properties we use the 'setColumns' method.
 		    	      grid.setColumns("nome", "cognome", "dataNasc");
 		    	      grid.getColumn("nome").setCaption("Nome");
-		 	      grid.getColumn("cognome").setCaption("Cognome");
-		 	      grid.getColumn("dataNasc").setCaption("Data di nascita");
+		 	          grid.getColumn("cognome").setCaption("Cognome");
+		 	          grid.getColumn("dataNasc").setCaption("Data di nascita");
 		    	   	  
 		 			   grid.setSelectionMode(SelectionMode.SINGLE); // Render a button that deletes the data row (item) 
 		 			   VerticalLayout vlDatiVis=new VerticalLayout();
 		 			   grid.addColumn(person -> "Modifica", new  ButtonRenderer<Object>(clickEvent -> {
 		 				   vlDatiVis.removeAllComponents();
-		 				   UInteger idMod=((Person)clickEvent.getItem()).getId();
+		 				   Integer idMod=((Person)clickEvent.getItem()).getId();
 		 				   GridLayout lytDati=new GridLayout(2,6);
 		 				    Label title=new Label("<h5><b>Nuovi dati</b></h5>",ContentMode.HTML);
 		 				    lytDati.addComponent(title,0,0);
@@ -169,7 +183,19 @@ import se4med.json.FreiburgTestJson;
 				    					people.remove(((Person)clickEvent.getItem()));
 				    					Person p=new Person(txNome.getValue(), txCognome.getValue(), null, idMod);
 				    					people.add(p);
-				    					int ok=database.execute(database.update(PATIENTDOC).set(PATIENTDOC.NAME,txNome.getValue()).set(PATIENTDOC.SURNAME,txCognome.getValue()).set(PATIENTDOC.DATEOFBIRTH, (Date)null).where(PATIENTDOC.ID.eq(idMod))); 
+				    					Statement stmtUp = null;
+				    					int ok=0;
+				    					try {
+											stmtUp=connection.createStatement();
+											String update="UPDATE patientdoc SET patientdoc.name=\""+txNome.getValue()+"\", patientdoc.surname=\""+
+				    									txCognome.getValue()+"\", patientdoc.dateofbirth=null WHERE patientdoc.id="+idMod;
+										
+											ok = stmtUp.executeUpdate(update);
+											stmtUp.close();
+										} catch (SQLException e1) {
+											// TODO Auto-generated catch block
+											e1.printStackTrace();
+										}
 				    					if(ok>0) {
 					    					lytDati.removeAllComponents();
 					    					grid.setItems(people);
@@ -188,8 +214,18 @@ import se4med.json.FreiburgTestJson;
 				    					people.remove(((Person)clickEvent.getItem()));
 				    					Person p=new Person(txNome.getValue(), txCognome.getValue(), new Date(datasql.getTime()), idMod);
 				    					people.add(p);
-
-				    					database.execute(database.update(PATIENTDOC).set(PATIENTDOC.NAME,txNome.getValue()).set(PATIENTDOC.SURNAME,txCognome.getValue()).set(PATIENTDOC.DATEOFBIRTH, datasql).where(PATIENTDOC.ID.eq(idMod))); 
+				    					Statement stmtUp=null;
+				    					try {
+											stmtUp=connection.createStatement();
+										
+				    					String update="UPDATE patientdoc SET patientdoc.name=\""+txNome.getValue()+"\", patientdoc.surname=\""+
+				    									txCognome.getValue()+"\", patientdoc.dateofbirth="+datasql+" WHERE patientdoc.id="+idMod;
+				    					int ok=stmtUp.executeUpdate(update);
+				    					stmtUp.close();
+				    					} catch (SQLException e1) {
+											// TODO Auto-generated catch block
+											e1.printStackTrace();
+										}
 				    					lytDati.removeAllComponents();
 				    					grid.setItems(people);
 				    					grid.getDataProvider().refreshAll();
@@ -206,7 +242,14 @@ import se4med.json.FreiburgTestJson;
 		 			   }));
 		 			   grid.addColumn(person -> "Cancella", new  ButtonRenderer<Object>(clickEvent -> {
 		 				   people.remove(clickEvent.getItem());
-		 				   database.execute(database.delete(PATIENTDOC).where(PATIENTDOC.ID.eq(((Person)clickEvent.getItem()).getId())));
+		 				   try {
+							Statement stmtDel=connection.createStatement();
+		 			      
+		 			        stmtDel.executeUpdate("DELETE from patientdoc WHERE patientdoc.id="+((Person)clickEvent.getItem()).getId());
+						} catch (SQLException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
 		 				   grid.setItems(people);
 		 			   }));
 		 			   
@@ -214,7 +257,7 @@ import se4med.json.FreiburgTestJson;
 		 			   grid.addColumn(person -> "Test", new ButtonRenderer<Object>(clickEvent -> {
 		 				   layout.removeAllComponents();
 		 				   String patientName=((Person)clickEvent.getItem()).getNome()+" "+((Person)clickEvent.getItem()).getCognome();
-		 				   UInteger patientID=((Person)clickEvent.getItem()).getId();
+		 				   Integer patientID=((Person)clickEvent.getItem()).getId();
 		 				   VaadinSession.getCurrent().setAttribute("patientName", patientName);
 		 				   VaadinSession.getCurrent().setAttribute("patientID", patientID);
 		 				   getUI().getNavigator().addView(DoctorView.NAME, DoctorView.class);
@@ -279,7 +322,16 @@ import se4med.json.FreiburgTestJson;
 		    		btSalva.addClickListener(event -> {
 		    			if(txNome.getValue()!="" &&  txCognome.getValue()!="") {
 		    				if(cbOpzionalDate.getValue()) {
-		    					int ok=database.execute(database.insertInto(PATIENTDOC,PATIENTDOC.NAME,PATIENTDOC.SURNAME,PATIENTDOC.DATEOFBIRTH,PATIENTDOC.EMAILDOC).values(txNome.getValue(), txCognome.getValue(),null,FSTdatabase.email));
+		    					int ok=0;
+								try {
+									Statement stmtUp=connection.createStatement();
+									String update="INSERT INTO patientdoc (name,surname,dateofbirth,emaildoc) VALUES (\""+txNome.getValue()+"\", \""+
+													txCognome.getValue()+"\",null, \""+FSTdatabase.email+"\")";
+									ok = stmtUp.executeUpdate(update);
+									stmtUp.close();
+								} catch (SQLException e1) {
+									err.setValue("<h4><font color=#ff0000>Errore: inserimento non andato a buon fine. Già presente</font></h4>");
+								}
 		    					if(ok>0) {
 			    					dataNasc.setValue(LocalDate.now());
 			    					txNome.setValue("");
@@ -290,36 +342,48 @@ import se4med.json.FreiburgTestJson;
 			    						err.setValue("<h4><font color=#ff0000>Errore: inserimento non andato a buon fine</font></h4>");
 			    						lytDati.addComponent(err,1,4);
 			    				}
-		    				}else if(dataNasc.getValue().toString()!="") {
-		    				Date now=new Date(Calendar.getInstance().getTimeInMillis());
-		    				java.sql.Date datasql=FSTdatabase.getMilliseconds(dataNasc.getValue().getYear(), dataNasc.getValue().getMonthValue(), dataNasc.getValue().getDayOfMonth());
+		    					
+		    				}else 
+		    					if(!dataNasc.isEmpty()) {
+		    						Date now=new Date(Calendar.getInstance().getTimeInMillis());
+		    						java.sql.Date datasql=FSTdatabase.getMilliseconds(dataNasc.getValue().getYear(), dataNasc.getValue().getMonthValue(), dataNasc.getValue().getDayOfMonth());
 		    						    				
-		    				if(datasql.before(now)) {
-		    							    					
-		    					InsertValuesStep4<PatientdocRecord, String, String, Date, String> insert=database.insertInto(PATIENTDOC,PATIENTDOC.NAME,PATIENTDOC.SURNAME,PATIENTDOC.DATEOFBIRTH,PATIENTDOC.EMAILDOC).values(txNome.getValue(), txCognome.getValue(),datasql,FSTdatabase.email );
-		    					int ok=insert.execute();
-		    					if(ok>0) {
-		    					dataNasc.setValue(LocalDate.now());
-		    					txNome.setValue("");
-		    					txCognome.setValue("");
-		    					tabsheet.setSelectedTab(0);
-		    					}else {
-		    						lytDati.removeComponent(err);
-		    						err.setValue("<h4><font color=#ff0000>Errore: inserimento non andato a buon fine</font></h4>");
-		    						lytDati.addComponent(err,1,4);
+		    						if(datasql.before(now)) {
+		    							int ok=0;
 		    						
-		    					}
-		    				}else {
-		    					lytDati.removeComponent(err);
-		    				err.setValue("<h4><font color=#ff0000>Errore: data di nascita non corretta</font></h4>");
-    						lytDati.addComponent(err,1,4);
-		    				}
+		    						try {
+		    							 Statement stmtIns=connection.createStatement();
+		    							 String update="INSERT INTO patientdoc (name,surname,dateofbirth,emaildoc) VALUES (\""+txNome.getValue()+"\", \""+
+													txCognome.getValue()+"\",\""+datasql+"\", \""+FSTdatabase.email+"\")";
+		    							 ok=stmtIns.executeUpdate(update);
+		    							 stmtIns.close();
+		    						} catch (SQLException e1) {
+		    							// TODO Auto-generated catch block
+		    							e1.printStackTrace();
+		    						}
+		    						if(ok>0) {
+		    								dataNasc.setValue(LocalDate.now());
+		    								txNome.setValue("");
+		    								txCognome.setValue("");
+		    								tabsheet.setSelectedTab(0);
+		    						}else {
+		    								lytDati.removeComponent(err);
+		    								err.setValue("<h4><font color=#ff0000>Errore: inserimento non andato a buon fine</font></h4>");
+		    								lytDati.addComponent(err,1,4);
+		    						}
+		    					
+		    						}else {
+		    							lytDati.removeComponent(err);
+		    							err.setValue("<h4><font color=#ff0000>Errore: data di nascita non corretta</font></h4>");
+		    							lytDati.addComponent(err,1,4);
+		    						}
     					
-		    				}else {
-    						lytDati.removeComponent(err);
-		    				err.setValue("<h4><font color=#ff0000>Errore: Spuntare la casella di data nulla</font></h4>");
-    						lytDati.addComponent(err,1,4);
-		    				}
+		    					}
+		    					else {
+		    						lytDati.removeComponent(err);
+		    						err.setValue("<h4><font color=#ff0000>Errore: Spuntare la casella di data nulla</font></h4>");
+		    						lytDati.addComponent(err,1,4);
+		    					}
 		    			}else {
 		    				lytDati.removeComponent(err);
 		    				err.setValue("<h4><font color=#ff0000>Errore: Nome e/o cognome non inseriti</font></h4>");
@@ -382,13 +446,19 @@ import se4med.json.FreiburgTestJson;
 		    		cp2.setPosition(200, 200);
 		    		lytDatitest.addComponent(cp1,0,9);
 		    		lytDatitest.addComponent(cp2,1,9);
-		    		SelectConditionStep<Record1<Integer>> contatore=database.selectCount().from(DOCTORAPP).where(DOCTORAPP.EMAILDOCTOR.eq(FSTdatabase.email).and(DOCTORAPP.IDAPP.eq("Freiburg")));
-		    		for(Record1<Integer> c : contatore) {
-		    		if((int)c.getValue(0)>0) {
-		    			SelectConditionStep<Record1<String>> selezionesettaggi=database.select(DOCTORAPP.SETTINGS).from(DOCTORAPP).where(DOCTORAPP.EMAILDOCTOR.eq(FSTdatabase.email).and(DOCTORAPP.IDAPP.eq("Freiburg")));
+		    		try {
+		    		Statement stmtCont=connection.createStatement();
+		    		String query="SELECT COUNT(*) FROM doctorapp WHERE (doctorapp.emaildoctor=\""+FSTdatabase.email+"\" AND doctorapp.idapp=\"Freiburg\")";
+			 		ResultSet rsCont= stmtCont.executeQuery(query);
+		    		while(rsCont.next()) {
+		    		if(rsCont.getInt(1)>0) {
+		    			Statement stmtSett=connection.createStatement();
+		    			String querySelSett="SELECT doctorapp.settings FROM doctorapp WHERE (doctorapp.emaildoctor=\""+FSTdatabase.email+"\" AND doctorapp.idapp=\"Freiburg\")";
+		    			ResultSet rsSetting=stmtSett.executeQuery(querySelSett);
+		    			//database.select(DOCTORAPP.SETTINGS).from(DOCTORAPP).where(DOCTORAPP.EMAILDOCTOR.eq(FSTdatabase.email).and(DOCTORAPP.IDAPP.eq("Freiburg")));
 		    			JSONObject jsonobj = null;
-		    			for(Record1<String> r:selezionesettaggi) {
-		    				jsonobj=new JSONObject((String)(r.getValue(0)));
+		    			while(rsSetting.next()) {
+		    				jsonobj=new JSONObject(rsSetting.getString(1));
 		    			}
 		    			nfMonitorSize.setValue(String.valueOf(jsonobj.get((FreiburgTestJson.monitorsize))));
 		    			nfDistanzaSchermo.setValue(String.valueOf(((int)jsonobj.get(FreiburgTestJson.distscreen))));
@@ -405,9 +475,16 @@ import se4med.json.FreiburgTestJson;
 		    			String[] cdivide2=colorc2.split("-");
 		    			int r2=Integer.parseInt(cdivide2[0]),g2=Integer.parseInt(cdivide2[1]),b2=Integer.parseInt(cdivide2[2]);
 		    			cp2.setValue(new Color(r2, g2, b2));
+		    			rsSetting.close();
+		    			stmtSett.close();
 		    		}
 		    		}
-		    		
+		    		rsCont.close();
+		    		stmtCont.close();
+		    		}catch(SQLException e1) {
+		    			// TODO Auto-generated catch block
+						e1.printStackTrace();
+		    		}
 		    		Button btSalvaDatiTest = new Button("Salva");
 		    		lytDatitest.addComponent(btSalvaDatiTest,1,10);
 		    		lytDatitest.setComponentAlignment(btSalvaDatiTest, Alignment.BOTTOM_CENTER);
@@ -437,14 +514,27 @@ import se4med.json.FreiburgTestJson;
 		    					                                  .put(FreiburgTestJson.monitorsize, d)
 		    					                                  .put(FreiburgTestJson.colorleft, cp1.getValue().getRed()+"-"+cp1.getValue().getGreen()+"-"+cp1.getValue().getBlue())
 		    					                                  .put(FreiburgTestJson.colorright, cp2.getValue().getRed()+"-"+cp2.getValue().getGreen()+"-"+cp2.getValue().getBlue()).toString();
-		    				SelectConditionStep<Record1<Integer>> contatore2=database.selectCount().from(DOCTORAPP).where(DOCTORAPP.EMAILDOCTOR.eq(FSTdatabase.email).and(DOCTORAPP.IDAPP.eq("Freiburg")));
-		    				for(Record1<Integer> r : contatore2) {
-		    					if((int)r.getValue(0)>0) {
-		    						database.execute(database.update(DOCTORAPP).set(DOCTORAPP.SETTINGS,freiburgSettings).where(DOCTORAPP.EMAILDOCTOR.eq(FSTdatabase.email).and(DOCTORAPP.IDAPP.eq("Freiburg"))));
-		    					}else {
-		    						database.execute(database.insertInto(DOCTORAPP,DOCTORAPP.EMAILDOCTOR,DOCTORAPP.IDAPP,DOCTORAPP.SETTINGS).values(FSTdatabase.email,"Freiburg",freiburgSettings));
-		    					}
-		    				}
+		    					try {
+									Statement stmtCont=connection.createStatement();
+									String queryC="SELECT COUNT(*) FROM doctorapp WHERE (doctorapp.emaildoctor=\""+FSTdatabase.email+"\" AND doctorapp.idapp=\"Freiburg\")";
+									ResultSet rsCont2= stmtCont.executeQuery(queryC);
+									while(rsCont2.next()) {
+										Statement stmtUpInsSett=connection.createStatement();
+										String queryUpIns;
+										if(rsCont2.getInt(1)>0) {
+											queryUpIns="UPDATE doctorapp SET doctorapp.settings=\""+freiburgSettings.replaceAll("\"", "\'")+"\" WHERE (doctorapp.emaildoctor=\""+FSTdatabase.email+"\" AND doctorapp.idapp=\"Freiburg\")";
+										}else {
+											queryUpIns="INSERT INTO doctorapp (emaildoctor,idapp,settings) VALUES (\""+FSTdatabase.email+"\",\"Freiburg\",\""+freiburgSettings.replaceAll("\"", "\'")+"\")";
+										}
+										stmtUpInsSett.executeUpdate(queryUpIns);
+										stmtUpInsSett.close();
+									}
+									rsCont2.close();
+									stmtCont.close();
+								} catch (SQLException e1) {
+									// TODO Auto-generated catch block
+									e1.printStackTrace();
+								}
 		    				}else {
 		    					nfWBarMin.setCaption("<h4><font color=#ff0000>Errore: il valore non può essere maggiore della distanza massima</font></h4>");
 		    				}
@@ -472,25 +562,33 @@ import se4med.json.FreiburgTestJson;
 		  // Have some data 
 		  List<Person> people = new ArrayList<>();
 		   
-		   
-		  SelectConditionStep<Record4<String, String, Date, UInteger>> result=database.select(PATIENTDOC.NAME,PATIENTDOC.SURNAME,PATIENTDOC.DATEOFBIRTH,PATIENTDOC.ID).from(PATIENTDOC).where(PATIENTDOC.EMAILDOC.eq(FSTdatabase.email));
+		  Statement stmt=connection.createStatement();
+  		  String query="SELECT name,surname,dateofbirth,id FROM patientdoc WHERE emaildoc=\""+FSTdatabase.email+"\"";
+	 	  ResultSet rs= stmt.executeQuery(query);
 		  boolean TestDone=false;
- 		  for(Record4<String, String, Date, UInteger> r:result) {
-    		       Person p=new Person((String)r.getValue(0),(String)r.getValue(1),(Date)r.getValue(2),(UInteger)r.getValue(3));
-    		       SelectConditionStep<Record2<Timestamp,String>> risultatoPersona=database.select(RESULT_NOT_REGISTERED.DATEANDTIME,RESULT_NOT_REGISTERED.RESULT).from(RESULT_NOT_REGISTERED).where(RESULT_NOT_REGISTERED.IDUTENTE.eq(p.getId()).and(RESULT_NOT_REGISTERED.IDAPP.eq("Freiburg")));
+ 		  while(rs.next()) {
+    		       Person p=new Person(rs.getString(1),rs.getString(2),rs.getDate(3),rs.getInt(4));
+    		       Statement stmtNR=connection.createStatement();
+    		  	   query="SELECT dateandtime,result FROM result_not_registered WHERE (idutente="+p.getId()+" AND idapp=\"Freiburg\")";
+    			   ResultSet rsRisPersona= stmtNR.executeQuery(query);
     		       List<String> risultatiTest = new ArrayList<>();
     		       JSONObject Resultfreiburg=new JSONObject();
     		       TestDone=false;
-    		       for(Record2<Timestamp, String> rResult:risultatoPersona) {
-	    		       Resultfreiburg=new JSONObject(rResult.getValue(1).toString());
-	    		       risultatiTest.add(((Timestamp)rResult.getValue(0)).toString() + " - Angolo: " + Resultfreiburg.getInt("angle") + "'' , M= " + Resultfreiburg.getInt("m") + "µm , "+Resultfreiburg.getString("status"));
+    		       while(rsRisPersona.next()) {
+	    		       Resultfreiburg=new JSONObject(rsRisPersona.getString(2));
+	    		       risultatiTest.add((rsRisPersona.getTimestamp(1)).toString() + " - Angolo: " + Resultfreiburg.getInt("angle") + "'' , M= " + Resultfreiburg.getInt("m") + "µm , "+Resultfreiburg.getString("status"));
 	    		       TestDone=true;
-	    	      }
+	    	       }
+    		       rsRisPersona.close();
+    		       stmtNR.close();
     		       if(TestDone) {
-    		    	   p=new Person((String)r.getValue(0),(String)r.getValue(1),(Date)r.getValue(2),(UInteger)r.getValue(3),risultatiTest);
+    		    	   p.setResultTest(risultatiTest);
     		       }
     		       people.add(p);
+    		       
     	      }
+ 		  rs.close();
+ 		  stmt.close();
    	   	  if(!people.isEmpty()) {
    	   	  // Create a grid bound to the list 
    	   	  Grid<Person> grid = new Grid<>(Person.class);
@@ -509,7 +607,7 @@ import se4med.json.FreiburgTestJson;
 			   VerticalLayout vlDatiVis=new VerticalLayout();
 			   grid.addColumn(person -> "Modifica", new  ButtonRenderer<Object>(clickEvent -> {
 				   vlDatiVis.removeAllComponents();
-				   UInteger idMod=((Person)clickEvent.getItem()).getId();
+				   Integer idMod=((Person)clickEvent.getItem()).getId();
 				   GridLayout lytDati=new GridLayout(2,6);
 				    Label title=new Label("<h5><b>Nuovi dati</b></h5>",ContentMode.HTML);
 				    lytDati.addComponent(title,0,0);
@@ -556,7 +654,17 @@ import se4med.json.FreiburgTestJson;
 		    					people.remove(((Person)clickEvent.getItem()));
 		    					Person p=new Person(txNome.getValue(), txCognome.getValue(), null, idMod);
 		    					people.add(p);
-		    					int ok=database.execute(database.update(PATIENTDOC).set(PATIENTDOC.NAME,txNome.getValue()).set(PATIENTDOC.SURNAME,txCognome.getValue()).set(PATIENTDOC.DATEOFBIRTH, (Date)null).where(PATIENTDOC.ID.eq(idMod))); 
+		    					int ok=0;
+								try {
+									Statement stmtUp=connection.createStatement();
+									String queryUp="UPDATE patientdoc SET patientdoc.name=\""+txNome.getValue()+"\", patientdoc.surname=\""+
+											txCognome.getValue()+"\", patientdoc.dateofbirth=null WHERE patientdoc.id="+idMod;
+									ok = stmtUp.executeUpdate(queryUp);
+									stmtUp.close();
+								} catch (SQLException e1) {
+									// TODO Auto-generated catch block
+									e1.printStackTrace();
+								}
 		    					if(ok>0) {
 			    					lytDati.removeAllComponents();
 			    					grid.setItems(people);
@@ -575,8 +683,16 @@ import se4med.json.FreiburgTestJson;
 		    					people.remove(((Person)clickEvent.getItem()));
 		    					Person p=new Person(txNome.getValue(), txCognome.getValue(), new Date(datasql.getTime()), idMod);
 		    					people.add(p);
-
-		    					database.execute(database.update(PATIENTDOC).set(PATIENTDOC.NAME,txNome.getValue()).set(PATIENTDOC.SURNAME,txCognome.getValue()).set(PATIENTDOC.DATEOFBIRTH, datasql).where(PATIENTDOC.ID.eq(idMod))); 
+		    					try {
+									Statement stmtUp=connection.createStatement();
+									String queryUp="UPDATE patientdoc SET patientdoc.name=\""+txNome.getValue()+"\", patientdoc.surname=\""+
+											txCognome.getValue()+"\", patientdoc.dateofbirth=\""+datasql+"\" WHERE patientdoc.id="+idMod;
+									int ok=stmtUp.executeUpdate(queryUp);
+									stmtUp.close();
+								} catch (SQLException e1) {
+									// TODO Auto-generated catch block
+									e1.printStackTrace();
+								}
 		    					lytDati.removeAllComponents();
 		    					grid.setItems(people);
 		    					grid.getDataProvider().refreshAll();
@@ -591,8 +707,17 @@ import se4med.json.FreiburgTestJson;
 		    		vlDatiVis.addComponent(lytDati);
 			   }));
 			   grid.addColumn(person -> "Cancella", new  ButtonRenderer<Object>(clickEvent -> {
-				   people.remove(clickEvent.getItem());
-				   database.execute(database.delete(PATIENTDOC).where(PATIENTDOC.ID.eq(((Person)clickEvent.getItem()).getId())));
+			       try {   
+			    	   Statement stmtDel = connection.createStatement();
+        			   String sql = "DELETE FROM patientdoc WHERE patientdoc.id="+((Person)clickEvent.getItem()).getId();
+        			   stmtDel.executeUpdate(sql);
+        			   stmtDel.close();
+			    	   people.remove(clickEvent.getItem());
+			       	} catch (SQLException e1) {
+			       		// TODO Auto-generated catch block
+			       		e1.printStackTrace();
+			       	}
+			       
 				   grid.setItems(people);
 			   }));
 			   
@@ -600,7 +725,7 @@ import se4med.json.FreiburgTestJson;
 			   grid.addColumn(person -> "Test", new ButtonRenderer<Object>(clickEvent -> {
 				   layout.removeAllComponents();
 				   String patientName=((Person)clickEvent.getItem()).getNome()+" "+((Person)clickEvent.getItem()).getCognome();
-				   UInteger patientID=((Person)clickEvent.getItem()).getId();
+				   Integer patientID=((Person)clickEvent.getItem()).getId();
 				   VaadinSession.getCurrent().setAttribute("patientName", patientName);
  				   VaadinSession.getCurrent().setAttribute("patientID", patientID);
 				   getUI().getNavigator().addView(DoctorView.NAME, DoctorView.class);
@@ -650,7 +775,8 @@ import se4med.json.FreiburgTestJson;
 			logoutButton.addClickListener(loginButtonlistener);
 			layout.addComponent(logoutButton);
 		  addComponent(layout);
-		  
+		
       }
+	
 	
 }

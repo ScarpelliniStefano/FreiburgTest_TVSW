@@ -7,22 +7,20 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import org.jooq.types.UInteger;
-
 import com.vaadin.ui.TextField;
 
 public class Person implements Cloneable {
-    private UInteger id;
+    private Integer id;
     private String Nome;
     private String Cognome;
     private Date dataNasc;
     private List<String> resultTest=new ArrayList<>();
 
-    public UInteger getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(UInteger id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -74,7 +72,7 @@ public class Person implements Cloneable {
         return id == other.id;
     }
 
-   public Person(String nome, String cognome, Date birthDate,UInteger id) {
+   public Person(String nome, String cognome, Date birthDate,Integer id) {
         super();
         this.id = id;
         this.Nome = nome;
@@ -82,7 +80,7 @@ public class Person implements Cloneable {
         this.dataNasc = birthDate;
         this.resultTest.add("Test non effettuato");
     }
-   public Person(String nome, String cognome, Date birthDate,UInteger id,List<String> risultato) {
+   public Person(String nome, String cognome, Date birthDate,Integer id,List<String> risultato) {
        super();
        this.id = id;
        this.Nome = nome;

@@ -126,15 +126,17 @@ public class FSTest extends Observable {
 		
 	}
 	
+	private static void changePos() {
+		risultato.setPos(new Random().nextBoolean());
+	}
 	
 	public static InputStream settaNuovaImg() {
 		
 		assert testSession.getStatoCorrente().currentResult == Test_session.Result.CONTINUA;
 		BufferedImage image = null;
 		
-		risultato.setPos(new Random().nextBoolean());
+		changePos();
 		image=GeneraImg.modificaM(risultato.getXBar(), risultato);
-		//risultato.setAngolo(AngleCalculus.calcolaAngolo(risultato));
 						
 		if(image!=null)	{
 		//prova di inserimento immagine nello stream
@@ -150,6 +152,7 @@ public class FSTest extends Observable {
 			}else return null;
 		
 	}
+	
 	
 	
 	

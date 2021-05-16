@@ -1,11 +1,11 @@
 package my.vaadin.app;
 
-import static se4med.jooq.tables.User.USER;
-import static se4med.jooq.tables.Doctor.DOCTOR;
 
-import org.jooq.DSLContext;
-import org.jooq.Record4;
-import org.jooq.SelectConditionStep;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
+
+
 
 import com.vaadin.navigator.*;
 import com.vaadin.server.Page;
@@ -19,6 +19,7 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickListener;
 
+import unibg.FSTAIMO.FSTdatabaseAIMO;
 import unibg.se4med.FSTdatabase;
 import unibg.se4med.HashFunction;
 
@@ -33,6 +34,8 @@ protected TextField user = null;
 protected PasswordField password = null;
 
 protected VerticalLayout viewLayout = new VerticalLayout();
+
+
 public LoginView(){
 	Button loginButton = null;
 
@@ -75,22 +78,27 @@ public LoginView(){
 		boolean isDoctor = false;
 		try {
 			FSTdatabase.IniziaConn();
-			DSLContext database = FSTdatabase.DatabaseOperator();
-
-			SelectConditionStep<Record4<String, String, Byte, String>> result = database.select(USER.NAME, USER.SURNAME,USER.ACTIVATED,USER.PASSWORD)
-					.from(USER).join(DOCTOR).on(USER.EMAIL.eq(DOCTOR.EMAIL)).where(USER.EMAIL.eq(username));
+			//FSTdatabaseAIMO.IniziaConn();
+			Connection connection = FSTdatabase.getConn();
+		    Statement statement = connection.createStatement();
 			
-			for (Record4<String, String, Byte, String> r : result) {
-				if(((String)r.getValue(3)).contentEquals(psw) && ((Byte)r.getValue(2)).intValue()==1) {
-					FSTdatabase.nomeUtente = r.getValue(1) + " " + r.getValue(0);
+			// Create and execute a SELECT SQL statement.
+            String selectSql = "SELECT name, surname, activated, password FROM user JOIN doctor ON (user.email=doctor.email) WHERE user.email=\'"+ username+"\'";
+            ResultSet rs = statement.executeQuery(selectSql);
+			
+			while ( rs.next()) {
+				if((rs.getString(4).contentEquals(psw)) && (rs.getInt(3)==1)) {
+					FSTdatabase.nomeUtente = rs.getString(2) + " " + rs.getString(1);
 					FSTdatabase.email = username;
 					isDoctor = true;
-				}else if(((Byte) r.getValue(2)).intValue()==0) {
+				}else if(rs.getInt(3)==0) {
 					strErr.setValue("<h4><font color=#ff0000>Errore: email non attiva</font></h4>");
 				}else{
 					strErr.setValue("<h4><font color=#ff0000>Errore: password non corretta</font></h4>");
 				}
 			}
+			rs.close();
+			statement.close();
 		} catch (Exception excp) {
 			excp.printStackTrace();
 		}

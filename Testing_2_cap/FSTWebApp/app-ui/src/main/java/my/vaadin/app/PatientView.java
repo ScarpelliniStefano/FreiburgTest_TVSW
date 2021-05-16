@@ -1,13 +1,14 @@
 package my.vaadin.app;
 
   import java.awt.List;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.Calendar;
 
-import org.jooq.DSLContext;
-import org.jooq.Record1;
-import org.jooq.SelectConditionStep;
-import org.jooq.types.UInteger;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.vaadin.navigator.View;
@@ -28,12 +29,9 @@ import com.vaadin.ui.Alignment;
 
   import libFSTest.test.DatiGenerazione;
   import libFSTest.test.FSTest.Scelta;
-import se4med.jooq.tables.records.PatientdocRecord;
 import se4med.json.FreiburgTestJson;
 import unibg.se4med.FSTdatabase;
-import static se4med.jooq.tables.ResultNotRegistered.RESULT_NOT_REGISTERED;
-import static se4med.jooq.tables.Doctorapp.DOCTORAPP;
-import static se4med.jooq.tables.Patientdoc.PATIENTDOC;
+
 
 
   
@@ -49,9 +47,10 @@ import static se4med.jooq.tables.Patientdoc.PATIENTDOC;
 	  private static DatiGenerazione result=new DatiGenerazione(); 
 	  private static StreamSource imgsource= null;
 	  protected VerticalLayout layout = new VerticalLayout();
-	  public PatientView() {
-		UInteger ID=(UInteger) VaadinSession.getCurrent().getAttribute("patientID");
-		DSLContext database=FSTdatabase.getDB(); 
+	  public PatientView() throws SQLException{
+		  Connection connection = FSTdatabase.getConn();
+		Integer ID=(Integer) VaadinSession.getCurrent().getAttribute("patientID");
+		
 		layout.addComponent(new Label("<h1><b>Test di Freiburg di "+VaadinSession.getCurrent().getAttribute("patientName").toString()+"</b></h1>",ContentMode.HTML));
 		  //settaggio layout button 
 		  final GridLayout layoutBTN=new GridLayout(2,1);
@@ -103,7 +102,16 @@ import static se4med.jooq.tables.Patientdoc.PATIENTDOC;
 			            										.toString(); 
 			            dt=new java.util.Date();
 			            currentTime = new Timestamp(dt.getTime());
-			            database.execute(database.insertInto(RESULT_NOT_REGISTERED,RESULT_NOT_REGISTERED.IDAPP,RESULT_NOT_REGISTERED.DATEANDTIME,RESULT_NOT_REGISTERED.RESULT,RESULT_NOT_REGISTERED.IDUTENTE).values("Freiburg",currentTime,Resultfreiburg,ID));
+			            try {
+							Statement stmtIns=connection.createStatement();
+							String update="INSERT INTO result_not_registered (idapp,dateandtime,result,idutente) VALUES (\"Freiburg\", \""+
+											currentTime+"\",\""+Resultfreiburg.replaceAll("\"", "\'")+"\", "+ID+")";
+							stmtIns.executeUpdate(update);
+							stmtIns.close();
+						} catch (SQLException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
 			            btGenera.setEnabled(true);
 			            lytTest.removeAllComponents();
 			            lytBtnTest.removeAllComponents(); 
@@ -121,7 +129,16 @@ import static se4med.jooq.tables.Patientdoc.PATIENTDOC;
 				            								 .toString();
 				            dt=new java.util.Date();
 				            currentTime = new Timestamp(dt.getTime());
-				            database.execute(database.insertInto(RESULT_NOT_REGISTERED,RESULT_NOT_REGISTERED.IDAPP,RESULT_NOT_REGISTERED.DATEANDTIME,RESULT_NOT_REGISTERED.RESULT,RESULT_NOT_REGISTERED.IDUTENTE).values("Freiburg",currentTime,Resultfreiburg,ID));
+				            try {
+								Statement stmtIns=connection.createStatement();
+								String update="INSERT INTO result_not_registered (idapp,dateandtime,result,idutente) VALUES (\"Freiburg\", \""+
+												currentTime+"\",\""+Resultfreiburg.replaceAll("\"", "\'")+"\", "+ID+")";
+								stmtIns.executeUpdate(update);
+								stmtIns.close();
+							} catch (SQLException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
 				            btGenera.setEnabled(true);
 				            lytTest.removeAllComponents();
 				            lytBtnTest.removeAllComponents();
@@ -142,7 +159,16 @@ import static se4med.jooq.tables.Patientdoc.PATIENTDOC;
     								 .toString();
 			        		 dt=new java.util.Date();
 			        		 currentTime = new Timestamp(dt.getTime());
-			        		 database.execute(database.insertInto(RESULT_NOT_REGISTERED,RESULT_NOT_REGISTERED.IDAPP,RESULT_NOT_REGISTERED.DATEANDTIME,RESULT_NOT_REGISTERED.RESULT,RESULT_NOT_REGISTERED.IDUTENTE).values("Freiburg",currentTime,Resultfreiburg,ID));
+			        		 try {
+									Statement stmtIns=connection.createStatement();
+									String update="INSERT INTO result_not_registered (idapp,dateandtime,result,idutente) VALUES (\"Freiburg\", \""+
+													currentTime+"\",\""+Resultfreiburg.replaceAll("\"", "\'")+"\", "+ID+")";
+									stmtIns.executeUpdate(update);
+									stmtIns.close();
+								} catch (SQLException e1) {
+									// TODO Auto-generated catch block
+									e1.printStackTrace();
+								}
 			        		 btGenera.setEnabled(true);
 			        		 lytTest.removeAllComponents();
 			        		 lytBtnTest.removeAllComponents();
@@ -158,60 +184,89 @@ import static se4med.jooq.tables.Patientdoc.PATIENTDOC;
 			  	
 		  //evento click btn Genera 
 		btGenera.addClickListener(e -> { 
-			  		DSLContext db=database;
-			  		SelectConditionStep<PatientdocRecord> risultato=db.selectFrom(PATIENTDOC).where(PATIENTDOC.ID.eq(ID));
-			  		int c=0;
-			  		while(c<1) {
-			  		for(PatientdocRecord r:risultato) {
-			  			if(!(String.valueOf(r.getValue(2)).isEmpty())||!(String.valueOf(r.getValue(2)).isEmpty())) {
-			  		        result.setNome(r.getValue(2) + " " + r.getValue(1)); 
-			  			}else {
-			  				result.setNome("unnamed patient"); 
-			  			}
-			  		try {
-			  		Calendar cdn = Calendar.getInstance();
-			  		cdn.setTime((java.util.Date)r.getValue(4));
-			  		result.setDataNasc(cdn); 
-			  		}catch(Exception excp) {
-			  			result.setDataNasc("01/01/0001"); 
-			  		}
-			  		}
-			  		c+=1;
-			  		}
-			  		
+			
+			         Statement stmtInterno;
+					int c;
+					try {
+						stmtInterno = connection.createStatement();
+						 String queryAllPatientDoc="SELECT * FROM patientdoc WHERE (id="+ID+")";
+						 ResultSet risultatoPersona=stmtInterno.executeQuery(queryAllPatientDoc);
+						
+						c = 0;
+						while(c<1) {
+						while(risultatoPersona.next()) {
+							if(!(risultatoPersona.getString(3).isEmpty())||!(risultatoPersona.getString(2).isEmpty())) {
+						        result.setNome(risultatoPersona.getString(3) + " " + risultatoPersona.getString(2)); 
+							}else {
+								result.setNome("unnamed patient"); 
+							}
+						try {
+						Calendar cdn = Calendar.getInstance();
+						cdn.setTime((java.util.Date)risultatoPersona.getDate(5));
+						result.setDataNasc(cdn); 
+						}catch(Exception excp) {
+							result.setDataNasc("01/01/0001"); 
+						}
+						}
+						c+=1;
+						}
+						risultatoPersona.close();
+						stmtInterno.close();
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 			  		
 			  		int w=UI.getCurrent().getPage().getBrowserWindowWidth(); 
 			  		int h=UI.getCurrent().getPage().getBrowserWindowHeight(); 
 			  		result.setDimensione(w,h);
-			  		SelectConditionStep<Record1<String>> selezionesettaggi=database.select(DOCTORAPP.SETTINGS).from(DOCTORAPP).where(DOCTORAPP.EMAILDOCTOR.eq(FSTdatabase.email).and(DOCTORAPP.IDAPP.eq("Freiburg")));
-			  		JSONObject jsonobj=new JSONObject();
-			  		c=0;
-			  		for(Record1<String> r:selezionesettaggi) {
-			  			jsonobj=new JSONObject(r.getValue(0).toString());
-			  			c++;
-			  		}
-			  		if(c==0) {
-			  			getUI().getNavigator().addView(DoctorView.NAME, DoctorView.class);
-			  			getUI().getNavigator().addView(PatientView.NAME, PatientView.class);
-			  			Page.getCurrent().setUriFragment("!"+DoctorView.NAME);
-			  		}else {
-			  		result.setDistSchermo((int) jsonobj.get(FreiburgTestJson.distscreen));
-			  		result.setHRect((int)jsonobj.get(FreiburgTestJson.hrect));
-			  		result.setWRect((int)jsonobj.get(FreiburgTestJson.wrect));
-			  		result.setHBar((int)jsonobj.get(FreiburgTestJson.hbar));
-			  		result.setXBar((int)jsonobj.get(FreiburgTestJson.xbarmax));
-			  		result.setLivMax((int)jsonobj.get(FreiburgTestJson.xbarmax));
-			  		result.setLivMin((int)jsonobj.get(FreiburgTestJson.xbarmin));
-			  		result.setMonitorSize((int)(Double.parseDouble((String) jsonobj.get(FreiburgTestJson.monitorsize))*10));
-			  		result.setPos(false);
-			  		String colorc1=(String) jsonobj.get(FreiburgTestJson.colorleft);
-	    			String[] cdivide1=colorc1.split("-");
-	    			int r1=Integer.parseInt(cdivide1[0]),g1=Integer.parseInt(cdivide1[1]),b1=Integer.parseInt(cdivide1[2]);
-	    			result.setC1(new java.awt.Color(r1, g1, b1));
-	    			String colorc2=(String) jsonobj.get(FreiburgTestJson.colorright);
-	    			String[] cdivide2=colorc2.split("-");
-	    			int r2=Integer.parseInt(cdivide2[0]),g2=Integer.parseInt(cdivide2[1]),b2=Integer.parseInt(cdivide2[2]);
-			  		result.setC2(new java.awt.Color(r2,g2,b2)); 
+			  		JSONObject jsonobj;
+			  		
+					try {
+						stmtInterno=connection.createStatement();
+						String querysettings="SELECT settings FROM doctorapp WHERE (emaildoctor=\""+FSTdatabase.email+"\" AND idapp=\"Freiburg\")";
+						 ResultSet rsSett=stmtInterno.executeQuery(querysettings);
+						
+						jsonobj = new JSONObject();
+						c=0;
+						while(rsSett.next()) {
+							jsonobj=new JSONObject(rsSett.getString(1));
+							c++;
+						}
+						rsSett.close();
+						stmtInterno.close();
+						if(c==0) {
+				  			getUI().getNavigator().addView(DoctorView.NAME, DoctorView.class);
+				  			getUI().getNavigator().addView(PatientView.NAME, PatientView.class);
+				  			Page.getCurrent().setUriFragment("!"+DoctorView.NAME);
+				  		}else {
+				  		result.setDistSchermo((int) jsonobj.get(FreiburgTestJson.distscreen));
+				  		result.setHRect((int)jsonobj.get(FreiburgTestJson.hrect));
+				  		result.setWRect((int)jsonobj.get(FreiburgTestJson.wrect));
+				  		result.setHBar((int)jsonobj.get(FreiburgTestJson.hbar));
+				  		result.setLivMax((int)jsonobj.get(FreiburgTestJson.xbarmax));
+				  		result.setLivMin((int)jsonobj.get(FreiburgTestJson.xbarmin));
+				  		result.setXBar((int)jsonobj.get(FreiburgTestJson.xbarmax));
+				  		result.setMonitorSize((int)(Double.parseDouble((String) jsonobj.get(FreiburgTestJson.monitorsize))*10));
+				  		result.setPos(false);
+				  		String colorc1=(String) jsonobj.get(FreiburgTestJson.colorleft);
+		    			String[] cdivide1=colorc1.split("-");
+		    			int r1=Integer.parseInt(cdivide1[0]),g1=Integer.parseInt(cdivide1[1]),b1=Integer.parseInt(cdivide1[2]);
+		    			result.setC1(new java.awt.Color(r1, g1, b1));
+		    			String colorc2=(String) jsonobj.get(FreiburgTestJson.colorright);
+		    			String[] cdivide2=colorc2.split("-");
+		    			int r2=Integer.parseInt(cdivide2[0]),g2=Integer.parseInt(cdivide2[1]),b2=Integer.parseInt(cdivide2[2]);
+				  		result.setC2(new java.awt.Color(r2,g2,b2)); 
+				  		}
+					} catch (JSONException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+			  		
+			  		
 			  		
 			  		//controllo veridicità della possibilità di generazione immagine dai dati inseriti
 			  		if(result.getHBar()>(result.getHRect()-10)||result.getXBar()>(result.getWRect()-10)) {
@@ -251,7 +306,7 @@ import static se4med.jooq.tables.Patientdoc.PATIENTDOC;
 			  			StreamResource resource=new StreamResource(imgsource,"test"+imgsource.toString()+".png");
 			  			lytTest.addComponent(new Image(null,resource));
 			  		}
-			  		}
+			  		
 		  
 		  });
 		  

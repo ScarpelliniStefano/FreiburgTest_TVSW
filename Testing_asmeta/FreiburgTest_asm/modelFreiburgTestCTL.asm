@@ -16,23 +16,21 @@ signature:
 	enum domain ChanceTimes={UNA, NESSUNA}
 	enum domain ResetDom={RESET_MINMAX,STARTED}
 
-	enum domain Livello={UNO, DUE, TRE, QUATTRO, CINQUE}
-	//domain RealCeil subsetof Integer
-	enum domain LivelloCert={TRECERT, CINQUE_NCERT}
-	//domain Livello subsetof Integer
+	enum domain Livello={UNO, DUE, TRE, QUATTRO, CINQUE, SEI, SETTE, OTTO, NOVE, DIECI, UNDICI, DODICI}
+	enum domain LivelloCert={UNO_C, DUE_C, TRE_C, QUATTRO_C, CINQUE_C, SEI_C, SETTE_C, OTTO_C, NOVE_C, DIECI_C, UNDICI_C, DODICI_C,TREDICI_NC}
 
 
 // FUNCTIONS
-	//static ceil : Livello -> Livello
-	//static livToLivCert:Livello->LivelloCert
-	
-	//derived limitSuper:Boolean
-	
 	
 	dynamic monitored posizioneScelta : Posizione
 	dynamic monitored rifai : Boolean	
 	monitored limiteMin : Livello
 	monitored limiteMax : Livello
+	
+	derived floor: Prod(Livello,Livello) -> Livello
+	derived ceil: Prod(Livello,Livello) -> Livello
+	derived distanzaUno: Prod(Livello,Livello) -> Boolean
+	derived livToCert: Livello -> LivelloCert
 	
 	dynamic controlled continuaTest : Boolean
 	dynamic controlled outMessage : Result
@@ -51,25 +49,477 @@ signature:
 	dynamic controlled posG:PosizioneGiusta
   
 definitions:
-// DOMAIN DEFINITIONS
-	//domain LivelloCert={+1 : +13} //13 non certificato 1..12 livello certificato
-	//domain Livello={+1 : +13}
-	//domain RealCeil={+1 : +30}
-
-
-
-
-// FUNCTION DEFINITIONS
-	 //function ceil($numberR in Livello)= if $numberR>=$numberR then $numberR else $numberR+1 endif
-	 //function livToLivCert($numb in Livello)=$numb
-	// function livCertToLiv($numb in LivelloCert)=$numb
-	 //function intToLivello($numb in Integer)=$numb
-	 //function realCeilToReal($numb in RealCeil)=$numb
-	 //function realToRealCeil($numb in Integer)=$numb
-	 	
-	 	
-	// function limitSuper=leftLimit!=UNO and rightLimit>=1 and leftLimit<=12 and rightLimit<=12
 	   
+	   
+	   
+	function floor($r in Livello, $l in Livello)=
+		switch($l)
+		case UNO:
+			switch($r)
+			case UNO : UNO
+			case DUE : UNO
+			case TRE : DUE 
+			case QUATTRO : DUE 
+			case CINQUE : TRE 
+			case SEI : TRE 
+			case SETTE : QUATTRO 
+			case OTTO : QUATTRO 
+			case NOVE : CINQUE 
+			case DIECI : CINQUE 
+			case UNDICI : SEI 
+			case DODICI : SEI 
+			endswitch
+		case DUE:
+			switch($r)
+			case UNO : UNO
+			case DUE : DUE
+			case TRE : DUE 
+			case QUATTRO : TRE 
+			case CINQUE : TRE 
+			case SEI : QUATTRO 
+			case SETTE : QUATTRO 
+			case OTTO : CINQUE 
+			case NOVE : CINQUE 
+			case DIECI : SEI 
+			case UNDICI : SEI 
+			case DODICI : SETTE
+			endswitch
+		case TRE:
+			switch($r)
+			case UNO : DUE
+			case DUE : DUE
+			case TRE : TRE 
+			case QUATTRO : TRE 
+			case CINQUE : QUATTRO
+			case SEI : QUATTRO 
+			case SETTE : CINQUE 
+			case OTTO : CINQUE 
+			case NOVE : SEI 
+			case DIECI : SEI 
+			case UNDICI : SETTE 
+			case DODICI : SETTE
+			endswitch
+		case QUATTRO:
+			switch($r)
+			case UNO : DUE
+			case DUE : TRE
+			case TRE : TRE 
+			case QUATTRO : QUATTRO 
+			case CINQUE : QUATTRO 
+			case SEI : CINQUE 
+			case SETTE : CINQUE 
+			case OTTO : SEI 
+			case NOVE : SEI 
+			case DIECI : SETTE 
+			case UNDICI : SETTE 
+			case DODICI : OTTO 
+			endswitch
+		case CINQUE:
+			switch($r)
+			case UNO : TRE
+			case DUE : TRE
+			case TRE : QUATTRO 
+			case QUATTRO : QUATTRO 
+			case CINQUE : CINQUE 
+			case SEI : CINQUE 
+			case SETTE : SEI 
+			case OTTO : SEI 
+			case NOVE : SETTE 
+			case DIECI : SETTE 
+			case UNDICI : OTTO 
+			case DODICI : OTTO 
+			endswitch
+		case SEI:
+			switch($r)
+			case UNO : TRE
+			case DUE : QUATTRO
+			case TRE : QUATTRO 
+			case QUATTRO : CINQUE
+			case CINQUE : CINQUE 
+			case SEI : SEI 
+			case SETTE : SEI 
+			case OTTO : SETTE 
+			case NOVE : SETTE 
+			case DIECI : OTTO 
+			case UNDICI : OTTO 
+			case DODICI : NOVE  
+			endswitch
+		case SETTE:
+			switch($r)
+			case UNO : QUATTRO
+			case DUE : QUATTRO
+			case TRE : CINQUE 
+			case QUATTRO : CINQUE
+			case CINQUE : SEI 
+			case SEI : SEI 
+			case SETTE : SETTE 
+			case OTTO : SETTE 
+			case NOVE : OTTO 
+			case DIECI : OTTO 
+			case UNDICI : NOVE 
+			case DODICI : NOVE
+			endswitch
+		case OTTO:
+			switch($r)
+			case UNO : QUATTRO
+			case DUE : CINQUE
+			case TRE : CINQUE 
+			case QUATTRO : SEI
+			case CINQUE : SEI 
+			case SEI : SETTE 
+			case SETTE : SETTE 
+			case OTTO : OTTO 
+			case NOVE : OTTO 
+			case DIECI : NOVE 
+			case UNDICI : NOVE 
+			case DODICI : DIECI 
+			endswitch
+		case NOVE:
+			switch($r)
+			case UNO : CINQUE
+			case DUE : CINQUE
+			case TRE : SEI 
+			case QUATTRO : SEI
+			case CINQUE : SETTE 
+			case SEI : SETTE 
+			case SETTE : OTTO 
+			case OTTO : OTTO 
+			case NOVE : NOVE 
+			case DIECI : NOVE 
+			case UNDICI : DIECI 
+			case DODICI : DIECI  
+			endswitch
+		case DIECI:
+			switch($r)
+			case UNO : CINQUE
+			case DUE : SEI
+			case TRE : SEI 
+			case QUATTRO : SETTE
+			case CINQUE : SETTE 
+			case SEI : OTTO 
+			case SETTE : OTTO 
+			case OTTO : NOVE 
+			case NOVE : NOVE 
+			case DIECI : DIECI 
+			case UNDICI : DIECI 
+			case DODICI : UNDICI 
+			endswitch
+		case UNDICI:
+			switch($r)
+			case UNO : SEI
+			case DUE : SEI
+			case TRE : SETTE 
+			case QUATTRO : SETTE
+			case CINQUE : OTTO
+			case SEI : OTTO 
+			case SETTE : NOVE 
+			case OTTO : NOVE 
+			case NOVE : DIECI 
+			case DIECI : DIECI 
+			case UNDICI : UNDICI 
+			case DODICI : UNDICI
+			endswitch
+		case DODICI:
+			switch($r)
+			case UNO : SEI
+			case DUE : SETTE
+			case TRE : SETTE 
+			case QUATTRO : OTTO
+			case CINQUE : OTTO
+			case SEI : NOVE 
+			case SETTE : NOVE 
+			case OTTO : DIECI 
+			case NOVE : DIECI 
+			case DIECI : UNDICI 
+			case UNDICI : UNDICI 
+			case DODICI : DODICI
+			endswitch
+		endswitch
+	function ceil($r in Livello, $l in Livello)=
+		switch($l)
+		case UNO:
+			switch($r)
+			case UNO : UNO
+			case DUE : DUE
+			case TRE : DUE 
+			case QUATTRO : TRE 
+			case CINQUE : TRE 
+			case SEI : QUATTRO 
+			case SETTE : QUATTRO 
+			case OTTO : CINQUE 
+			case NOVE : CINQUE 
+			case DIECI : SEI 
+			case UNDICI : SEI 
+			case DODICI : SETTE 
+			endswitch
+		case DUE:
+			switch($r)
+			case UNO : DUE
+			case DUE : DUE
+			case TRE : TRE 
+			case QUATTRO : TRE 
+			case CINQUE : QUATTRO
+			case SEI : QUATTRO 
+			case SETTE : CINQUE 
+			case OTTO : CINQUE 
+			case NOVE : SEI 
+			case DIECI : SEI 
+			case UNDICI : SETTE 
+			case DODICI : SETTE
+			endswitch
+		case TRE:
+			switch($r)
+			case UNO : DUE
+			case DUE : TRE
+			case TRE : TRE 
+			case QUATTRO : QUATTRO 
+			case CINQUE : QUATTRO 
+			case SEI : CINQUE 
+			case SETTE : CINQUE 
+			case OTTO : SEI 
+			case NOVE : SEI 
+			case DIECI : SETTE 
+			case UNDICI : SETTE 
+			case DODICI : OTTO
+			endswitch
+		case QUATTRO:
+			switch($r)
+			case UNO : TRE
+			case DUE : TRE
+			case TRE : QUATTRO 
+			case QUATTRO : QUATTRO 
+			case CINQUE : CINQUE 
+			case SEI : CINQUE 
+			case SETTE : SEI 
+			case OTTO : SEI 
+			case NOVE : SETTE 
+			case DIECI : SETTE 
+			case UNDICI : OTTO 
+			case DODICI : OTTO 
+			endswitch
+		case CINQUE:
+			switch($r)
+			case UNO : TRE
+			case DUE : QUATTRO
+			case TRE : QUATTRO 
+			case QUATTRO : CINQUE
+			case CINQUE : CINQUE 
+			case SEI : SEI 
+			case SETTE : SEI 
+			case OTTO : SETTE 
+			case NOVE : SETTE 
+			case DIECI : OTTO 
+			case UNDICI : OTTO 
+			case DODICI : NOVE  
+			endswitch
+		case SEI:
+			switch($r)
+			case UNO : QUATTRO
+			case DUE : QUATTRO
+			case TRE : CINQUE 
+			case QUATTRO : CINQUE
+			case CINQUE : SEI 
+			case SEI : SEI 
+			case SETTE : SETTE 
+			case OTTO : SETTE 
+			case NOVE : OTTO 
+			case DIECI : OTTO 
+			case UNDICI : NOVE 
+			case DODICI : NOVE  
+			endswitch
+		case SETTE:
+			switch($r)
+			case UNO : QUATTRO
+			case DUE : CINQUE
+			case TRE : CINQUE 
+			case QUATTRO : SEI
+			case CINQUE : SEI 
+			case SEI : SETTE 
+			case SETTE : SETTE 
+			case OTTO : OTTO 
+			case NOVE : OTTO 
+			case DIECI : NOVE 
+			case UNDICI : NOVE 
+			case DODICI : DIECI 
+			endswitch
+		case OTTO:
+			switch($r)
+			case UNO : CINQUE
+			case DUE : CINQUE
+			case TRE : SEI 
+			case QUATTRO : SEI
+			case CINQUE : SETTE 
+			case SEI : SETTE 
+			case SETTE : OTTO 
+			case OTTO : OTTO 
+			case NOVE : NOVE 
+			case DIECI : NOVE 
+			case UNDICI : DIECI 
+			case DODICI : DIECI 
+			endswitch
+		case NOVE:
+			switch($r)
+			case UNO : CINQUE
+			case DUE : SEI
+			case TRE : SEI 
+			case QUATTRO : SETTE
+			case CINQUE : SETTE 
+			case SEI : OTTO 
+			case SETTE : OTTO 
+			case OTTO : NOVE 
+			case NOVE : NOVE 
+			case DIECI : DIECI 
+			case UNDICI : DIECI 
+			case DODICI : UNDICI 
+			endswitch
+		case DIECI:
+			switch($r)
+			case UNO : SEI
+			case DUE : SEI
+			case TRE : SETTE 
+			case QUATTRO : SETTE
+			case CINQUE : OTTO
+			case SEI : OTTO 
+			case SETTE : NOVE 
+			case OTTO : NOVE 
+			case NOVE : DIECI 
+			case DIECI : DIECI 
+			case UNDICI : UNDICI 
+			case DODICI : UNDICI
+			endswitch
+		case UNDICI:
+			switch($r)
+			case UNO : SEI
+			case DUE : SETTE
+			case TRE : SETTE 
+			case QUATTRO : OTTO
+			case CINQUE : OTTO
+			case SEI : NOVE 
+			case SETTE : NOVE 
+			case OTTO : DIECI 
+			case NOVE : DIECI 
+			case DIECI : UNDICI 
+			case UNDICI : UNDICI 
+			case DODICI : DODICI
+			endswitch
+		case DODICI:
+			switch($r)
+			case UNO : SETTE
+			case DUE : SETTE
+			case TRE : OTTO 
+			case QUATTRO : OTTO
+			case CINQUE : NOVE
+			case SEI : NOVE 
+			case SETTE : DIECI 
+			case OTTO : DIECI 
+			case NOVE : UNDICI 
+			case DIECI : UNDICI 
+			case UNDICI : DODICI
+			case DODICI : DODICI
+			endswitch
+		endswitch		
+	function distanzaUno($r in Livello, $l in Livello)=
+		switch($l)
+		case UNO:
+			switch($r)
+			case UNO : true
+			case DUE : true
+			otherwise false 
+			endswitch
+		case DUE:
+			switch($r)
+			case UNO :true
+			case DUE : true
+			case TRE : true
+			otherwise false 
+			endswitch
+		case TRE:
+			switch($r)
+			case DUE:true
+			case TRE : true
+			case QUATTRO : true
+			otherwise false 
+			endswitch
+		case QUATTRO:
+			switch($r)
+			case TRE :true
+			case QUATTRO : true
+			case CINQUE : true
+			otherwise false 
+			endswitch
+		case CINQUE:
+			switch($r)
+			case QUATTRO :true
+			case CINQUE : true
+			case SEI : true
+			otherwise false 
+			endswitch
+		case SEI:
+			switch($r)
+			case CINQUE :true
+			case SEI : true
+			case SETTE : true
+			otherwise false   
+			endswitch
+		case SETTE:
+			switch($r)
+			case SEI :true
+			case SETTE : true
+			case OTTO : true
+			otherwise false  
+			endswitch
+		case OTTO:
+			switch($r)
+			case SETTE :true
+			case OTTO : true
+			case NOVE : true
+			otherwise false  
+			endswitch
+		case NOVE:
+			switch($r)
+			case OTTO :true
+			case NOVE : true
+			case DIECI : true
+			otherwise false  
+			endswitch
+		case DIECI:
+			switch($r)
+			case NOVE :true
+			case DIECI : true
+			case UNDICI : true
+			otherwise false 
+			endswitch
+		case UNDICI:
+			switch($r)
+			case DIECI :true
+			case UNDICI : true
+			case DODICI : true
+			otherwise false 
+			endswitch
+		case DODICI:
+			switch($r)
+			case UNDICI :true
+			case DODICI : true
+			otherwise false 
+			endswitch
+		otherwise false
+		endswitch		
+	function livToCert($liv in Livello)=
+	switch($liv)
+			case UNO : UNO_C
+			case DUE : DUE_C
+			case TRE : TRE_C
+			case QUATTRO : QUATTRO_C
+			case CINQUE : CINQUE_C 
+			case SEI : SEI_C
+			case SETTE : SETTE_C 
+			case OTTO : OTTO_C 
+			case NOVE : NOVE_C 
+			case DIECI : DIECI_C
+			case UNDICI : UNDICI_C 
+			case DODICI : DODICI_C
+	endswitch
+
 // RULE DEFINITIONS
 	rule r_generaRisp=
 		choose $x in PosizioneGiusta with true do
@@ -88,7 +538,7 @@ definitions:
 	rule r_esci=
 		par
 			continuaTest:=false
-			livelloCertificato:=CINQUE_NCERT
+			livelloCertificato:=TREDICI_NC
 			livelloTest:=currentDepth
 			outMessage:=FINE_NON_CERTIFICATA
 			sol:=STOP
@@ -96,11 +546,11 @@ definitions:
 	
 
 		rule r_answerChange=
-							if leftLimit=TRE and rightLimit=DUE then
+							if distanzaUno(rightLimit,leftLimit) then
 								par
 									outMessage:=FINE_CERTIFICATA
 									currentDepth:=leftLimit
-									livelloCertificato:=TRECERT
+									livelloCertificato:=livToCert(leftLimit)
 									continuaTest:=false
 									posizioneGiusta:=ESCI
 								endpar
@@ -120,12 +570,12 @@ definitions:
 			else 
 				if controlRightWrong=SETTAGGI_LEFT_OR_RIGHT then
 					par
-						//currentDepth:=floor(div(leftLimit+rightLimit,2))
-						if(leftLimit=TRE)then
+						currentDepth:=floor(rightLimit,leftLimit)
+						/*if(leftLimit=TRE)then
 							currentDepth:=DUE
 						else
 							currentDepth:=TRE
-						endif
+						endif*/
 						controlRightWrong:=SETTAGGI_PROF_CURR
 					endpar
 				else 
@@ -144,12 +594,12 @@ definitions:
 			else 
 				if controlRightWrong=SETTAGGI_LEFT_OR_RIGHT then
 					par
-						//currentDepth:=ceil(rtoi(div(leftLimit+rightLimit,2)))
-						if(rightLimit=TRE)then
+						currentDepth:=ceil(rightLimit,leftLimit)
+						/*if(rightLimit=TRE)then
 							currentDepth:=DUE
 						else
 							currentDepth:=TRE
-						endif
+						endif*/
 						
 						controlRightWrong:=SETTAGGI_PROF_CURR
 					endpar
@@ -222,11 +672,11 @@ definitions:
 					if $s then
 						par
 							continuaTest:=true
-							if livelloTest!=QUATTRO then
-								livelloTest:=QUATTRO
+							if livelloTest!=DODICI then
+								livelloTest:=DODICI
 							endif
-							if livelloCertificato!=CINQUE_NCERT then
-								livelloCertificato:=CINQUE_NCERT
+							if livelloCertificato!=TREDICI_NC then
+								livelloCertificato:=TREDICI_NC
 							endif
 							if chance!=UNA then
 								chance:=UNA
@@ -234,11 +684,11 @@ definitions:
 							if sol!=GIUSTA then
 								sol:=GIUSTA
 							endif
-							if currentDepth!=QUATTRO then
-								currentDepth:=QUATTRO
+							if currentDepth!=DODICI then
+								currentDepth:=DODICI
 							endif
-							if maxDepth!=QUATTRO then
-								maxDepth:=QUATTRO
+							if maxDepth!=DODICI then
+								maxDepth:=DODICI
 							endif
 							if control!=RICHIESTA_POSIZIONE then
 								control:=RICHIESTA_POSIZIONE
@@ -255,8 +705,11 @@ definitions:
 							if rightLimit!=UNO then
 								rightLimit:=UNO
 							endif
-							if leftLimit!=QUATTRO then
-								leftLimit:=QUATTRO
+							if leftLimit!=DODICI then
+								leftLimit:=DODICI
+							endif
+							if reset!=RESET_MINMAX then
+								reset:=RESET_MINMAX 
 							endif
 							outMessage:=CONTINUA
 						endpar
@@ -264,6 +717,7 @@ definitions:
 						continuaTest:=false
 					endif
 				endlet
+
 
 
 //esiste un caso in cui si giunge a FINE_CERTIFICATA
@@ -276,8 +730,10 @@ CTLSPEC ag(outMessage=FINE_NON_CERTIFICATA or outMessage=FINE_CERTIFICATA implie
 CTLSPEC af(sol=SBAGLIATA and chance=NESSUNA and currentDepth=maxDepth implies ax(outMessage=FINE_NON_CERTIFICATA))
 //non è vero che ogni caso in cui controlRightWrong sia iniziato fin quando diventa SETTAGGI_LEFT_OR_RIGHT  --> falsa
 CTLSPEC not a(controlRightWrong=INIZIO_RW,controlRightWrong=SETTAGGI_LEFT_OR_RIGHT)
-//è vero che ogni caso in cui controlRightWrong sia iniziato fin quando diventa SETTAGGI_LEFT_OR_RIGHT  --> falsa
-CTLSPEC a(controlRightWrong=INIZIO_RW,controlRightWrong=SETTAGGI_LEFT_OR_RIGHT)
+//è vero che ogni caso in cui controlRightWrong sia iniziato fin quando diventa SETTAGGI_LEFT_OR_RIGHT o rimane INIZIO_RW
+CTLSPEC a(controlRightWrong=INIZIO_RW,(controlRightWrong=SETTAGGI_LEFT_OR_RIGHT or controlRightWrong=INIZIO_RW))
+//non è vero che ogni caso in cui controlRightWrong sia iniziato fin quando diventa SETTAGGI_LEFT_OR_RIGHT  --> falsa
+CTLSPEC not a(controlRightWrong=INIZIO_RW,controlRightWrong=SETTAGGI_LEFT_OR_RIGHT)
 //in ogni stato deve esserci una soluzione sbagliata, giusta o stop
 CTLSPEC ag(sol=SBAGLIATA or sol=GIUSTA or sol=STOP)
 //in ogni caso in cui posizioneScelta non è uguale a posizioneGiusta che porti nello stato successivo a avere FINE_NON_CERTIFICATA e che in ogni futuro di quello stato continuaTest sia falso
@@ -292,6 +748,8 @@ CTLSPEC af(posizioneScelta!=posizioneGiusta implies ax(outMessage=FINE_NON_CERTI
 							par
 								leftLimit:=$max
 								rightLimit:=$min
+								livelloTest:=$max
+								currentDepth:=$max
 								reset:=STARTED
 							endpar
 					endlet
@@ -308,16 +766,17 @@ CTLSPEC af(posizioneScelta!=posizioneGiusta implies ax(outMessage=FINE_NON_CERTI
 		
 // INITIAL STATE
 default init s0:
-	function continuaTest = true
-	function livelloTest=QUATTRO
-	function livelloCertificato=CINQUE_NCERT
+function continuaTest = true
+	function livelloTest=DODICI
+	function livelloCertificato=TREDICI_NC
 	function chance=UNA
 	function sol=GIUSTA
-	function currentDepth=limiteMax
-	function maxDepth=limiteMax
+	function currentDepth=DODICI
+	function maxDepth=DODICI
 	function control=RICHIESTA_POSIZIONE
 	function controlRightWrong=INIZIO_RW
 	function posizioneGiusta=INDIETRO
 	function rightLimit=limiteMin
 	function leftLimit=limiteMax
 	function posG=INDIETROG
+	function reset=RESET_MINMAX

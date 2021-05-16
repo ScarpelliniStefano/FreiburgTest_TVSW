@@ -26,6 +26,7 @@ public class LoginCorrectTest {
   private WebDriver driver;
   private Map<String, Object> vars;
   JavascriptExecutor js;
+
   @Before
   public void setUp() {
     driver = new ChromeDriver();

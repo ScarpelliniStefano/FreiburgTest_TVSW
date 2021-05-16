@@ -22,7 +22,7 @@ import org.openqa.selenium.Keys;
 import java.util.*;
 import java.net.MalformedURLException;
 import java.net.URL;
-public class NewPatientCorrectTest {
+public class ChangeImpostazioniTest {
   private WebDriver driver;
   private Map<String, Object> vars;
   JavascriptExecutor js;
@@ -37,7 +37,7 @@ public class NewPatientCorrectTest {
     driver.quit();
   }
   @Test
-  public void newPatientCorrect() {
+  public void changeImpostazioni() {
     driver.get("http://localhost:8888/");
     driver.findElement(By.id("gwt-uid-3")).click();
     driver.findElement(By.id("gwt-uid-3")).sendKeys("test@test.com");
@@ -52,20 +52,26 @@ public class NewPatientCorrectTest {
     driver.findElement(By.id("gwt-uid-5")).click();
     driver.findElement(By.id("gwt-uid-5")).sendKeys("test");
     driver.findElement(By.cssSelector(".v-align-center")).click();
+    driver.findElement(By.id("gwt-uid-3")).sendKeys("test@test.com");
+    driver.findElement(By.id("gwt-uid-5")).sendKeys("test");
     driver.findElement(By.cssSelector(".v-button")).click();
-    driver.findElement(By.id("gwt-uid-7")).click();
-    driver.findElement(By.cssSelector(".v-textfield-focus")).click();
-    driver.findElement(By.cssSelector(".v-textfield-focus")).sendKeys("Giovanni");
-    driver.findElement(By.cssSelector(".v-textfield-focus")).click();
-    driver.findElement(By.cssSelector(".v-textfield-focus")).sendKeys("Rossi");
-    driver.findElement(By.cssSelector(".v-datefield-textfield")).click();
-    driver.findElement(By.cssSelector(".v-datefield-textfield")).sendKeys("07/05/2020");
-    driver.findElement(By.cssSelector(".v-gridlayout-slot > .v-button")).click();
+    driver.findElement(By.cssSelector("#gwt-uid-8 > .v-captiontext")).click();
+    driver.findElement(By.cssSelector(".v-gridlayout")).click();
+    driver.findElement(By.cssSelector(".v-textfield-focus")).sendKeys("3");
+    driver.findElement(By.cssSelector(".v-gridlayout")).click();
+    driver.findElement(By.cssSelector(".v-gridlayout-slot:nth-child(19) > .v-button")).click();
+    driver.findElement(By.cssSelector(".v-colorpicker-gradient-clicklayer")).click();
+    driver.findElement(By.cssSelector(".v-slot:nth-child(1) > .v-button")).click();
+    driver.findElement(By.cssSelector(".v-gridlayout-slot:nth-child(20) > .v-button")).click();
+    driver.findElement(By.id("gwt-uid-6")).click();
+    driver.findElement(By.cssSelector("#gwt-uid-8 > .v-captiontext")).click();
     {
-      List<WebElement> elements = driver.findElements(By.cssSelector(".v-grid-row-stripe > .v-grid-cell:nth-child(1)"));
-      assert(elements.size() > 0);
+      String value = driver.findElement(By.cssSelector(".v-textfield-focus")).getAttribute("value");
+      assertThat(value, is("3"));
     }
-    driver.findElement(By.cssSelector(".v-grid-row-stripe > .v-grid-cell:nth-child(5) > .v-nativebutton")).click();
+    driver.findElement(By.cssSelector(".v-slot > .v-button")).click();
+    driver.findElement(By.id("gwt-uid-18")).sendKeys("test@test.com");
+    driver.findElement(By.id("gwt-uid-20")).sendKeys("test");
     driver.findElement(By.cssSelector(".v-button")).click();
   }
 }

@@ -1,4 +1,4 @@
-package unibg.se4med;
+package unibg.FSTAIMO;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -13,29 +13,10 @@ import org.jooq.impl.DSL;
 
 import com.vaadin.sass.internal.parser.ParseException;
 
-public class FSTdatabase {
+import unibg.se4med.Constant;
+
+public class FSTdatabaseAIMO {
 	
-	public static Date getMilliseconds(int yyyy, int mm, int dd) {
-		SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
-		format.setTimeZone(TimeZone.getTimeZone("UTC"));
-		java.sql.Date sqlDate = null;
-		try {
-			java.util.Date utilDate = null;
-			try {
-				utilDate = format.parse(yyyy + "/" + mm + "/" + dd);
-			} catch (java.text.ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			sqlDate = new java.sql.Date(utilDate.getTime());
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-		return sqlDate;
-	}
-	
-	public static String nomeUtente = null;
-	public static String email = null;
 	static Connection conn;
 	static DSLContext database;
 
@@ -56,6 +37,13 @@ public class FSTdatabase {
 	public static Connection getConn() {
 		return conn;
 	}
+	
+	public static Boolean connOpers() {
+		if (conn!=null) 
+			return true;
+		else
+			return false;
+	}
 	/**
 	 * Connect to the database if it exists
 	 * 
@@ -65,9 +53,9 @@ public class FSTdatabase {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 
-			return DriverManager.getConnection(Constant.url, Constant.user, Constant.password);
+			return DriverManager.getConnection(Constant.urlMed, Constant.userMed, Constant.passwordMed);
 		} catch (Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		return null;
 	}

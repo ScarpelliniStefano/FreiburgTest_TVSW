@@ -57,18 +57,17 @@ public class DatiGenerazione {
 	 * @return the nome
 	 */
 	public String getNome() {
-		if(Nome!="") {
-				return Nome;
-		}else {
-			return "No Name";
-		}
+		
+			return Nome;
+
 		
 	}
 	/**
 	 * @param nome the nome to set
 	 */
 	public void setNome(String nome) {
-		Nome = nome;
+		this.Nome=nome;
+		
 	}
 	/**
 	 * @return the sesso
@@ -130,7 +129,9 @@ public class DatiGenerazione {
 	 */
 	public void setMonitorSize(int d) {
 		if(d>0)
-		MonitorSize = d;
+			MonitorSize = d;
+		else
+			MonitorSize=0;
 	}
 	/**
 	 * @return the wRect

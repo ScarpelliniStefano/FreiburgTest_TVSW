@@ -56,12 +56,12 @@ definitions:
     			posizioneGiusta:=AVANTI 
     			posG:=AVANTIG
     		endpar
-    		else
+    	else
     		par
     			posG:=INDIETROG
     			posizioneGiusta:=INDIETRO 
     		endpar
-    		endif
+    	endif
    
 	rule r_esci=
 		par

@@ -12,6 +12,9 @@ import java.util.Random;
 
 import javax.imageio.ImageIO;
 
+import libFST.db.Doctor;
+import libFST.db.FSTdatabaseAIMO;
+import libFST.db.Patient;
 import libFSTest.session.PestBase.CertifierStatus;
 import libFSTest.draw.AngleCalculus;
 import libFSTest.draw.GeneraImg;
@@ -25,7 +28,7 @@ public class FSTest extends Observable {
 	private static DatiGenerazione risultato=new DatiGenerazione();
 
 	/** the tester. */
-	private static Test_session testSession=null;
+	public static Test_session testSession=null;
 	
 	static ByteArrayOutputStream imagebuffer = null;
 	
@@ -63,6 +66,7 @@ public class FSTest extends Observable {
 		}
 		else {
 			risultato.setXBar(risultato.getLivMax());
+			risultato.setPos(false);
 		}
 		
 		testSession = new Test_session();
@@ -153,7 +157,22 @@ public class FSTest extends Observable {
 		
 	}
 	
+	private FSTdatabaseAIMO db;
+	public void setDB(FSTdatabaseAIMO db) {
+		this.db=db;
+	}
 	
+	public Boolean checkAuthorization(String user,String psw) {
+		return db.checkAuthorization(user, psw);
+	}
 	
+	public Boolean addDoctor(Doctor d) {
+		return db.insertDoc(d);
+	
+	}
+	
+	public Boolean assignP(Patient p) {
+		return db.assignPatDoc(p, db.getDoc());
+	}
 	
 }

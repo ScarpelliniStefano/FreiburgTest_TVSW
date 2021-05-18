@@ -1,0 +1,100 @@
+(!(continuaTest) 
+|
+ (
+	(
+		(
+			!(controlRightWrong = SETTAGGI_LEFT_OR_RIGHT) & 
+			!(
+				(currentDepth = maxDepth) & 
+				(
+					(chance = UNA) &
+					(sol = SBAGLIATA)
+				)
+			) & 
+			!(controlRightWrong = INIZIO_RW) & 
+			(controlRightWrong = SETTAGGI_PROF_CURR) &
+			(sol = GIUSTA) & 
+			!(
+				(
+					(currentDepth = maxDepth) & 
+					(
+						(chance = NESSUNA) & 
+						(sol = SBAGLIATA)
+					)
+				) 
+				| 
+				(sol = STOP)
+			) &
+			distanzaUno_rightLimit_leftLimit &
+			continuaTest &
+			(control = CONTROLLO_RISPOSTA) &
+			!(reset = RESET_MINMAX) &
+			!(control = RICHIESTA_POSIZIONE)
+		) 
+		| 
+		(
+			(
+				(control = CONTROLLO_RISPOSTA) &
+				!(reset = RESET_MINMAX) &
+				!(
+					(currentDepth = maxDepth) &
+					(
+						(chance = UNA) &
+						(sol = SBAGLIATA)
+					)
+				) &
+				!(control = RICHIESTA_POSIZIONE) &
+				continuaTest &
+				(
+					(
+						(currentDepth = maxDepth) &
+						(
+							(chance = NESSUNA) &
+							(sol = SBAGLIATA)
+						)
+					) 
+					| 
+					(sol = STOP)
+				)
+			) 
+			| 
+			(
+				!(reset = RESET_MINMAX) &
+				(ESCI = posizioneScelta) &
+				(control = RICHIESTA_POSIZIONE) &
+				continuaTest
+			)
+		)
+	) 
+	| 
+	(
+		!(controlRightWrong = SETTAGGI_LEFT_OR_RIGHT) &
+		!(
+			(currentDepth = maxDepth) & 
+			(
+				(chance = UNA) &
+				(sol = SBAGLIATA)
+			)
+		) &
+		!(controlRightWrong = INIZIO_RW) &
+		(controlRightWrong = SETTAGGI_PROF_CURR) &
+		!(
+			(
+				(currentDepth = maxDepth) &
+				(
+					(chance = NESSUNA) &
+					(sol = SBAGLIATA)
+				)
+			) 
+			| 
+			(sol = STOP)
+		) & 
+		distanzaUno_rightLimit_leftLimit &
+		continuaTest &
+		(control = CONTROLLO_RISPOSTA) &
+		!(reset = RESET_MINMAX) &
+		!(sol = GIUSTA) &
+		!(control = RICHIESTA_POSIZIONE)
+	)
+ )
+): FALSE;

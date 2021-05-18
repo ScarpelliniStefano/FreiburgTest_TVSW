@@ -1,0 +1,128 @@
+RISULTATO asmetaMA su AMD Ryzen 3400G con 16gb di ram:
+
+tutti insieme in 13 sec:
+
+model advising L/FreiburgTest_asm/modelFreiburgTestMA.asm
+updateMap [chance, changedTriv, continuaTest, control, controlRightWrong, currentDepth, leftLimit, livelloCertificato, livelloTest, maxDepth, outMessage, posG, posizioneGiusta, reset, rightLimit, sol]
+MP1: No inconsistent update is ever performed
+NONE
+
+MP2: Every conditional rule must be complete
+ConditionalRule if (and(and(continuaTest,eq(reset,RESET_MINMAX)),and(eq(limiteMax,CINQUE),eq(limiteMin,QUATTRO)))) is not complete.
+ConditionalRule if (and(and(not(continuaTest),rifai),not(neq(control,RICHIESTA_POSIZIONE)))) is not complete.
+ConditionalRule if (and(and(continuaTest,eq(reset,RESET_MINMAX)),and(eq(limiteMax,TRE),eq(limiteMin,DUE)))) is not complete.
+ConditionalRule if (and(and(not(continuaTest),rifai),not(neq(leftLimit,QUATTRO)))) is not complete.
+ConditionalRule if (and(and(not(continuaTest),rifai),not(neq(sol,GIUSTA)))) is not complete.
+ConditionalRule if (and(and(continuaTest,eq(reset,RESET_MINMAX)),and(eq(limiteMax,DUE),eq(limiteMin,UNO)))) is not complete.
+ConditionalRule if (and(and(and(and(and(and(and(and(and(and(continuaTest,not(eq(reset,RESET_MINMAX))),not(eq(control,RICHIESTA_POSIZIONE))),eq(control,CONTROLLO_RISPOSTA)),not(and(and(eq(sol,SBAGLIATA),eq(chance,UNA)),eq(currentDepth,maxDepth)))),not(or(and(and(eq(sol,SBAGLIATA),eq(chance,NESSUNA)),eq(currentDepth,maxDepth)),eq(sol,STOP)))),eq(sol,GIUSTA)),not(eq(controlRightWrong,INIZIO_RW))),not(eq(controlRightWrong,SETTAGGI_LEFT_OR_RIGHT))),eq(controlRightWrong,SETTAGGI_PROF_CURR)),and(eq(leftLimit,TRE),eq(rightLimit,DUE)))) is not complete.
+ConditionalRule if (and(and(and(and(and(and(and(continuaTest,not(eq(reset,RESET_MINMAX))),not(eq(control,RICHIESTA_POSIZIONE))),eq(control,CONTROLLO_RISPOSTA)),not(and(and(eq(sol,SBAGLIATA),eq(chance,UNA)),eq(currentDepth,maxDepth)))),not(or(and(and(eq(sol,SBAGLIATA),eq(chance,NESSUNA)),eq(currentDepth,maxDepth)),eq(sol,STOP)))),eq(sol,GIUSTA)),eq(controlRightWrong,INIZIO_RW))) is not complete.
+ConditionalRule if (and(and(and(and(continuaTest,not(eq(reset,RESET_MINMAX))),eq(control,RICHIESTA_POSIZIONE)),eq(posizioneScelta,AVANTI)),eq(AVANTI,posizioneGiusta))) is not complete.
+ConditionalRule if (eq($x012,AVANTIG)) is not complete.
+ConditionalRule if (and(and(not(continuaTest),rifai),not(neq(livelloCertificato,CINQUE_NCERT)))) is not complete.
+ConditionalRule if (and(and(continuaTest,eq(reset,RESET_MINMAX)),and(eq(limiteMax,TRE),eq(limiteMin,UNO)))) is not complete.
+ConditionalRule if (and(and(not(continuaTest),rifai),neq(chance,UNA))) is not complete.
+ConditionalRule if (and(and(and(and(continuaTest,not(eq(reset,RESET_MINMAX))),not(eq(control,RICHIESTA_POSIZIONE))),eq(control,CONTROLLO_RISPOSTA)),and(and(eq(sol,SBAGLIATA),eq(chance,UNA)),eq(currentDepth,maxDepth)))) is not complete.
+ConditionalRule if (and(and(continuaTest,eq(reset,RESET_MINMAX)),and(eq(limiteMax,UNO),eq(limiteMin,DUE)))) is not complete.
+ConditionalRule if (and(and(not(continuaTest),rifai),not(neq(currentDepth,QUATTRO)))) is not complete.
+ConditionalRule if (and(and(and(and(continuaTest,not(eq(reset,RESET_MINMAX))),not(eq(control,RICHIESTA_POSIZIONE))),not(eq(control,CONTROLLO_RISPOSTA))),and(eq(control,GENERA_NUOVA_RISPOSTA),or(eq(controlRightWrong,INIZIO_RW),eq(controlRightWrong,CONTROLLO_FINE))))) is not complete.
+ConditionalRule if (and(and(continuaTest,eq(reset,RESET_MINMAX)),and(eq(limiteMax,UNO),eq(limiteMin,TRE)))) is not complete.
+ConditionalRule if (and(and(continuaTest,eq(reset,RESET_MINMAX)),and(eq(limiteMax,TRE),eq(limiteMin,QUATTRO)))) is not complete.
+ConditionalRule if (and(and(and(and(and(and(and(and(and(and(continuaTest,not(eq(reset,RESET_MINMAX))),not(eq(control,RICHIESTA_POSIZIONE))),eq(control,CONTROLLO_RISPOSTA)),not(and(and(eq(sol,SBAGLIATA),eq(chance,UNA)),eq(currentDepth,maxDepth)))),not(or(and(and(eq(sol,SBAGLIATA),eq(chance,NESSUNA)),eq(currentDepth,maxDepth)),eq(sol,STOP)))),not(eq(sol,GIUSTA))),not(eq(controlRightWrong,INIZIO_RW))),not(eq(controlRightWrong,SETTAGGI_LEFT_OR_RIGHT))),eq(controlRightWrong,SETTAGGI_PROF_CURR)),not(and(eq(leftLimit,TRE),eq(rightLimit,DUE))))) is not complete.
+ConditionalRule if (and(and(continuaTest,eq(reset,RESET_MINMAX)),and(eq(limiteMax,QUATTRO),eq(limiteMin,UNO)))) is not complete.
+ConditionalRule if (not(continuaTest)) is not complete.
+ConditionalRule if (and(and(continuaTest,eq(reset,RESET_MINMAX)),and(eq(limiteMax,CINQUE),eq(limiteMin,TRE)))) is not complete.
+ConditionalRule if (and(and(not(continuaTest),rifai),not(neq(chance,UNA)))) is not complete.
+ConditionalRule if (and(and(and(and(and(and(and(and(and(continuaTest,not(eq(reset,RESET_MINMAX))),not(eq(control,RICHIESTA_POSIZIONE))),eq(control,CONTROLLO_RISPOSTA)),not(and(and(eq(sol,SBAGLIATA),eq(chance,UNA)),eq(currentDepth,maxDepth)))),not(or(and(and(eq(sol,SBAGLIATA),eq(chance,NESSUNA)),eq(currentDepth,maxDepth)),eq(sol,STOP)))),not(eq(sol,GIUSTA))),not(eq(controlRightWrong,INIZIO_RW))),eq(controlRightWrong,SETTAGGI_LEFT_OR_RIGHT)),eq(rightLimit,TRE))) is not complete.
+ConditionalRule if (and(and(continuaTest,eq(reset,RESET_MINMAX)),and(eq(limiteMax,QUATTRO),eq(limiteMin,CINQUE)))) is not complete.
+ConditionalRule if (and(and(continuaTest,eq(reset,RESET_MINMAX)),and(eq(limiteMax,DUE),eq(limiteMin,QUATTRO)))) is not complete.
+ConditionalRule if (and(and(and(and(and(continuaTest,not(eq(reset,RESET_MINMAX))),not(eq(control,RICHIESTA_POSIZIONE))),eq(control,CONTROLLO_RISPOSTA)),not(and(and(eq(sol,SBAGLIATA),eq(chance,UNA)),eq(currentDepth,maxDepth)))),or(and(and(eq(sol,SBAGLIATA),eq(chance,NESSUNA)),eq(currentDepth,maxDepth)),eq(sol,STOP)))) is not complete.
+ConditionalRule if (and(and(continuaTest,eq(reset,RESET_MINMAX)),and(eq(limiteMax,TRE),eq(limiteMin,CINQUE)))) is not complete.
+ConditionalRule if (and(and(not(continuaTest),rifai),not(neq(maxDepth,QUATTRO)))) is not complete.
+ConditionalRule if (and(and(not(continuaTest),rifai),neq(livelloCertificato,CINQUE_NCERT))) is not complete.
+ConditionalRule if (and(and(not(continuaTest),rifai),neq(posizioneGiusta,INDIETRO))) is not complete.
+ConditionalRule if (and(and(and(continuaTest,not(eq(reset,RESET_MINMAX))),eq(control,RICHIESTA_POSIZIONE)),eq(posizioneScelta,AVANTI))) is not complete.
+ConditionalRule if (and(and(and(continuaTest,not(eq(reset,RESET_MINMAX))),eq(control,RICHIESTA_POSIZIONE)),eq(posizioneScelta,ESCI))) is not complete.
+ConditionalRule if (and(and(and(continuaTest,not(eq(reset,RESET_MINMAX))),eq(control,RICHIESTA_POSIZIONE)),eq(posizioneScelta,INDIETRO))) is not complete.
+ConditionalRule if (not(eq($x012,AVANTIG))) is not complete.
+ConditionalRule if (and(and(continuaTest,eq(reset,RESET_MINMAX)),and(eq(limiteMax,DUE),eq(limiteMin,CINQUE)))) is not complete.
+ConditionalRule if (and(and(continuaTest,eq(reset,RESET_MINMAX)),and(eq(limiteMax,UNO),eq(limiteMin,QUATTRO)))) is not complete.
+ConditionalRule if (and(and(not(continuaTest),rifai),not(neq(livelloTest,QUATTRO)))) is not complete.
+ConditionalRule if (and(and(continuaTest,eq(reset,RESET_MINMAX)),and(eq(limiteMax,QUATTRO),eq(limiteMin,TRE)))) is not complete.
+ConditionalRule if (and(and(and(and(and(and(and(continuaTest,not(eq(reset,RESET_MINMAX))),not(eq(control,RICHIESTA_POSIZIONE))),eq(control,CONTROLLO_RISPOSTA)),not(and(and(eq(sol,SBAGLIATA),eq(chance,UNA)),eq(currentDepth,maxDepth)))),not(or(and(and(eq(sol,SBAGLIATA),eq(chance,NESSUNA)),eq(currentDepth,maxDepth)),eq(sol,STOP)))),not(eq(sol,GIUSTA))),eq(controlRightWrong,INIZIO_RW))) is not complete.
+ConditionalRule if (and(and(not(continuaTest),rifai),neq(rightLimit,UNO))) is not complete.
+ConditionalRule if (and(and(continuaTest,eq(reset,RESET_MINMAX)),and(eq(limiteMax,DUE),eq(limiteMin,TRE)))) is not complete.
+ConditionalRule if (and(and(and(and(and(and(and(and(and(and(continuaTest,not(eq(reset,RESET_MINMAX))),not(eq(control,RICHIESTA_POSIZIONE))),eq(control,CONTROLLO_RISPOSTA)),not(and(and(eq(sol,SBAGLIATA),eq(chance,UNA)),eq(currentDepth,maxDepth)))),not(or(and(and(eq(sol,SBAGLIATA),eq(chance,NESSUNA)),eq(currentDepth,maxDepth)),eq(sol,STOP)))),eq(sol,GIUSTA)),not(eq(controlRightWrong,INIZIO_RW))),not(eq(controlRightWrong,SETTAGGI_LEFT_OR_RIGHT))),eq(controlRightWrong,SETTAGGI_PROF_CURR)),not(and(eq(leftLimit,TRE),eq(rightLimit,DUE))))) is not complete.
+ConditionalRule if (and(and(and(and(and(and(and(and(and(and(continuaTest,not(eq(reset,RESET_MINMAX))),not(eq(control,RICHIESTA_POSIZIONE))),eq(control,CONTROLLO_RISPOSTA)),not(and(and(eq(sol,SBAGLIATA),eq(chance,UNA)),eq(currentDepth,maxDepth)))),not(or(and(and(eq(sol,SBAGLIATA),eq(chance,NESSUNA)),eq(currentDepth,maxDepth)),eq(sol,STOP)))),not(eq(sol,GIUSTA))),not(eq(controlRightWrong,INIZIO_RW))),not(eq(controlRightWrong,SETTAGGI_LEFT_OR_RIGHT))),eq(controlRightWrong,SETTAGGI_PROF_CURR)),and(eq(leftLimit,TRE),eq(rightLimit,DUE)))) is not complete.
+ConditionalRule if (and(and(and(and(continuaTest,not(eq(reset,RESET_MINMAX))),eq(control,RICHIESTA_POSIZIONE)),eq(posizioneScelta,AVANTI)),not(eq(AVANTI,posizioneGiusta)))) is not complete.
+ConditionalRule if (and(and(and(and(and(and(and(and(and(continuaTest,not(eq(reset,RESET_MINMAX))),not(eq(control,RICHIESTA_POSIZIONE))),eq(control,CONTROLLO_RISPOSTA)),not(and(and(eq(sol,SBAGLIATA),eq(chance,UNA)),eq(currentDepth,maxDepth)))),not(or(and(and(eq(sol,SBAGLIATA),eq(chance,NESSUNA)),eq(currentDepth,maxDepth)),eq(sol,STOP)))),eq(sol,GIUSTA)),not(eq(controlRightWrong,INIZIO_RW))),eq(controlRightWrong,SETTAGGI_LEFT_OR_RIGHT)),eq(leftLimit,TRE))) is not complete.
+ConditionalRule if (and(and(continuaTest,eq(reset,RESET_MINMAX)),and(eq(limiteMax,CINQUE),eq(limiteMin,DUE)))) is not complete.
+ConditionalRule if (and(and(not(continuaTest),rifai),not(neq(rightLimit,UNO)))) is not complete.
+ConditionalRule if (and(and(continuaTest,eq(reset,RESET_MINMAX)),and(eq(limiteMax,TRE),eq(limiteMin,TRE)))) is not complete.
+ConditionalRule if (and(and(continuaTest,eq(reset,RESET_MINMAX)),and(eq(limiteMax,CINQUE),eq(limiteMin,UNO)))) is not complete.
+ConditionalRule if (and(not(continuaTest),rifai)) is not complete.
+ConditionalRule if (and(and(and(and(and(and(and(and(and(continuaTest,not(eq(reset,RESET_MINMAX))),not(eq(control,RICHIESTA_POSIZIONE))),eq(control,CONTROLLO_RISPOSTA)),not(and(and(eq(sol,SBAGLIATA),eq(chance,UNA)),eq(currentDepth,maxDepth)))),not(or(and(and(eq(sol,SBAGLIATA),eq(chance,NESSUNA)),eq(currentDepth,maxDepth)),eq(sol,STOP)))),not(eq(sol,GIUSTA))),not(eq(controlRightWrong,INIZIO_RW))),eq(controlRightWrong,SETTAGGI_LEFT_OR_RIGHT)),not(eq(rightLimit,TRE)))) is not complete.
+ConditionalRule if (and(and(not(continuaTest),rifai),neq(maxDepth,QUATTRO))) is not complete.
+ConditionalRule if (and(not(continuaTest),eq(rifai,false))) is not complete.
+ConditionalRule if (and(and(not(continuaTest),rifai),neq(livelloTest,QUATTRO))) is not complete.
+ConditionalRule if (and(and(continuaTest,eq(reset,RESET_MINMAX)),and(eq(limiteMax,CINQUE),eq(limiteMin,CINQUE)))) is not complete.
+ConditionalRule if (and(and(not(continuaTest),rifai),not(neq(controlRightWrong,INIZIO_RW)))) is not complete.
+ConditionalRule if (and(and(and(and(and(and(and(and(continuaTest,not(eq(reset,RESET_MINMAX))),not(eq(control,RICHIESTA_POSIZIONE))),eq(control,CONTROLLO_RISPOSTA)),not(and(and(eq(sol,SBAGLIATA),eq(chance,UNA)),eq(currentDepth,maxDepth)))),not(or(and(and(eq(sol,SBAGLIATA),eq(chance,NESSUNA)),eq(currentDepth,maxDepth)),eq(sol,STOP)))),not(eq(sol,GIUSTA))),not(eq(controlRightWrong,INIZIO_RW))),eq(controlRightWrong,SETTAGGI_LEFT_OR_RIGHT))) is not complete.
+ConditionalRule if (and(and(continuaTest,eq(reset,RESET_MINMAX)),and(eq(limiteMax,QUATTRO),eq(limiteMin,DUE)))) is not complete.
+ConditionalRule if (and(and(and(and(continuaTest,not(eq(reset,RESET_MINMAX))),eq(control,RICHIESTA_POSIZIONE)),eq(posizioneScelta,INDIETRO)),not(eq(INDIETRO,posizioneGiusta)))) is not complete.
+ConditionalRule if (and(and(and(and(continuaTest,not(eq(reset,RESET_MINMAX))),eq(control,RICHIESTA_POSIZIONE)),eq(posizioneScelta,INDIETRO)),eq(INDIETRO,posizioneGiusta))) is not complete.
+ConditionalRule if (and(and(continuaTest,eq(reset,RESET_MINMAX)),and(eq(limiteMax,QUATTRO),eq(limiteMin,QUATTRO)))) is not complete.
+ConditionalRule if (and(and(not(continuaTest),rifai),neq(controlRightWrong,INIZIO_RW))) is not complete.
+ConditionalRule if (and(and(not(continuaTest),rifai),not(neq(posizioneGiusta,INDIETRO)))) is not complete.
+ConditionalRule if (and(and(and(and(and(and(and(and(continuaTest,not(eq(reset,RESET_MINMAX))),not(eq(control,RICHIESTA_POSIZIONE))),eq(control,CONTROLLO_RISPOSTA)),not(and(and(eq(sol,SBAGLIATA),eq(chance,UNA)),eq(currentDepth,maxDepth)))),not(or(and(and(eq(sol,SBAGLIATA),eq(chance,NESSUNA)),eq(currentDepth,maxDepth)),eq(sol,STOP)))),eq(sol,GIUSTA)),not(eq(controlRightWrong,INIZIO_RW))),eq(controlRightWrong,SETTAGGI_LEFT_OR_RIGHT))) is not complete.
+ConditionalRule if (and(and(not(continuaTest),rifai),neq(sol,GIUSTA))) is not complete.
+ConditionalRule if (and(and(and(and(and(and(and(and(and(continuaTest,not(eq(reset,RESET_MINMAX))),not(eq(control,RICHIESTA_POSIZIONE))),eq(control,CONTROLLO_RISPOSTA)),not(and(and(eq(sol,SBAGLIATA),eq(chance,UNA)),eq(currentDepth,maxDepth)))),not(or(and(and(eq(sol,SBAGLIATA),eq(chance,NESSUNA)),eq(currentDepth,maxDepth)),eq(sol,STOP)))),eq(sol,GIUSTA)),not(eq(controlRightWrong,INIZIO_RW))),eq(controlRightWrong,SETTAGGI_LEFT_OR_RIGHT)),not(eq(leftLimit,TRE)))) is not complete.
+ConditionalRule if (and(and(continuaTest,eq(reset,RESET_MINMAX)),and(eq(limiteMax,DUE),eq(limiteMin,DUE)))) is not complete.
+ConditionalRule if (and(and(continuaTest,eq(reset,RESET_MINMAX)),and(eq(limiteMax,UNO),eq(limiteMin,UNO)))) is not complete.
+ConditionalRule if (and(and(continuaTest,eq(reset,RESET_MINMAX)),and(eq(limiteMax,UNO),eq(limiteMin,CINQUE)))) is not complete.
+ConditionalRule if (and(and(and(and(continuaTest,not(eq(reset,RESET_MINMAX))),not(eq(control,RICHIESTA_POSIZIONE))),not(eq(control,CONTROLLO_RISPOSTA))),not(and(eq(control,GENERA_NUOVA_RISPOSTA),or(eq(controlRightWrong,INIZIO_RW),eq(controlRightWrong,CONTROLLO_FINE)))))) is not complete.
+ConditionalRule if (and(and(not(continuaTest),rifai),neq(control,RICHIESTA_POSIZIONE))) is not complete.
+ConditionalRule if (and(and(not(continuaTest),rifai),neq(currentDepth,QUATTRO))) is not complete.
+ConditionalRule if (and(and(not(continuaTest),rifai),neq(leftLimit,QUATTRO))) is not complete.
+
+MP2: Every case rule without otherwise must be complete
+NONE
+
+MP3: Choose rule is always/sometimes/never not empty
+choose $x012 in PosizioneGiusta with true (when executed) is always not empty.
+
+MP3: Forall rule is always/sometimes/never not empty
+NONE
+
+MP3: Conditional rule eval to true
+NONE
+
+MP4: No assignment is always trivial
+Trivial update of location currentDepth. When the condition is (TRUE & ((((((((((continuaTest & !(reset = RESET_MINMAX)) & !(control = RICHIESTA_POSIZIONE)) & (control = CONTROLLO_RISPOSTA)) & !(((sol = SBAGLIATA) & (chance = UNA)) & (currentDepth = maxDepth))) & !((((sol = SBAGLIATA) & (chance = NESSUNA)) & (currentDepth = maxDepth)) | (sol = STOP))) & !(sol = GIUSTA)) & !(controlRightWrong = INIZIO_RW)) & !(controlRightWrong = SETTAGGI_LEFT_OR_RIGHT)) & (controlRightWrong = SETTAGGI_PROF_CURR)) & ((leftLimit = TRE) & (rightLimit = DUE)))) its value is always the same of the term leftLimit.
+Trivial update of location rightLimit. When the condition is (TRUE & ((continuaTest & (reset = RESET_MINMAX)) & ((limiteMax = QUATTRO) & (limiteMin = UNO)))) its value is always the same of the term UNO.
+Trivial update of location rightLimit. When the condition is (TRUE & ((continuaTest & (reset = RESET_MINMAX)) & ((limiteMax = UNO) & (limiteMin = UNO)))) its value is always the same of the term UNO.
+Trivial update of location rightLimit. When the condition is (TRUE & ((continuaTest & (reset = RESET_MINMAX)) & ((limiteMax = TRE) & (limiteMin = UNO)))) its value is always the same of the term UNO.
+Trivial update of location rightLimit. When the condition is (TRUE & ((continuaTest & (reset = RESET_MINMAX)) & ((limiteMax = DUE) & (limiteMin = UNO)))) its value is always the same of the term UNO.
+Trivial update of location rightLimit. When the condition is (TRUE & ((continuaTest & (reset = RESET_MINMAX)) & ((limiteMax = CINQUE) & (limiteMin = UNO)))) its value is always the same of the term UNO.
+Trivial update of location continuaTest. When the condition is (TRUE & (!(continuaTest) & (rifai = FALSE))) its value is always the same of the term FALSE.
+Trivial update of location livelloCertificato. When the condition is (TRUE & (((continuaTest & !(reset = RESET_MINMAX)) & (control = RICHIESTA_POSIZIONE)) & (posizioneScelta = ESCI))) its value is always the same of the term CINQUE_NCERT.
+Trivial update of location leftLimit. When the condition is (TRUE & ((continuaTest & (reset = RESET_MINMAX)) & ((limiteMax = QUATTRO) & (limiteMin = UNO)))) its value is always the same of the term QUATTRO.
+Trivial update of location leftLimit. When the condition is (TRUE & ((continuaTest & (reset = RESET_MINMAX)) & ((limiteMax = QUATTRO) & (limiteMin = DUE)))) its value is always the same of the term QUATTRO.
+Trivial update of location leftLimit. When the condition is (TRUE & ((continuaTest & (reset = RESET_MINMAX)) & ((limiteMax = QUATTRO) & (limiteMin = CINQUE)))) its value is always the same of the term QUATTRO.
+Trivial update of location leftLimit. When the condition is (TRUE & ((continuaTest & (reset = RESET_MINMAX)) & ((limiteMax = QUATTRO) & (limiteMin = QUATTRO)))) its value is always the same of the term QUATTRO.
+Trivial update of location leftLimit. When the condition is (TRUE & ((continuaTest & (reset = RESET_MINMAX)) & ((limiteMax = QUATTRO) & (limiteMin = TRE)))) its value is always the same of the term QUATTRO.
+
+MP5: For every domain element e, there exists a location which has value e
+NONE
+
+MP6: Every controlled location can take any value in its codomain
+NONE
+
+MP7: a location could be removed
+NONE
+
+MP7: a controlled location is never updated
+NONE
+
+MP7: a controlled location could be static
+NONE
+

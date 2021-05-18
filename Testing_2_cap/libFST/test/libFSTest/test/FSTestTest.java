@@ -75,11 +75,14 @@ public class FSTestTest {
 
 	@Test
 	public void testGetCurrentDepthCorrect() {
+		fst=new FSTest();
 		fst.IniziaTest(dgen);
 		int curr=fst.getCurrentDepth();
 		assertEquals(curr,12);
 		fst.ControlloRisposta("behind");
 		curr=fst.getCurrentDepth();
+		Result r=fst.getCurrentStatus().currentResult;
+		//non possiamo proseguire poi con la verifica perchè è randomica
 		assertEquals(fst.getCurrentDepth(),6);
 		
 	}

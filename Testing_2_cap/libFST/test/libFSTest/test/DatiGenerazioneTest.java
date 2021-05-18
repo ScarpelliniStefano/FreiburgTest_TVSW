@@ -262,7 +262,7 @@ public class DatiGenerazioneTest {
 		dgen.setMonitorSize(156);
 		assertEquals(dgen.getMonitorSize(),156);
 		dgen.setMonitorSize(0);
-		assertEquals(dgen.getMonitorSize(),156);
+		assertNotEquals(dgen.getMonitorSize(),156);
 	}
 	
 	@Test

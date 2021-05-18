@@ -418,86 +418,141 @@ definitions:
 			case DODICI : DODICI
 			endswitch
 		endswitch		
-	function distanzaUno($r in Livello, $l in Livello)=
-		switch($l)
+	function distanzaUno($l in Livello, $r in Livello)=
+		switch($r)
 		case UNO:
-			switch($r)
+			switch($l)
 			case UNO : true
 			case DUE : true
-			otherwise false 
+			otherwise false
 			endswitch
 		case DUE:
-			switch($r)
+			switch($l)
 			case UNO :true
 			case DUE : true
 			case TRE : true
-			otherwise false 
+			otherwise false
 			endswitch
 		case TRE:
-			switch($r)
+			switch($l)
+			case UNO :true
 			case DUE:true
 			case TRE : true
 			case QUATTRO : true
 			otherwise false 
 			endswitch
 		case QUATTRO:
-			switch($r)
+			switch($l)
+			case UNO :true
+			case DUE:true
 			case TRE :true
 			case QUATTRO : true
 			case CINQUE : true
 			otherwise false 
 			endswitch
 		case CINQUE:
-			switch($r)
+			switch($l)
+			case UNO :true
+			case DUE:true
+			case TRE :true
 			case QUATTRO :true
 			case CINQUE : true
 			case SEI : true
 			otherwise false 
 			endswitch
 		case SEI:
-			switch($r)
+			switch($l)
+			case UNO :true
+			case DUE:true
+			case TRE :true
+			case QUATTRO:true
 			case CINQUE :true
 			case SEI : true
 			case SETTE : true
 			otherwise false   
 			endswitch
 		case SETTE:
-			switch($r)
+			switch($l)
+			case UNO :true
+			case DUE:true
+			case TRE :true
+			case QUATTRO:true
+			case CINQUE :true
 			case SEI :true
 			case SETTE : true
 			case OTTO : true
 			otherwise false  
 			endswitch
 		case OTTO:
-			switch($r)
+			switch($l)
+			case UNO :true
+			case DUE:true
+			case TRE :true
+			case QUATTRO:true
+			case CINQUE :true
+			case SEI :true
 			case SETTE :true
 			case OTTO : true
 			case NOVE : true
 			otherwise false  
 			endswitch
 		case NOVE:
-			switch($r)
+			switch($l)
+			case UNO :true
+			case DUE:true
+			case TRE :true
+			case QUATTRO:true
+			case CINQUE :true
+			case SEI :true
+			case SETTE :true
 			case OTTO :true
 			case NOVE : true
 			case DIECI : true
 			otherwise false  
 			endswitch
 		case DIECI:
-			switch($r)
+			switch($l)
+			case UNO :true
+			case DUE:true
+			case TRE :true
+			case QUATTRO:true
+			case CINQUE :true
+			case SEI :true
+			case SETTE :true
+			case OTTO :true
 			case NOVE :true
 			case DIECI : true
 			case UNDICI : true
 			otherwise false 
 			endswitch
 		case UNDICI:
-			switch($r)
+			switch($l)
+			case UNO :true
+			case DUE:true
+			case TRE :true
+			case QUATTRO:true
+			case CINQUE :true
+			case SEI :true
+			case SETTE :true
+			case OTTO :true
+			case NOVE :true
 			case DIECI :true
 			case UNDICI : true
 			case DODICI : true
 			otherwise false 
 			endswitch
 		case DODICI:
-			switch($r)
+			switch($l)
+			case UNO :true
+			case DUE:true
+			case TRE :true
+			case QUATTRO:true
+			case CINQUE :true
+			case SEI :true
+			case SETTE :true
+			case OTTO :true
+			case NOVE :true
+			case DIECI :true
 			case UNDICI :true
 			case DODICI : true
 			otherwise false 
@@ -546,7 +601,7 @@ definitions:
 	
 
 		rule r_answerChange=
-							if distanzaUno(rightLimit,leftLimit) then
+							if distanzaUno(leftLimit,rightLimit) then
 								par
 									outMessage:=FINE_CERTIFICATA
 									currentDepth:=leftLimit
@@ -668,8 +723,8 @@ definitions:
 
 
 	rule r_exit=
-				let($s=rifai) in
-					if $s then
+				//let($s=rifai) in
+				/*	if $s then
 						par
 							continuaTest:=true
 							if livelloTest!=DODICI then
@@ -713,13 +768,13 @@ definitions:
 							endif
 							outMessage:=CONTINUA
 						endpar
-					else
+					else*/ 
 						continuaTest:=false
-					endif
-				endlet
+					//endif
+				//endlet
 
 
-
+/*
 //esiste un caso in cui si giunge a FINE_CERTIFICATA
 CTLSPEC ef(outMessage=FINE_CERTIFICATA) 
 //esiste un caso in cui si giunge a FINE_NON_CERTIFICATA
@@ -738,7 +793,7 @@ CTLSPEC not a(controlRightWrong=INIZIO_RW,controlRightWrong=SETTAGGI_LEFT_OR_RIG
 CTLSPEC ag(sol=SBAGLIATA or sol=GIUSTA or sol=STOP)
 //in ogni caso in cui posizioneScelta non è uguale a posizioneGiusta che porti nello stato successivo a avere FINE_NON_CERTIFICATA e che in ogni futuro di quello stato continuaTest sia falso
 CTLSPEC af(posizioneScelta!=posizioneGiusta implies ax(outMessage=FINE_NON_CERTIFICATA and af(continuaTest=false)))
-
+*/
 
 // MAIN RULE
 	main rule r_Main =

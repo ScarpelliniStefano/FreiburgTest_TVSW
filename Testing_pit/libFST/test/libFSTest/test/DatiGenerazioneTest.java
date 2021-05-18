@@ -59,7 +59,6 @@ public class DatiGenerazioneTest {
 		dgen.setC2(Color.BLUE);
 		dgen.setMonitorSize(173);
 		dgen.setDistSchermo(40);
-		
 		dgen.setDimensione(1920.0d,1080.0d);
 		dgen.setWRect(200);
 		dgen.setHRect(400);
@@ -84,14 +83,19 @@ public class DatiGenerazioneTest {
 	}
 	
 	@Test
-	public void testDataNascCalendarType() {
+	public void testDataNascCalendarTypeCorrect() {
 		Calendar dn=Calendar.getInstance(TimeZone.getTimeZone("Europe/Rome"),Locale.ITALY);
 		dn.set(2019, 0, 1); //1 gennaio 2019
 		Calendar vData=dgen.getDataNasc();
 		dgen.setDataNasc(dn);
 		System.out.println("Test su inserimento data corretta.");
 		assertEquals(dgen.getDataNasc(),dn);
-		
+	}
+	
+	@Test
+	public void testDataNascCalendarTypeIncorrect() {
+		Calendar dn=Calendar.getInstance(TimeZone.getTimeZone("Europe/Rome"),Locale.ITALY);
+		Calendar vData=dgen.getDataNasc();
 		vData=dgen.getDataNasc();
 		dn.set(2021, 10, 8);
 		System.out.println("Test su inserimento data futura.");
@@ -99,14 +103,22 @@ public class DatiGenerazioneTest {
 	}
 	
 	@Test
-	public void testDataNascStringType() {
+	public void testDataNascStringTypeCorrect() {
 		System.out.println("Test su inserimento data corretta.");
 		Calendar dn=Calendar.getInstance(TimeZone.getTimeZone("Europe/Rome"),Locale.ITALY);
 		String data="20/11/2019";
 		dgen.setDataNasc(data);
 		dn.set(2019, 10, 20,0,0,0);
 		assertEquals(dgen.getDataNasc().getTime().toString(),dn.getTime().toString());
-		
+		data="31/11/2019";
+		dgen.setDataNasc(data);
+		dn.set(2019, 10, 31,0,0,0);
+		assertEquals(dgen.getDataNasc().getTime().toString(),dn.getTime().toString());
+	}
+	
+	@Test
+	public void testDataNascStringTypeIncorrect() {
+		Calendar dn=Calendar.getInstance(TimeZone.getTimeZone("Europe/Rome"),Locale.ITALY);
 		System.out.println("Test su inserimento date scorrette.");
 		String[] fakeData= {"08/11/2021","32/11/2019","12/13/2020","2019/11/08","11/8/2021"};
 		dn=Calendar.getInstance(TimeZone.getTimeZone("Europe/Rome"),Locale.ITALY);
@@ -118,42 +130,57 @@ public class DatiGenerazioneTest {
 	}
 	
 	@Test
-	public void testWRect() {
+	public void testWRectCorrect() {
 		System.out.println("Test su inserimento wrect corretto.");
-		dgen.setDimensione(Toolkit.getDefaultToolkit().getScreenSize());
+		dgen.setDimensione(new Dimension(1920,1080));
 		dgen.setWRect(200);
 		assertEquals(dgen.getWRect(),200);
-		
+	}
+	
+	@Test
+	public void testWRectIncorrect() {
+		dgen.setDimensione(new Dimension(1920,1080));
 		System.out.println("Test su inserimento wrect scorretto.");
-		int[] err= {Toolkit.getDefaultToolkit().getScreenSize().width-10,-3};
+		int[] err= {(int) (dgen.getDimensione().getWidth()-10),-3};
 		for(int e:err) {
 			dgen.setWRect(e);
-			assertEquals(dgen.getWRect(),Toolkit.getDefaultToolkit().getScreenSize().width-20);
+			assertEquals(dgen.getWRect(),1900);
 		}
 	}
+
 	
 	@Test
-	public void testHRect() {
+	public void testHRectCorrect() {
 		System.out.println("Test su inserimento hrect corretto.");
-		dgen.setDimensione(Toolkit.getDefaultToolkit().getScreenSize());
+		dgen.setDimensione(new Dimension(1920,1080));
 		dgen.setHRect(300);
 		assertEquals(dgen.getHRect(),300);
+	}
+	
+	@Test
+	public void testHRectIncorrect() {
+		dgen.setDimensione(new Dimension(1920,1080));
 		
 		System.out.println("Test su inserimento hrect scorretto.");
-		int[] err= {Toolkit.getDefaultToolkit().getScreenSize().height-10,-5};
+		int[] err= {1080-10,-5};
 		for(int e:err) {
 			dgen.setHRect(e);
-			assertEquals(dgen.getHRect(),Toolkit.getDefaultToolkit().getScreenSize().height-20);
+			assertEquals(dgen.getHRect(),1060);
 		}
 	}
 	
 	@Test
-	public void testHBar() {
+	public void testHBarCorrect() {
 		System.out.println("Test su inserimento hbar corretto.");
 		dgen.setHRect(300);
 		dgen.setHBar(200);
 		assertEquals(dgen.getHBar(),200);
-		
+	
+	}
+	
+	@Test
+	public void testHBarIncorrect() {
+		dgen.setHRect(300);
 		System.out.println("Test su inserimento hbar scorretto.");
 		int[] err= {295,-5};
 		for(int e:err) {
@@ -165,7 +192,7 @@ public class DatiGenerazioneTest {
 
 	
 	@Test
-	public void testXBar() {
+	public void testXBarCorrect() {
 		System.out.println("Test su inserimento xbar corretto.");
 		dgen.setLivMax(12);		
 		dgen.setXBar(12);
@@ -191,12 +218,36 @@ public class DatiGenerazioneTest {
 	}
 	
 	@Test
-	public void testLivMax() {
+	public void testXBarIncorrect() {
+		
+		System.out.println("Test su inserimento xbar scorretto.");
+		dgen.setLivMax(3);
+		dgen.setLivMin(10);
+		dgen.setXBar(5);
+		assertEquals(dgen.getXBar(),3);
+		
+		dgen.setLivMax(12);
+		dgen.setLivMin(4);
+		int[] err= {13,3,-5};
+		for(int e:err) {
+			dgen.setXBar(e);
+			assertEquals(dgen.getXBar(),12);
+		}
+	
+	}
+	
+	@Test
+	public void testLivMaxCorrect() {
 		System.out.println("Test su inserimento livello massimo corretto.");
 		dgen.setWRect(200);
 		dgen.setLivMax(12);
 		assertEquals(dgen.getLivMax(),12);
-		
+	
+	}
+	
+	@Test
+	public void testLivMaxIncorrect() {
+		dgen.setWRect(200);
 		System.out.println("Test su inserimento livello massimo scorretto.");
 		int[] err= {195,-5};
 		for(int e:err) {
@@ -207,7 +258,7 @@ public class DatiGenerazioneTest {
 	}
 	
 	@Test
-	public void testLivMin() {
+	public void testLivMinCorrect() {
 		dgen=new DatiGenerazione();
 		dgen.setDimensione(1920, 1080);
 		System.out.println("Test su inserimento livello minimo corretto.");
@@ -218,9 +269,16 @@ public class DatiGenerazioneTest {
 		dgen.setLivMax(12);
 		dgen.setLivMin(1);
 		assertEquals(dgen.getLivMin(),1);
-		
+	
+	}
+	
+	@Test
+	public void testLivMinIncorrect() {
 		System.out.println("Test su inserimento livello minimo scorretto.");
-		
+		dgen=new DatiGenerazione();
+		dgen.setDimensione(1920, 1080);
+		dgen.setWRect(200);
+		dgen.setLivMax(12);
 		int[] err= {13,198,-5};
 		for(int e:err) {
 			dgen.setLivMin(e);
@@ -247,11 +305,17 @@ public class DatiGenerazioneTest {
 	}
 	
 	@Test
-	public void testMonSize() {
+	public void testMonSizeCorrect() {
 		dgen.setMonitorSize(156);
 		assertEquals(dgen.getMonitorSize(),156);
+	}
+	
+	@Test
+	public void testMonSizeIncorrect() {
 		dgen.setMonitorSize(0);
-		assertNotEquals(dgen.getMonitorSize(),156);
+		assertEquals(dgen.getMonitorSize(),0);
+		dgen.setMonitorSize(-5);
+		assertNotEquals(dgen.getMonitorSize(),-5);
 	}
 	
 	@Test

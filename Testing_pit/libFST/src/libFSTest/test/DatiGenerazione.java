@@ -122,13 +122,13 @@ public class DatiGenerazione {
 	 * @return the monitorSize
 	 */
 	public int getMonitorSize() {
-		return MonitorSize;
+			return MonitorSize;
 	}
 	/**
 	 * @param d the monitorSize to set
 	 */
 	public void setMonitorSize(int d) {
-		if(d>0)
+		if(d>=0)
 			MonitorSize = d;
 		else
 			MonitorSize=0;

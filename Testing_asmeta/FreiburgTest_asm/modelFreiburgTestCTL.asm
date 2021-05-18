@@ -418,141 +418,86 @@ definitions:
 			case DODICI : DODICI
 			endswitch
 		endswitch		
-	function distanzaUno($l in Livello, $r in Livello)=
-		switch($r)
+	function distanzaUno($r in Livello, $l in Livello)=
+		switch($l)
 		case UNO:
-			switch($l)
+			switch($r)
 			case UNO : true
 			case DUE : true
-			otherwise false
+			otherwise false 
 			endswitch
 		case DUE:
-			switch($l)
+			switch($r)
 			case UNO :true
 			case DUE : true
 			case TRE : true
-			otherwise false
+			otherwise false 
 			endswitch
 		case TRE:
-			switch($l)
-			case UNO :true
+			switch($r)
 			case DUE:true
 			case TRE : true
 			case QUATTRO : true
 			otherwise false 
 			endswitch
 		case QUATTRO:
-			switch($l)
-			case UNO :true
-			case DUE:true
+			switch($r)
 			case TRE :true
 			case QUATTRO : true
 			case CINQUE : true
 			otherwise false 
 			endswitch
 		case CINQUE:
-			switch($l)
-			case UNO :true
-			case DUE:true
-			case TRE :true
+			switch($r)
 			case QUATTRO :true
 			case CINQUE : true
 			case SEI : true
 			otherwise false 
 			endswitch
 		case SEI:
-			switch($l)
-			case UNO :true
-			case DUE:true
-			case TRE :true
-			case QUATTRO:true
+			switch($r)
 			case CINQUE :true
 			case SEI : true
 			case SETTE : true
 			otherwise false   
 			endswitch
 		case SETTE:
-			switch($l)
-			case UNO :true
-			case DUE:true
-			case TRE :true
-			case QUATTRO:true
-			case CINQUE :true
+			switch($r)
 			case SEI :true
 			case SETTE : true
 			case OTTO : true
 			otherwise false  
 			endswitch
 		case OTTO:
-			switch($l)
-			case UNO :true
-			case DUE:true
-			case TRE :true
-			case QUATTRO:true
-			case CINQUE :true
-			case SEI :true
+			switch($r)
 			case SETTE :true
 			case OTTO : true
 			case NOVE : true
 			otherwise false  
 			endswitch
 		case NOVE:
-			switch($l)
-			case UNO :true
-			case DUE:true
-			case TRE :true
-			case QUATTRO:true
-			case CINQUE :true
-			case SEI :true
-			case SETTE :true
+			switch($r)
 			case OTTO :true
 			case NOVE : true
 			case DIECI : true
 			otherwise false  
 			endswitch
 		case DIECI:
-			switch($l)
-			case UNO :true
-			case DUE:true
-			case TRE :true
-			case QUATTRO:true
-			case CINQUE :true
-			case SEI :true
-			case SETTE :true
-			case OTTO :true
+			switch($r)
 			case NOVE :true
 			case DIECI : true
 			case UNDICI : true
 			otherwise false 
 			endswitch
 		case UNDICI:
-			switch($l)
-			case UNO :true
-			case DUE:true
-			case TRE :true
-			case QUATTRO:true
-			case CINQUE :true
-			case SEI :true
-			case SETTE :true
-			case OTTO :true
-			case NOVE :true
+			switch($r)
 			case DIECI :true
 			case UNDICI : true
 			case DODICI : true
 			otherwise false 
 			endswitch
 		case DODICI:
-			switch($l)
-			case UNO :true
-			case DUE:true
-			case TRE :true
-			case QUATTRO:true
-			case CINQUE :true
-			case SEI :true
-			case SETTE :true
-			case OTTO :true
-			case NOVE :true
-			case DIECI :true
+			switch($r)
 			case UNDICI :true
 			case DODICI : true
 			otherwise false 
@@ -601,7 +546,7 @@ definitions:
 	
 
 		rule r_answerChange=
-							if distanzaUno(leftLimit,rightLimit) then
+							if distanzaUno(rightLimit,leftLimit) then
 								par
 									outMessage:=FINE_CERTIFICATA
 									currentDepth:=leftLimit
@@ -617,13 +562,13 @@ definitions:
 							endif
 
 		rule r_rightAnswer=
-			if controlRightWrong=INIZIO_RW then
+			if controlRightWrong = INIZIO_RW then
 				par
 					leftLimit:=currentDepth
 					controlRightWrong:=SETTAGGI_LEFT_OR_RIGHT
 				endpar
 			else 
-				if controlRightWrong=SETTAGGI_LEFT_OR_RIGHT then
+				if controlRightWrong = SETTAGGI_LEFT_OR_RIGHT then
 					par
 						currentDepth:=floor(rightLimit,leftLimit)
 						/*if(leftLimit=TRE)then
@@ -634,20 +579,20 @@ definitions:
 						controlRightWrong:=SETTAGGI_PROF_CURR
 					endpar
 				else 
-					if controlRightWrong=SETTAGGI_PROF_CURR then
+					if controlRightWrong = SETTAGGI_PROF_CURR then
 						r_answerChange[]
 					endif
 				endif
 			endif
 					
 	rule r_wrongAnswer=
-			if controlRightWrong=INIZIO_RW then
+			if controlRightWrong = INIZIO_RW then
 				par
 					rightLimit:=currentDepth
 					controlRightWrong:=SETTAGGI_LEFT_OR_RIGHT
 				endpar
 			else 
-				if controlRightWrong=SETTAGGI_LEFT_OR_RIGHT then
+				if controlRightWrong = SETTAGGI_LEFT_OR_RIGHT then
 					par
 						currentDepth:=ceil(rightLimit,leftLimit)
 						/*if(rightLimit=TRE)then
@@ -659,7 +604,7 @@ definitions:
 						controlRightWrong:=SETTAGGI_PROF_CURR
 					endpar
 				else 
-					if controlRightWrong=SETTAGGI_PROF_CURR then
+					if controlRightWrong = SETTAGGI_PROF_CURR then
 						r_answerChange[]
 					endif
 				endif
@@ -668,21 +613,21 @@ definitions:
 	
 
 	rule r_controlloRisposta($a in Soluzione)=
-		if control=CONTROLLO_RISPOSTA then
-			if ($a = SBAGLIATA and chance=UNA and currentDepth=maxDepth) then
+		if control = CONTROLLO_RISPOSTA then
+			if ($a = SBAGLIATA and chance = UNA and currentDepth = maxDepth) then
 				par
 					chance:=NESSUNA
 					control:=GENERA_NUOVA_RISPOSTA
 					sol:=GIUSTA
 				endpar
 			else 
-				if ($a = SBAGLIATA and chance=NESSUNA and currentDepth=maxDepth) or ($a=STOP) then
+				if ($a = SBAGLIATA and chance = NESSUNA and currentDepth = maxDepth) or ($a = STOP) then
 					par
 						outMessage:=FINE_NON_CERTIFICATA
 						continuaTest:=false
 					endpar
 				else 
-					if $a=GIUSTA then
+					if $a = GIUSTA then
 						r_rightAnswer[]
 					else
 						r_wrongAnswer[]
@@ -690,7 +635,7 @@ definitions:
 				endif
 			endif
 		else 
-			if control=GENERA_NUOVA_RISPOSTA and (controlRightWrong=INIZIO_RW or controlRightWrong=CONTROLLO_FINE) then
+			if control = GENERA_NUOVA_RISPOSTA and (controlRightWrong = INIZIO_RW or controlRightWrong = CONTROLLO_FINE) then
 				par
 					r_generaRisp[]
 					control:=RICHIESTA_POSIZIONE
@@ -701,13 +646,13 @@ definitions:
 		endif
 
 	rule r_test=	
-		if control=RICHIESTA_POSIZIONE then
-			let ($p=posizioneScelta) in
-				if ($p=ESCI) then
+		if control = RICHIESTA_POSIZIONE then
+			let ($p = posizioneScelta) in
+				if ($p = ESCI) then
 					r_esci[]
 				else
 					par
-						if $p=posizioneGiusta then
+						if $p = posizioneGiusta then
 							sol:=GIUSTA
 						else
 							sol:=SBAGLIATA
@@ -723,8 +668,8 @@ definitions:
 
 
 	rule r_exit=
-				//let($s=rifai) in
-				/*	if $s then
+		let($s=rifai) in
+					if $s then
 						par
 							continuaTest:=true
 							if livelloTest!=DODICI then
@@ -763,37 +708,35 @@ definitions:
 							if leftLimit!=DODICI then
 								leftLimit:=DODICI
 							endif
-							if reset!=RESET_MINMAX then
-								reset:=RESET_MINMAX 
-							endif
 							outMessage:=CONTINUA
 						endpar
-					else*/ 
+					else
 						continuaTest:=false
-					//endif
-				//endlet
+					endif
+				endlet
 
 
-/*
-//esiste un caso in cui si giunge a FINE_CERTIFICATA
-CTLSPEC ef(outMessage=FINE_CERTIFICATA) 
-//esiste un caso in cui si giunge a FINE_NON_CERTIFICATA
-CTLSPEC ef(outMessage=FINE_CERTIFICATA) 
+
+//esiste sempre un caso in cui si giunge a FINE_CERTIFICATA
+	CTLSPEC ef(outMessage = FINE_CERTIFICATA) 
+//esiste sempre un caso in cui si giunge a FINE_NON_CERTIFICATA
+	CTLSPEC ef(outMessage=FINE_NON_CERTIFICATA) 
 //in ogni caso FINE_NON_CERTIFICATA O FINE_CERTIFICATA implica che ci sarà continuaTest=false
-CTLSPEC ag(outMessage=FINE_NON_CERTIFICATA or outMessage=FINE_CERTIFICATA implies continuaTest=false)
+	CTLSPEC ag((outMessage=FINE_NON_CERTIFICATA or outMessage=FINE_CERTIFICATA) implies continuaTest=false)
 //per ogni caso in cui sol è SBAGLIATA e chance=0 e currentDepth=maxDepth avremo che nel futuro ci sarà outMessage=FINE_NON_CERTIFICATA
-CTLSPEC af(sol=SBAGLIATA and chance=NESSUNA and currentDepth=maxDepth implies ax(outMessage=FINE_NON_CERTIFICATA))
-//non è vero che ogni caso in cui controlRightWrong sia iniziato fin quando diventa SETTAGGI_LEFT_OR_RIGHT  --> falsa
-CTLSPEC not a(controlRightWrong=INIZIO_RW,controlRightWrong=SETTAGGI_LEFT_OR_RIGHT)
+	CTLSPEC af((sol=SBAGLIATA and chance=NESSUNA and currentDepth=maxDepth) implies ax(outMessage=FINE_NON_CERTIFICATA))
+//ogni caso ha che controlRightWrong è all'inizio fin quando diventa SETTAGGI_LEFT_OR_RIGHT  --> falsa
+	//CTLSPEC a(controlRightWrong=INIZIO_RW,controlRightWrong=SETTAGGI_LEFT_OR_RIGHT)
+//non è vero che ogni caso ha che controlRightWrong è all'inizio fin quando diventa SETTAGGI_LEFT_OR_RIGHT
+	CTLSPEC not a(controlRightWrong=INIZIO_RW,controlRightWrong=SETTAGGI_LEFT_OR_RIGHT)
 //è vero che ogni caso in cui controlRightWrong sia iniziato fin quando diventa SETTAGGI_LEFT_OR_RIGHT o rimane INIZIO_RW
-CTLSPEC a(controlRightWrong=INIZIO_RW,(controlRightWrong=SETTAGGI_LEFT_OR_RIGHT or controlRightWrong=INIZIO_RW))
-//non è vero che ogni caso in cui controlRightWrong sia iniziato fin quando diventa SETTAGGI_LEFT_OR_RIGHT  --> falsa
-CTLSPEC not a(controlRightWrong=INIZIO_RW,controlRightWrong=SETTAGGI_LEFT_OR_RIGHT)
+	CTLSPEC a(controlRightWrong=INIZIO_RW,(controlRightWrong=SETTAGGI_LEFT_OR_RIGHT or controlRightWrong=INIZIO_RW))
 //in ogni stato deve esserci una soluzione sbagliata, giusta o stop
-CTLSPEC ag(sol=SBAGLIATA or sol=GIUSTA or sol=STOP)
-//in ogni caso in cui posizioneScelta non è uguale a posizioneGiusta che porti nello stato successivo a avere FINE_NON_CERTIFICATA e che in ogni futuro di quello stato continuaTest sia falso
-CTLSPEC af(posizioneScelta!=posizioneGiusta implies ax(outMessage=FINE_NON_CERTIFICATA and af(continuaTest=false)))
-*/
+	CTLSPEC ag(sol=SBAGLIATA or sol=GIUSTA or sol=STOP)
+//in ogni caso in cui posizioneScelta non è uguale a posizioneGiusta porta nello stato successivo a avere FINE_NON_CERTIFICATA e che in ogni futuro di quello stato continuaTest sia falso
+	CTLSPEC af(posizioneScelta!=posizioneGiusta implies ax(outMessage=FINE_NON_CERTIFICATA and af(continuaTest=false)))
+//esiste sempre un caso futuro in cui il test finisce con il livello certificato migliore
+	CTLSPEC ef(outMessage = FINE_CERTIFICATA and livelloCertificato = DUE_C)
 
 // MAIN RULE
 	main rule r_Main =
@@ -803,8 +746,6 @@ CTLSPEC af(posizioneScelta!=posizioneGiusta implies ax(outMessage=FINE_NON_CERTI
 							par
 								leftLimit:=$max
 								rightLimit:=$min
-								livelloTest:=$max
-								currentDepth:=$max
 								reset:=STARTED
 							endpar
 					endlet
@@ -821,17 +762,18 @@ CTLSPEC af(posizioneScelta!=posizioneGiusta implies ax(outMessage=FINE_NON_CERTI
 		
 // INITIAL STATE
 default init s0:
-function continuaTest = true
-	function livelloTest=DODICI
-	function livelloCertificato=TREDICI_NC
-	function chance=UNA
-	function sol=GIUSTA
-	function currentDepth=DODICI
-	function maxDepth=DODICI
-	function control=RICHIESTA_POSIZIONE
-	function controlRightWrong=INIZIO_RW
-	function posizioneGiusta=INDIETRO
-	function rightLimit=limiteMin
-	function leftLimit=limiteMax
-	function posG=INDIETROG
-	function reset=RESET_MINMAX
+	function continuaTest = true
+	function livelloTest = DODICI
+	function livelloCertificato = TREDICI_NC
+	function chance = UNA
+	function sol = GIUSTA
+	function currentDepth = DODICI
+	function maxDepth = DODICI
+	function control = RICHIESTA_POSIZIONE
+	function controlRightWrong = INIZIO_RW
+	function posizioneGiusta = INDIETRO
+	function rightLimit = DODICI
+	function leftLimit = UNO
+	function posG = INDIETROG
+	function outMessage = CONTINUA
+	function reset = RESET_MINMAX

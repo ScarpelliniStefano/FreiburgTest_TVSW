@@ -121,9 +121,11 @@ public class DatiGenerazioneTest {
 		Calendar dn=Calendar.getInstance(TimeZone.getTimeZone("Europe/Rome"),Locale.ITALY);
 		System.out.println("Test su inserimento date scorrette.");
 		String[] fakeData= {"08/11/2021","32/11/2019","12/13/2020","2019/11/08","11/8/2021"};
-		dn=Calendar.getInstance(TimeZone.getTimeZone("Europe/Rome"),Locale.ITALY);
+		//
 		for(String dataf:fakeData) {
+			dn=Calendar.getInstance(TimeZone.getTimeZone("Europe/Rome"),Locale.ITALY);
 			dgen.setDataNasc(dataf);
+			
 			assertEquals(dgen.getDataNasc().getTime().toString(),dn.getTime().toString());
 		}
 	

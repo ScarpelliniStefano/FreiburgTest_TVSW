@@ -101,7 +101,7 @@ public class DatiGenerazione {
 	 */
 	public void setDataNasc(String dataNascString) {
 		if(dataNascString.charAt(2)=='/' && dataNascString.charAt(5)=='/') {
-			Calendar d = Calendar.getInstance(TimeZone.getTimeZone("Europe/Rome"),Locale.ITALY);
+			//Calendar d = Calendar.getInstance(TimeZone.getTimeZone("Europe/Rome"),Locale.ITALY);
 			GregorianCalendar data=new GregorianCalendar();
 			DataEsame=dataNasc;
 			DataEsame.setTime(data.getTime());
@@ -111,6 +111,7 @@ public class DatiGenerazione {
 			String g=""+cD[0]+cD[1];
 			if(Integer.parseInt(m)<=12&&Integer.parseInt(g)<=31) {
 				data=new GregorianCalendar(Integer.parseInt(a),Integer.parseInt(m)-1, Integer.parseInt(g));
+				data.setTimeZone(TimeZone.getTimeZone("Europe/Rome"));
 		
 				if(DataEsame.getTime().after(data.getTime())) {
 					this.dataNasc.setTime(data.getTime());

@@ -27,4 +27,4 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/Testing_pit/libFST/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
       - name: Run tests with Maven
-        run: mvn -B test
+        run: mvn -f Testing_pi/libFST/ -B test

@@ -128,10 +128,10 @@ public class DatiGenerazione {
 	 * @param d the monitorSize to set
 	 */
 	public void setMonitorSize(int d) {
-		if(d>=0)
-			MonitorSize = d;
+		if(d<0)
+			MonitorSize = -1;
 		else
-			MonitorSize=0;
+			MonitorSize=d;
 	}
 	/**
 	 * @return the wRect
@@ -182,8 +182,7 @@ public class DatiGenerazione {
 	 * @param xBar the xBar to set
 	 */
 	public void setXBar(int xBar) throws ArithmeticException {
-		if(livMin==-1&&livMax>=livMin)
-			this.livMin=livMax;
+		
 		if(xBar<=livMax && xBar>=livMin)	this.XBar = xBar;
 		else
 				this.XBar=livMax;

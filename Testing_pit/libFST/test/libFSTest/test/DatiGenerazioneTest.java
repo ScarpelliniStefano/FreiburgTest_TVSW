@@ -201,21 +201,9 @@ public class DatiGenerazioneTest {
 		dgen.setXBar(5);
 		assertEquals(dgen.getXBar(),5);
 		
-		System.out.println("Test su inserimento xbar scorretto.");
-		dgen.setLivMax(3);
-		dgen.setLivMin(10);
-		dgen.setXBar(5);
-		assertEquals(dgen.getXBar(),3);
 		
-		dgen.setLivMax(12);
-		dgen.setLivMin(4);
-		int[] err= {13,3,-5};
-		for(int e:err) {
-			dgen.setXBar(e);
-			assertEquals(dgen.getXBar(),12);
-		}
-	
 	}
+	
 	
 	@Test
 	public void testXBarIncorrect() {
@@ -315,7 +303,7 @@ public class DatiGenerazioneTest {
 		dgen.setMonitorSize(0);
 		assertEquals(dgen.getMonitorSize(),0);
 		dgen.setMonitorSize(-5);
-		assertNotEquals(dgen.getMonitorSize(),-5);
+		assertEquals(dgen.getMonitorSize(),-1);
 	}
 	
 	@Test

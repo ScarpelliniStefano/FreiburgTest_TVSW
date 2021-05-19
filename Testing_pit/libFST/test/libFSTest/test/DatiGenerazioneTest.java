@@ -110,9 +110,9 @@ public class DatiGenerazioneTest {
 		dgen.setDataNasc(data);
 		dn.set(2019, 10, 20,0,0,0);
 		assertEquals(dgen.getDataNasc().getTime().toString(),dn.getTime().toString());
-		data="31/11/2019";
+		data="31/12/2019";
 		dgen.setDataNasc(data);
-		dn.set(2019, 10, 31,0,0,0);
+		dn.set(2019, 11, 31,0,0,0);
 		assertEquals(dgen.getDataNasc().getTime().toString(),dn.getTime().toString());
 	}
 	

@@ -109,7 +109,7 @@ public class DatiGenerazione {
 			String a=""+cD[6]+cD[7]+cD[8]+cD[9];
 			String m=""+cD[3]+cD[4];
 			String g=""+cD[0]+cD[1];
-			if(Integer.parseInt(m)<=11&&Integer.parseInt(g)<=31) {
+			if(Integer.parseInt(m)<=12&&Integer.parseInt(g)<=31) {
 				data=new GregorianCalendar(Integer.parseInt(a),Integer.parseInt(m)-1, Integer.parseInt(g));
 		
 				if(DataEsame.getTime().after(data.getTime())) {

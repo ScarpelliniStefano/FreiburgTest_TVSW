@@ -4,24 +4,24 @@ import java.awt.Color;
 import java.awt.Dimension;
 
 public class DatiGenerazione {
-	/*@ non_null @*/ 
-	private Dimension dimensione;
-	private String Nome="";
-	private String Sesso;
-	// @ invariant WRect>0;
-	private int MonitorSize;
-	private int WRect;
-	private int HRect;
-	private int HBar;
-	private int XBar;
-	private int livMax;
-	private int livMin;
-	private int distSchermo;
-	private Color c1;
-	private Color c2;
-	private boolean Pos;
-	private double Livello;
-	private double Angolo;
+	/*@ non_null @*/ private Dimension dimensione=new Dimension(0,0);
+	/*@ non_null @*/ private String Nome="";
+	/*@ non_null @*/ private String Sesso="";
+	/*@ non_null @*/private int MonitorSize=-2;
+	/*@ non_null @*/private int WRect=-2;
+	/*@ non_null @*/private int HRect=-2;
+	/*@ non_null @*/private int HBar=-2;
+	/*@ non_null @*/private int XBar=-2;
+	/*@ non_null @*/private int livMax=-2;
+	/*@ non_null @*/private int livMin=-2;
+	/*@ non_null @*/private int distSchermo=-2;
+	/*@ non_null @*/private Color c1=Color.BLACK;
+	/*@ non_null @*/private Color c2=Color.BLACK;
+	private boolean Pos=false;
+	/*@ non_null @*/private double Livello=-2;
+	/*@ non_null @*/private double Angolo=-2;
+	
+	// @ invariant dimensione.width>=0 && dimensione.height>=0;
 	
 	// @ ensures Nome=="Unnamed" && Sesso=="null" && MonitorSize==0 && WRect==-1 && HRect==-1 ;
 	// @ ensures HBar==-1 && XBar==-1 && disSchermo==0 && livMIn==-1 && livMax==-1 && pos==false && Livello==-1 && Angolo==-1;
@@ -29,7 +29,6 @@ public class DatiGenerazione {
 		dimensione=new Dimension(1,1);
 		Nome="Unnamed";
 		Sesso="null";
-		//dataNasc=Calendar.getInstance(TimeZone.getTimeZone("Europe/Rome"),Locale.ITALY);
 		MonitorSize=0;
 		WRect=-1;
 		HRect=-1;
@@ -43,20 +42,18 @@ public class DatiGenerazione {
 		Pos=false;
 		Livello=-1;
 		Angolo=-1;
-		//DataEsame=Calendar.getInstance();
 		
 	}
 	
-	// @ requires name!=null && (sex=="man" or sex=="female") && monSize>=0 && wRect>=0
-	// @ ensures Nome==name && Nome!=\old(name)&& Sesso==sex && MonitorSize==monSize && WRect==wRect && HRect==-1 ;
+	// @ requires name!=null && (sex=="man" or sex=="female") && monSize>=0 && wrect>=0
+	// @ ensures Nome==name && Nome!=\old(name) && Sesso==sex && MonitorSize==monSize && WRect==wrect && HRect==-1 ;
 	// @ ensures HBar==-1 && XBar==-1 && disSchermo==0 && livMIn==-1 && livMax==-1 && pos==false && Livello==-1 && Angolo==-1;
-	public DatiGenerazione(String name, String sex, int monSize, int wRect){
+	public DatiGenerazione(String name, String sex, int monSize, int wrect){
 		dimensione=new Dimension(1,1);
 		Nome=name;
 		Sesso=sex;
-		//dataNasc=Calendar.getInstance(TimeZone.getTimeZone("Europe/Rome"),Locale.ITALY);
 		MonitorSize=monSize;
-		WRect=wRect;
+		WRect=wrect;
 		HRect=-1;
 		HBar=-1;
 		XBar=-1;
@@ -68,18 +65,16 @@ public class DatiGenerazione {
 		Pos=false;
 		Livello=-1;
 		Angolo=-1;
-		//DataEsame=Calendar.getInstance();
 		
 	}
 	
-	// @ requires name!=null && (sex=="man" or sex=="female") && monSize>=0 && wRect>=0
-	// @ ensures Nome==name && Sesso==sex && MonitorSize==monSize && WRect==wRect && HRect==-1 ;
-	// @ ensures HBar==-1 && XBar==-1 && disSchermo==0 && livMIn==-1 && livMax==-1 && pos==false && Livello==-1 && Angolo==-1;
+	// @ requires name!=null && (sex=="man" or sex=="female") && monSize>=0 && wRect>=0;
+	// @ ensures Nome==name && Sesso==sex && MonitorSize==monSize && dimensione.width==dimx && dimensione.height==dimy && WRect==wrect && HRect==hrect ;
+	// @ ensures HBar==hbar && XBar==-1 && disSchermo==disSchermo && livMin==livmin && livMax==livmax && pos==false && Livello==-1 && Angolo==-1;
 	public DatiGenerazione(String name, String sex, int monSize,int dimx,int dimy, int wrect,int hrect, int hbar, int disSchermo, int livmin,int livmax){
 		dimensione=new Dimension(dimx,dimy);
 		Nome=name;
 		Sesso=sex;
-		//dataNasc=Calendar.getInstance(TimeZone.getTimeZone("Europe/Rome"),Locale.ITALY);
 		MonitorSize=monSize;
 		WRect=wrect;
 		HRect=hrect;
@@ -93,7 +88,6 @@ public class DatiGenerazione {
 		Pos=false;
 		Livello=-1;
 		Angolo=-1;
-		//DataEsame=Calendar.getInstance();
 		
 	}
 	
@@ -106,7 +100,8 @@ public class DatiGenerazione {
 	}
 
 	
-	// @ requires nome!=null;
+	// @ requires nome!="";
+	// @ ensures Nome==nome;
 	public void setNome(String nome) {
 		this.Nome=nome;
 		
@@ -119,37 +114,6 @@ public class DatiGenerazione {
 	public void setSesso(String sesso) {
 		Sesso = sesso;
 	}
-	
-
-	/*public Calendar getDataNasc() {
-		return dataNasc;
-	}
-
-	public void setDataNasc(Calendar dn) {
-		Calendar dateNow=Calendar.getInstance(TimeZone.getTimeZone("Europe/Rome"),Locale.ITALY);
-		if(dateNow.after(dn)) {
-		this.dataNasc = dn;}
-	}
-
-	public void setDataNasc(String dataNascString) {
-		if(dataNascString.charAt(2)=='/' && dataNascString.charAt(5)=='/') {
-			Calendar d = Calendar.getInstance(TimeZone.getTimeZone("Europe/Rome"),Locale.ITALY);
-			GregorianCalendar data=new GregorianCalendar();
-			DataEsame=dataNasc;
-			DataEsame.setTime(data.getTime());
-			char[] cD=dataNascString.toCharArray();
-			String a=""+cD[6]+cD[7]+cD[8]+cD[9];
-			String m=""+cD[3]+cD[4];
-			String g=""+cD[0]+cD[1];
-			if(Integer.parseInt(m)<=11&&Integer.parseInt(g)<=31) {
-				data=new GregorianCalendar(Integer.parseInt(a),Integer.parseInt(m)-1, Integer.parseInt(g));
-		
-				if(DataEsame.getTime().after(data.getTime())) {
-					this.dataNasc.setTime(data.getTime());
-				}
-			}
-		}
-	}*/
 
 	public int getMonitorSize() {
 		return MonitorSize;
@@ -294,10 +258,7 @@ public class DatiGenerazione {
 	/**
 	 * @return the dataEsame
 	 */
-	/*public Calendar getDataEsame() {
-		return DataEsame;
-	}*/
-	
+
 	/**
 	 * @param dimensione the dimension to set (Dimension format)
 	 */

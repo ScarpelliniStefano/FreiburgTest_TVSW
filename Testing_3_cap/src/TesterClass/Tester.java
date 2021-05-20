@@ -1,6 +1,6 @@
 package TesterClass;
 
-import libFSTest.test.DatiGenerazione;
+import test.DatiGenerazione;
 
 public class Tester {
 

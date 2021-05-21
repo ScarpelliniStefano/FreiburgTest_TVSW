@@ -2,7 +2,13 @@ package session;
 
 import session.TestSession.Result;
 
-public abstract class PestBase {
+/**
+ * @author stefa
+ *	classe base pest
+ */
+public abstract class AbstractPestBase {
+
+	
 
 	/**
 	 * The Enum Solution
@@ -18,8 +24,7 @@ public abstract class PestBase {
 	
 	
 
-	/** stato certificato */
-	protected CertifierStatus certifierStatus;
+	public static CertifierStatus certifierStatus = new CertifierStatus();
 
 	/**
 	 * Classe CertifierStatus
@@ -27,10 +32,10 @@ public abstract class PestBase {
 	static public class CertifierStatus {
 
 		/** Profondità corrente */
-		public int currentDepth;
+		public transient int currentDepth;
 
 		/** Risultato corrente */
-		public TestSession.Result currentResult=Result.CONTINUA; 
+		public transient TestSession.Result currentResult=Result.CONTINUA; 
 		/*
 		 * Bug: Read of unwritten public or protected field 
 		 * currentResult in session.PestBase$CertifierStatus.toString()
@@ -39,15 +44,22 @@ public abstract class PestBase {
 
 		@Override
 		public String toString() {
+			String risposta="";
 			switch (currentResult) {
 			case FINE_CERTIFICATA:
-				return "CERTIFICATO a livello: " + currentDepth;
+				risposta= "CERTIFICATO a livello: " + currentDepth;
+				break;
 			case FINE_NON_CERTIFICATA:
-				return "FINITO ma NON CERTIFICATO fino al livello: " + currentDepth;
+				risposta= "FINITO ma NON CERTIFICATO fino al livello: " + currentDepth;
+				break;
 			case CONTINUA:
-				return "NON COMPLETATO (Testing fermato a " + currentDepth + ")";
+				risposta= "NON COMPLETATO (Testing fermato a " + currentDepth + ")";
+				break;
+				default:
+					risposta="";
+					break;
 			}
-			return "";
+			return risposta;
 		}
 	}
 
@@ -56,16 +68,21 @@ public abstract class PestBase {
 	 *
 	 * @return la profondità corrente
 	 */
-	public int getCurrentDepth() {
+	public static int getCurrentDepth() {
 		return certifierStatus.currentDepth;
 	}
 
-	abstract void computeNextDepth(Soluzione sol);
+	/**
+	 * metodo per computare la profondità
+	 * successiva
+	 * @param sol
+	 */
+	protected abstract void computeNextDepth(Soluzione sol);
 
 	/**
 	 * Get stato corrente
 	 * 
 	 * @return
 	 */
-	abstract public CertifierStatus getCurrentStatus();
+	protected abstract CertifierStatus getCurrentStatus();
 }

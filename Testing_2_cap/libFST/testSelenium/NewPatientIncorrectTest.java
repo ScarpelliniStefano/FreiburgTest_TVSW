@@ -38,14 +38,26 @@ public class NewPatientIncorrectTest {
   }
   @Test
   public void newPatientIncorrect() {
-    driver.get("http://localhost:8888/#!doctor");
-    driver.findElement(By.cssSelector("#gwt-uid-3 > .v-captiontext")).click();
-    driver.findElement(By.cssSelector(".v-textfield-focus")).click();
-    driver.findElement(By.cssSelector(".v-textfield-focus")).sendKeys("Giovanni");
-    driver.findElement(By.cssSelector(".v-textfield-focus")).sendKeys("Rossi");
+    driver.get("http://localhost:8888/");
+    driver.findElement(By.id("gwt-uid-3")).click();
+    driver.findElement(By.id("gwt-uid-3")).sendKeys("test@test.com");
+    driver.findElement(By.id("gwt-uid-3")).click();
+    {
+      WebElement element = driver.findElement(By.id("gwt-uid-3"));
+      Actions builder = new Actions(driver);
+      builder.doubleClick(element).perform();
+    }
+    driver.findElement(By.id("gwt-uid-3")).click();
+    driver.findElement(By.cssSelector(".v-align-center")).click();
+    driver.findElement(By.id("gwt-uid-5")).click();
+    driver.findElement(By.id("gwt-uid-5")).sendKeys("test");
+    driver.findElement(By.cssSelector(".v-align-center")).click();
+    driver.findElement(By.cssSelector(".v-button")).click();
+    driver.findElement(By.id("gwt-uid-7")).click();
+    driver.findElement(By.cssSelector(".v-datefield-textfield")).sendKeys("07/05/2020");
     driver.findElement(By.cssSelector(".v-gridlayout-slot > .v-button")).click();
     {
-      List<WebElement> elements = driver.findElements(By.cssSelector(".v-gridlayout-slot:nth-child(9) > .v-label"));
+      List<WebElement> elements = driver.findElements(By.cssSelector("font"));
       assert(elements.size() > 0);
     }
     driver.findElement(By.cssSelector(".v-button")).click();

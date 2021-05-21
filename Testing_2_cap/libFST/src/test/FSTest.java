@@ -9,16 +9,24 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Observable;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 import javax.imageio.ImageIO;
 
+import db.Doctor;
+import db.FSTdatabaseAIMO;
+import db.Patient;
 import draw.AbstractAngleCalculus;
 import draw.GeneraImg;
 import session.TestSession;
-import session.PestBase.CertifierStatus;
+import session.AbstractPestBase.CertifierStatus;
 import session.TestSession.Result;
 
-@SuppressWarnings("deprecation")
+
+/**
+ * @author stefa
+ * classe test freiburg
+ */
 public class FSTest extends Observable {
 	///PMD1: conversione di tutti i nomi di metodi 
 	// 		con le lettere maiuscole iniziali in minuscole	
@@ -38,9 +46,8 @@ public class FSTest extends Observable {
 	/** The stream of image */
 	private static ByteArrayOutputStream imagebuffer;
 	
-	/** generatore di randomici */
-	static Random rnGen=new Random();
 	
+	private FSTdatabaseAIMO db;
 	
 	/**
 	 * The Enum Scelta
@@ -83,9 +90,9 @@ public class FSTest extends Observable {
 		if(inizio==Scelta.CORRETTO) {
 			BufferedImage image;
 			if(Double.compare(risultato.getDimensione().getWidth(),1)==0) { //problema con la call chain
-		        image=GeneraImg.GeneraImmagine(risultato.getWRect(), risultato.getHRect(), risultato.getHBar(), risultato.getXBar(), risultato.getC1(), risultato.getC2());		
+		        image=GeneraImg.generaImmagine(risultato.getWRect(), risultato.getHRect(), risultato.getHBar(), risultato.getXBar(), risultato.getC1(), risultato.getC2());		
 			}else {
-				image=GeneraImg.GeneraImmagine(risultato.getDimensione().width,risultato.getDimensione().height,risultato.getWRect(), risultato.getHRect(), risultato.getHBar(), risultato.getXBar(), risultato.getC1(), risultato.getC2());	
+				image=GeneraImg.generaImmagine(risultato.getDimensione().width,risultato.getDimensione().height,risultato.getWRect(), risultato.getHRect(), risultato.getHBar(), risultato.getXBar(), risultato.getC1(), risultato.getC2());	
 				//problema con la call chain
 			}
 			//prova di inserimento immagine nello stream
@@ -139,7 +146,8 @@ public class FSTest extends Observable {
 				risultato.setLivello(0);
 			}else {
 				risultato.setAngolo(AbstractAngleCalculus.calcolaAngolo(risultato));
-			    /*call chain*/risultato.setLivello(1000* (AbstractAngleCalculus.monitorWidthMM(risultato.getMonitorSize(),(int)risultato.getDimensione().getWidth(),(int)risultato.getDimensione().getHeight())*risultato.getXBar())/(int)risultato.getDimensione().getWidth());
+			    /*call chain*/
+				risultato.setLivello(1000* (AbstractAngleCalculus.monitorWidthMM(risultato.getMonitorSize(),(int)risultato.getDimensione().getWidth(),(int)risultato.getDimensione().getHeight())*risultato.getXBar())/(int)risultato.getDimensione().getWidth());
 		    }
 		}
 		return scelta;
@@ -152,7 +160,9 @@ public class FSTest extends Observable {
 	 * metodo per cambio posizione
 	 */
 	private static void changePos() {
-		risultato.setPos(rnGen.nextBoolean()); 
+		//Bug: Random object created and used only 
+		//once in test.FSTest.changePos()
+		risultato.setPos(ThreadLocalRandom.current().nextBoolean()); 
 		//prima era new Random().nextBoolean()
 		//ora si è creato un generatore di randomici
 	}
@@ -163,7 +173,7 @@ public class FSTest extends Observable {
 	public static InputStream settaNuovaImg() {
 		
 		assert testSession.getStatoCorrente().currentResult == TestSession.Result.CONTINUA; //call chain
-		BufferedImage image = null;
+		BufferedImage image;
 		ByteArrayInputStream imgByteArray = null;
 		changePos();
 		image=GeneraImg.modificaM(risultato.getXBar(), risultato);
@@ -182,6 +192,43 @@ public class FSTest extends Observable {
 		
 		}
 		return imgByteArray;
+	}
+
+	
+	/**
+	 * @param database
+	 */
+	public void setDB(final FSTdatabaseAIMO database) {
+		this.db=database;
+	}
+	
+	/**
+	 * controllo autorizzazione
+	 * @param user
+	 * @param psw
+	 * @return
+	 */
+	public Boolean checkAuthorization(final String user,final String psw) {
+		return db.checkAuthorization(user, psw);
+	}
+	
+	/**
+	 * aggiungi dottore
+	 * @param d
+	 * @return
+	 */
+	public Boolean addDoctor(final Doctor doc) {
+		return db.insertDoc(doc);
+	
+	}
+	
+	/**
+	 * assegna paziente
+	 * @param p
+	 * @return
+	 */
+	public Boolean assignP(final Patient pat) {
+		return db.assignPatDoc(pat, db.getDoc());
 	}
 	
 

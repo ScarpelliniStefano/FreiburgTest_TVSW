@@ -47,5 +47,6 @@ public class LoginCorrectTest {
       List<WebElement> elements = driver.findElements(By.cssSelector(".v-label"));
       assert(elements.size() > 0);
     }
+    driver.findElement(By.cssSelector(".v-button")).click();
   }
 }

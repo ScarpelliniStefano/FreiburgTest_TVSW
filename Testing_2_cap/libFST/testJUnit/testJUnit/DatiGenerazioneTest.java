@@ -23,7 +23,7 @@ public class DatiGenerazioneTest {
 	private static DatiGenerazione dgen;
 	
 	@BeforeClass
-	public static void SetupData() {
+	public static void setupData() {
 		dgen=new DatiGenerazione();
 	}
 	
@@ -121,30 +121,30 @@ public class DatiGenerazioneTest {
 	@Test
 	public void testWRect() {
 		System.out.println("Test su inserimento wrect corretto.");
-		dgen.setDimensione(Toolkit.getDefaultToolkit().getScreenSize());
+		dgen.setDimensione(1920,1080);
 		dgen.setWRect(200);
 		assertEquals(dgen.getWRect(),200);
 		
 		System.out.println("Test su inserimento wrect scorretto.");
-		int[] err= {Toolkit.getDefaultToolkit().getScreenSize().width-10,-3};
+		int[] err= {1910,-3};
 		for(int e:err) {
 			dgen.setWRect(e);
-			assertEquals(dgen.getWRect(),Toolkit.getDefaultToolkit().getScreenSize().width-20);
+			assertEquals(dgen.getWRect(),1900);
 		}
 	}
 	
 	@Test
 	public void testHRect() {
 		System.out.println("Test su inserimento hrect corretto.");
-		dgen.setDimensione(Toolkit.getDefaultToolkit().getScreenSize());
+		dgen.setDimensione(1920,1080);
 		dgen.setHRect(300);
 		assertEquals(dgen.getHRect(),300);
 		
 		System.out.println("Test su inserimento hrect scorretto.");
-		int[] err= {Toolkit.getDefaultToolkit().getScreenSize().height-10,-5};
+		int[] err= {1070,-5};
 		for(int e:err) {
 			dgen.setHRect(e);
-			assertEquals(dgen.getHRect(),Toolkit.getDefaultToolkit().getScreenSize().height-20);
+			assertEquals(dgen.getHRect(),1060);
 		}
 	}
 	

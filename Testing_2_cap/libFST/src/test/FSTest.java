@@ -28,6 +28,10 @@ import session.TestSession.Result;
  * classe test freiburg
  */
 public class FSTest extends Observable {
+	//CODE REFACTOR:
+	//LONG METHOD: i metodi che sono troppo lunghi sono stati 
+	//suddivisi in sottometodi privati
+	
 	///PMD1: conversione di tutti i nomi di metodi 
 	// 		con le lettere maiuscole iniziali in minuscole	
 	//PMD2: aggiunta dei commenti a ogni attributo e metodo della classe
@@ -38,7 +42,7 @@ public class FSTest extends Observable {
 	//PMD5: confronti tra valori cambiati in compareTo o metodi di confronto
 	
 	/** The result. */
-	private static DatiGenerazione risultato=new DatiGenerazione();
+	private static DatiGenerazione datagen=new DatiGenerazione();
 
 	/** the tester. */
 	public static TestSession testSession;
@@ -47,7 +51,10 @@ public class FSTest extends Observable {
 	private static ByteArrayOutputStream imagebuffer;
 	
 	
-	private FSTdatabaseAIMO db;
+	/**
+	 * database
+	 */
+	private transient FSTdatabaseAIMO database;
 	
 	/**
 	 * The Enum Scelta
@@ -76,25 +83,16 @@ public class FSTest extends Observable {
 		* @throws IOException 
 		*/		
 	public static InputStream iniziaTest(final DatiGenerazione result) throws IOException {
-		if(risultato.getAngolo()==-1) {
-			risultato=result;
-		}
-		else {
-			risultato.setXBar(risultato.getLivMax());
-			risultato.setPos(false);
+		risultatoSplitted();
+		if(datagen.getAngolo()==-1) {
+			datagen=result;
 		}
 		
 		testSession = new TestSession();
-		final Scelta inizio=TestSession.iniziaTest(risultato);
+		final Scelta inizio=TestSession.iniziaTest(datagen);
 		ByteArrayInputStream imgByteArray = null;
 		if(inizio==Scelta.CORRETTO) {
-			BufferedImage image;
-			if(Double.compare(risultato.getDimensione().getWidth(),1)==0) { //problema con la call chain
-		        image=GeneraImg.generaImmagine(risultato.getWRect(), risultato.getHRect(), risultato.getHBar(), risultato.getXBar(), risultato.getC1(), risultato.getC2());		
-			}else {
-				image=GeneraImg.generaImmagine(risultato.getDimensione().width,risultato.getDimensione().height,risultato.getWRect(), risultato.getHRect(), risultato.getHBar(), risultato.getXBar(), risultato.getC1(), risultato.getC2());	
-				//problema con la call chain
-			}
+			final BufferedImage image = image();
 			//prova di inserimento immagine nello stream
 				try {
 					// Write the image to a buffer
@@ -110,6 +108,34 @@ public class FSTest extends Observable {
 		return imgByteArray;
 		
 				
+	}
+
+	private static void risultatoSplitted() {
+		risultatoAngle();
+		if (datagen.getAngolo() == -1) {
+		} else {
+			datagen.setPos(false);
+		}
+	}
+
+	private static void risultatoAngle() {
+		if (datagen.getAngolo() == -1) {
+		} else {
+			datagen.setXBar(datagen.getLivMax());
+		}
+	}
+
+	private static BufferedImage image() {
+		BufferedImage image;
+		if (Double.compare(datagen.getDimensione().getWidth(), 1) == 0) {
+			image = GeneraImg.generaImmagine(datagen.getWRect(), datagen.getHRect(), datagen.getHBar(),
+					datagen.getXBar(), datagen.getC1(), datagen.getC2());
+		} else {
+			image = GeneraImg.generaImmagine(datagen.getDimensione().width, datagen.getDimensione().height,
+					datagen.getWRect(), datagen.getHRect(), datagen.getHBar(), datagen.getXBar(),
+					datagen.getC1(), datagen.getC2());
+		}
+		return image;
 	}
 	
 	/**
@@ -141,17 +167,26 @@ public class FSTest extends Observable {
 		Scelta scelta;
 		scelta=testSession.controlloRisposta(rispostaData); // Initialized before computeNextDepth()
 		if(!testSession.getStatoCorrente().currentResult.equals(Result.CONTINUA)) { //call chain
-			if(testSession.getStatoCorrente().currentResult==Result.FINE_NON_CERTIFICATA) { //call chain
-				risultato.setAngolo(0);
-				risultato.setLivello(0);
-			}else {
-				risultato.setAngolo(AbstractAngleCalculus.calcolaAngolo(risultato));
-			    /*call chain*/
-				risultato.setLivello(1000* (AbstractAngleCalculus.monitorWidthMM(risultato.getMonitorSize(),(int)risultato.getDimensione().getWidth(),(int)risultato.getDimensione().getHeight())*risultato.getXBar())/(int)risultato.getDimensione().getWidth());
-		    }
+			risultato();
 		}
 		return scelta;
 		
+	}
+
+	private static void risultato() {
+		if (testSession.getStatoCorrente().currentResult == Result.FINE_NON_CERTIFICATA) {
+			datagen.setAngolo(0);
+			datagen.setLivello(0);
+		} else {
+			datagen.setAngolo(AbstractAngleCalculus.calcolaAngolo(datagen));
+			//varie chain call
+			datagen
+					.setLivello(1000
+							* (AbstractAngleCalculus.monitorWidthMM(datagen.getMonitorSize(),
+									(int) datagen.getDimensione().getWidth(),
+									(int) datagen.getDimensione().getHeight()) * datagen.getXBar())
+							/ (int) datagen.getDimensione().getWidth());
+		}
 	}
 	
 	
@@ -162,9 +197,8 @@ public class FSTest extends Observable {
 	private static void changePos() {
 		//Bug: Random object created and used only 
 		//once in test.FSTest.changePos()
-		risultato.setPos(ThreadLocalRandom.current().nextBoolean()); 
+		datagen.setPos(ThreadLocalRandom.current().nextBoolean()); //chain call
 		//prima era new Random().nextBoolean()
-		//ora si è creato un generatore di randomici
 	}
 	
 	/**
@@ -173,11 +207,8 @@ public class FSTest extends Observable {
 	public static InputStream settaNuovaImg() {
 		
 		assert testSession.getStatoCorrente().currentResult == TestSession.Result.CONTINUA; //call chain
-		BufferedImage image;
+		final BufferedImage image = imageSplit();
 		ByteArrayInputStream imgByteArray = null;
-		changePos();
-		image=GeneraImg.modificaM(risultato.getXBar(), risultato);
-						
 		if(image!=null)	{
 		//prova di inserimento immagine nello stream
 			try {
@@ -194,12 +225,19 @@ public class FSTest extends Observable {
 		return imgByteArray;
 	}
 
+	private static BufferedImage imageSplit() {
+		BufferedImage image;
+		changePos();
+		image = GeneraImg.modificaM(datagen.getXBar(), datagen);
+		return image;
+	}
+
 	
 	/**
 	 * @param database
 	 */
 	public void setDB(final FSTdatabaseAIMO database) {
-		this.db=database;
+		this.database=database;
 	}
 	
 	/**
@@ -209,7 +247,7 @@ public class FSTest extends Observable {
 	 * @return
 	 */
 	public Boolean checkAuthorization(final String user,final String psw) {
-		return db.checkAuthorization(user, psw);
+		return database.checkAuthorization(user, psw);
 	}
 	
 	/**
@@ -218,7 +256,7 @@ public class FSTest extends Observable {
 	 * @return
 	 */
 	public Boolean addDoctor(final Doctor doc) {
-		return db.insertDoc(doc);
+		return database.insertDoc(doc);
 	
 	}
 	
@@ -228,7 +266,7 @@ public class FSTest extends Observable {
 	 * @return
 	 */
 	public Boolean assignP(final Patient pat) {
-		return db.assignPatDoc(pat, db.getDoc());
+		return database.assignPatDoc(pat, database.getDoc());
 	}
 	
 

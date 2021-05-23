@@ -55,9 +55,6 @@ public abstract class AbstractPestBase {
 			case CONTINUA:
 				risposta= "NON COMPLETATO (Testing fermato a " + currentDepth + ")";
 				break;
-				default:
-					risposta="";
-					break;
 			}
 			return risposta;
 		}

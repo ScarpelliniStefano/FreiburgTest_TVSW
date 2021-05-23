@@ -91,20 +91,18 @@ public class FSTest extends Observable {
 		testSession = new TestSession();
 		final Scelta inizio=TestSession.iniziaTest(datagen);
 		ByteArrayInputStream imgByteArray = null;
-		if(inizio==Scelta.CORRETTO) {
-			final BufferedImage image = image();
-			//prova di inserimento immagine nello stream
-				try {
-					// Write the image to a buffer
-							imagebuffer = new ByteArrayOutputStream();
-							ImageIO.write(image, "png", imagebuffer);
-							// Return a stream from the buffer
-							imgByteArray=new ByteArrayInputStream(imagebuffer.toByteArray());
-				}catch(IOException e) {
-					e.printStackTrace(); //change to logger
-					
-				}
+		final BufferedImage image = image();
+		//prova di inserimento immagine nello stream
+		try {
+			// Write the image to a buffer
+			imagebuffer = new ByteArrayOutputStream();
+			ImageIO.write(image, "png", imagebuffer);
+			// Return a stream from the buffer
+			imgByteArray=new ByteArrayInputStream(imagebuffer.toByteArray());
+		}catch(IOException e) {
+			e.printStackTrace(); //change to logger	
 		}
+		
 		return imgByteArray;
 		
 				
@@ -127,14 +125,8 @@ public class FSTest extends Observable {
 
 	private static BufferedImage image() {
 		BufferedImage image;
-		if (Double.compare(datagen.getDimensione().getWidth(), 1) == 0) {
 			image = GeneraImg.generaImmagine(datagen.getWRect(), datagen.getHRect(), datagen.getHBar(),
 					datagen.getXBar(), datagen.getC1(), datagen.getC2());
-		} else {
-			image = GeneraImg.generaImmagine(datagen.getDimensione().width, datagen.getDimensione().height,
-					datagen.getWRect(), datagen.getHRect(), datagen.getHBar(), datagen.getXBar(),
-					datagen.getC1(), datagen.getC2());
-		}
 		return image;
 	}
 	
@@ -209,18 +201,15 @@ public class FSTest extends Observable {
 		assert testSession.getStatoCorrente().currentResult == TestSession.Result.CONTINUA; //call chain
 		final BufferedImage image = imageSplit();
 		ByteArrayInputStream imgByteArray = null;
-		if(image!=null)	{
 		//prova di inserimento immagine nello stream
-			try {
+		try {
 			// Write the image to a buffer
-					imagebuffer = new ByteArrayOutputStream();
-					ImageIO.write(image, "png", imagebuffer);
-					// Return a stream from the buffer
-					imgByteArray=new ByteArrayInputStream(imagebuffer.toByteArray());
-			}catch(IOException e) {
-				e.printStackTrace(); //sarebbe da usare un logger
-			}
-		
+			imagebuffer = new ByteArrayOutputStream();
+			ImageIO.write(image, "png", imagebuffer);
+			// Return a stream from the buffer
+			imgByteArray=new ByteArrayInputStream(imagebuffer.toByteArray());
+		}catch(IOException e) {
+			e.printStackTrace(); //sarebbe da usare un logger
 		}
 		return imgByteArray;
 	}

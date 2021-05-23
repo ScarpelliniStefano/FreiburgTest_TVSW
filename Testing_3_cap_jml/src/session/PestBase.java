@@ -19,6 +19,7 @@ public abstract class PestBase {
 	
 
 	/** stato certificato */
+	/*@ spec_public @*/
 	protected CertifierStatus certifierStatus;
 
 	/**

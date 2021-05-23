@@ -14,28 +14,34 @@ public class BestPestElaboratorNew extends PestBase {
 	/**
 	 * prossima profondità
 	 */
+	/*@ spec_public @*/
 	private int nextDepth=-1;
 	
 	/**
 	 * massima profondità
 	 */
+	/*@ spec_public @*/
 	private transient int maxDepth=-1;  //non è possibile renderlo final
 	/**
 	 * limite sinistro
 	 */
+	/*@ spec_public @*/
 	private transient int leftLimit=-1;
 	
 	/**
 	 * limite destro
 	 */
+	/*@ spec_public @*/
 	protected transient int rightLimit=-1;
 	/**
 	 * possibilità se all'inizio del test
 	 */
+	/*@ spec_public @*/
 	private transient int chance=-1;
 	/**
 	 * @return prossima profondità
 	 */
+
 	public int getNextDepth() {
 		return nextDepth;
 	}
@@ -43,11 +49,14 @@ public class BestPestElaboratorNew extends PestBase {
 	/**
 	 * @param nextDepth profondità successiva
 	 */
+	/*@ requires nextDepth>=0;
+	  @ ensures this.nextDepth==nextDepth || this.nextDepth==maxDepth;
+	  @*/
 	public void setNextDepth(final int nextDepth) {
 		if(nextDepth<=maxDepth && nextDepth>=rightLimit) {
 			this.nextDepth = nextDepth;
 		}else {
-			throw new IllegalArgumentException();
+			this.nextDepth=maxDepth;
 		}
 	}
 
@@ -59,6 +68,12 @@ public class BestPestElaboratorNew extends PestBase {
 	 * @param maxVal
 	 * @param minVal
 	 */
+	/*@ requires maxVal>0 && minVal<=maxVal && minVal>=0;
+	  @ ensures certifierStatus!=null;
+	  @ ensures this.maxDepth==maxVal && this.nextDepth==maxVal;
+	  @ ensures this.leftLimit==maxVal && (this.rightLimit==minVal || this.rightLimit==maxVal);
+	  @ ensures chance>0;
+	  @*/
 	public BestPestElaboratorNew(final int maxVal,final int minVal) {
 		super();
 		certifierStatus = new CertifierStatus();
@@ -84,11 +99,16 @@ public class BestPestElaboratorNew extends PestBase {
 	/**
 	 * metodo per decidere la prossima profondità
 	 */
-	@Override
+	
 	/*
 	 * metodo con alta complessità e preso da un 
 	 * metodo astratto (non posso implementare un metodo astratto)
 	 */
+	/*@ also requires solution==PestBase.Soluzione.SBAGLIATA ||
+	 				  solution==PestBase.Soluzione.GIUSTA ||
+	 				  solution==PestBase.Soluzione.STOP;
+	  @*/
+	@Override
 	protected void computeNextDepth(final PestBase.Soluzione solution) {
 		double value;
 
@@ -131,6 +151,8 @@ public class BestPestElaboratorNew extends PestBase {
 		}
 	}
 
+	/*@ also ensures certifierStatus!=null;
+	  @*/
 	@Override
 	public CertifierStatus getCurrentStatus() {
 		assert maxDepth!=-1;

@@ -57,8 +57,9 @@ public class BestPestElabTest {
 				//percorso tutto corretto:
 				for(Soluzione sol:listSol)
 					bpElab.computeNextDepth(sol); //6,3,2,2
-				assertEquals(bpElab.getCurrentStatus().currentDepth,currentDepth);
+				assertEquals(bpElab.getCurrentDepth(),currentDepth);
 				assertEquals(bpElab.getCurrentStatus().currentResult,resFinale);
+				System.out.println(bpElab.certifierStatus.toString());
 			}
 	 }
 	 public static class NonParameterizedTest {

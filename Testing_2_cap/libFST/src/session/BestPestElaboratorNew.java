@@ -133,7 +133,7 @@ public class BestPestElaboratorNew extends AbstractPestBase {
 
 	@Override
 	public CertifierStatus getCurrentStatus() {
-		assert maxDepth!=-1;
+		//assert maxDepth!=-1;
 		return certifierStatus;
 	}
 

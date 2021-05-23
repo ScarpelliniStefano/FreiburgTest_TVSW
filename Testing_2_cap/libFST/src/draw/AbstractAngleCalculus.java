@@ -35,9 +35,6 @@ public abstract class AbstractAngleCalculus {
 	 * metodo astratto
 	 */
 	public abstract void calcolaAngoloAbstract();
-	/**
-	 * costruttore
-	 */
 	
 	/**
 	 * costruttore (inutile)

@@ -133,7 +133,7 @@ public class DatiGenerazioneImage { //ancora una god class
 	 */
 	public void setXBar(final int xBar) {
 		//assert xBar>0;
-		if(livMin==-1&&livMax>=livMin) {
+		if(livMin==-1) {
 			this.livMin=livMax;
 		}
 		if(xBar<=livMax && xBar>=livMin) {	this.xBar = xBar;}
@@ -188,7 +188,7 @@ public class DatiGenerazioneImage { //ancora una god class
 	 * @param distSchermo
 	 */
 	public void setDistSchermo(final int distSchermo) {
-		assert distSchermo>=0;
+		//assert distSchermo>=0;
 		this.distSchermo = distSchermo*10;
 	}
 
@@ -278,5 +278,15 @@ public class DatiGenerazioneImage { //ancora una god class
 	 */
 	public void setXBarNC(final int xbar) {
 		this.xBar=xbar;
+	}
+	public void setMonitorSizeNC(int monSize) {
+		this.monitorSize=monSize;
+		
+	}
+	public void setDistSchermoNC(int disSchermo) {
+		this.distSchermo=disSchermo;
+	}
+	public void setDimensioneNC(Dimension dimension) {
+		this.dimensione=dimension;
 	}
 }

@@ -49,6 +49,22 @@ public class DatiGenerazioneTest {
 		assertNotNull(dgen.getAngolo());
 		assertNotNull(dgen.getDataEsame());
 		System.out.println("Test costruttore DatiGenerazione");
+		dgen=new DatiGenerazione("Unnamed","null",100,1);
+		assertEquals(dgen.getNome(),"Unnamed");
+		assertEquals(dgen.getSesso(),"null");
+		assertEquals(dgen.getMonitorSize(),100);
+		assertEquals(dgen.getWRect(),1);
+		dgen=new DatiGenerazione("Unnamed","null",1, 1920,1080,0,0,0,0,0,1);
+		assertEquals(dgen.getNome(),"Unnamed");
+		assertEquals(dgen.getSesso(),"null");
+		assertEquals(dgen.getMonitorSize(),1);
+		assertEquals(dgen.getDistSchermo(),0);
+		assertEquals(dgen.getDimensione(),new Dimension(1920,1080));
+		assertEquals(dgen.getWRect(),0);
+		assertEquals(dgen.getHRect(),0);
+		assertEquals(dgen.getHBar(),0);
+		assertNotNull(dgen.getLivMax());
+		assertNotNull(dgen.getLivMin());
 	}
 	
 	@Test
@@ -60,7 +76,7 @@ public class DatiGenerazioneTest {
 		dgen.setC2(Color.BLUE);
 		dgen.setMonitorSize(173);
 		dgen.setDistSchermo(40);
-		
+		dgen.setDimensione(new Dimension(1920,1080));
 		dgen.setDimensione(1920.0d,1080.0d);
 		dgen.setWRect(200);
 		dgen.setHRect(400);

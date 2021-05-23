@@ -51,10 +51,10 @@ public class GeneraImg extends Observable{
 	 * @param risultato i dati di generazione per generare la nuova immagine
 	 * @return immagine da visualizzare
 	 */
-	public static BufferedImage modificaMWeb(final int distance,final DatiGenerazione risultato) {
+	/*public static BufferedImage modificaMWeb(final int distance,final DatiGenerazione risultato) {
 		return generaImmagine(risultato.getDimensione().width-80,risultato.getDimensione().height-80,risultato.getWRect(), risultato.getHRect(), risultato.getHBar(), distance, risultato.getC1(), risultato.getC2());
 		
-	}
+	}*/
 		/**
 		* funzione di generazione immagine del test di 
 		* freiburg dati i parametri di generazione
@@ -161,13 +161,13 @@ public class GeneraImg extends Observable{
 			    drawable.setColor(color2);
 			    drawable.drawLine(x, y, x, y);
 			}
-			if((centroImgx-(xBar/2)+(DIMBARRE/2))>=(centroImgx+(xBar/2)-(DIMBARRE/2))) {
+			/*if((centroImgx-(xBar/2)+(DIMBARRE/2))>=(centroImgx+(xBar/2)-(DIMBARRE/2))) {
 				for(int x=centroImgx+(xBar/2)-(DIMBARRE/2);x<=centroImgx-(xBar/2)+(DIMBARRE/2);x++) {
 					drawable.setColor(cAssign);
 				    drawable.drawLine(x, y, x, y);
 				}
 				
-			}
+			}*/
 		}
 		//drawable.setColor(Color.WHITE);
 		//drawable.fillRect((centroImgx-(dimBarre/2)),

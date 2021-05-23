@@ -92,8 +92,8 @@ public class DatiGenerazione {
 		this();
 		dgenP.setNome(name);
 		dgenP.setSesso(sex);
-		dgenI.setMonitorSize(monSize);
-		dgenI.setWRect(wrect);
+		dgenI.setMonitorSizeNC(monSize);
+		dgenI.setWRectNC(wrect);
 	}
 	
 	
@@ -102,17 +102,17 @@ public class DatiGenerazione {
 	 */
 	public DatiGenerazione(final String name,final String sex,final int monSize, final int dimx,final int dimy,final int wrect,final int hrect,final int hbar,final int disSchermo,final int livmin,final int livmax){
 		this();
-		dgenI.setDimensione(new Dimension(dimx,dimy));
+		dgenI.setDimensioneNC(new Dimension(dimx,dimy));
 		dgenP.setNome(name);
 		dgenP.setSesso(sex);
-		dgenI.setMonitorSize(monSize);
-		dgenI.setWRect(wrect);
-		dgenI.setHRect(hrect);
+		dgenI.setMonitorSizeNC(monSize);
+		dgenI.setWRectNC(wrect);
+		dgenI.setHRectNC(hrect);
 		dgenI.setHBarNC(hbar);
-		dgenI.setXBar(-1);
-		dgenI.setDistSchermo(disSchermo);
-		dgenI.setLivMin(livmin);
-		dgenI.setLivMax(livmax);
+		dgenI.setXBarNC(-1);
+		dgenI.setDistSchermoNC(disSchermo);
+		dgenI.setLivMinNC(livmin);
+		dgenI.setLivMaxNC(livmax);
 	}
 	
 	

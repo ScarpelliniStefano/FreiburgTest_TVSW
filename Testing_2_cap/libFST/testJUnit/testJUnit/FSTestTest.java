@@ -69,12 +69,15 @@ public class FSTestTest {
 		ByteArrayInputStream img=(ByteArrayInputStream) FSTest.iniziaTest(dgen);
 		img.available();
 		assertNotNull(img.available());
-		
-		img=(ByteArrayInputStream) FSTest.iniziaTest(dgen);
+	}
+
+	@Test
+	public void testIniziaTestWidthMinus1() throws IOException {
+		dgen.setDimensione(0, 0);
+		ByteArrayInputStream img=(ByteArrayInputStream) FSTest.iniziaTest(dgen);
 		img.available();
 		assertNotNull(img.available());
 	}
-
 	@Test
 	public void testGetCurrentDepthCorrect() {
 		fst=new FSTest();

@@ -1,0 +1,240 @@
+testclass FreiburgTest for statechart Statechart {
+	
+	@Test
+	operation testAllCorrect() {
+		enter
+			assert test.startTest==true
+			assert test.choiceRight==false
+			assert test.choiceUser==true
+			assert test.fineCert=="continua"
+			assert test.status=="non_init"
+			assert param.maxDepth==true
+			assert param.chance==1
+			assert param.rightLim==0
+			assert param.leftLim==0
+			raise init_e
+			assert active(Code.reset)
+			assert test.choiceRight==false
+			assert test.choiceUser==true
+			assert test.fineCert=="continua"
+			assert test.status=="non_init"
+			assert param.maxDepth==true
+			assert param.chance==1
+			assert param.rightLim==0
+			assert param.leftLim==0
+			param.leftLim=12
+			param.rightLim=1
+			raise start_e
+			assert active(Code.started)
+			assert test.status=="started"
+			assert param.currDepth==12
+			raise started_e
+			assert active(Code.choiceUser)
+			test.choiceUser=false
+			param.currDepth=12
+			raise choosed_e
+			assert test.status=="choosed"
+			assert active(Code.controlRisposta)
+			raise control_e
+			assert active(Code.rightCh)
+			assert param.leftLim==12
+			raise checkR_e
+			assert active(Code.valMin)
+			assert param.value==6.0
+			assert param.maxDepth==false
+			raise changedCurr_e
+			assert active(Code.controlRisp)
+			assert param.currDepth==6
+			raise controlRisp_e
+			assert active(Code.choiceUser)
+			assert param.chance==0
+			test.choiceUser=true
+			test.choiceRight=true
+			raise choosed_e
+			assert active(Code.controlRisposta)
+			raise control_e
+			assert active(Code.rightCh)
+			assert param.leftLim==6
+			raise checkR_e
+			assert active(Code.valMin)
+			assert param.value==3.0
+			assert param.maxDepth==false
+			raise changedCurr_e
+			assert active(Code.controlRisp)
+			assert param.currDepth==3.0
+			raise controlRisp_e
+			assert active(Code.choiceUser)
+			assert param.chance==0
+			test.choiceUser=true
+			test.choiceRight=true
+			raise choosed_e
+			assert active(Code.controlRisposta)
+			raise control_e
+			assert active(Code.rightCh)
+			assert param.leftLim==3
+			raise checkR_e
+			assert active(Code.valMin)
+			assert param.value==2.0
+			assert param.maxDepth==false
+			raise changedCurr_e
+			assert active(Code.controlRisp)
+			assert param.currDepth==2.0
+			raise controlRisp_e
+			assert active(Code.choiceUser)
+			assert param.chance==0
+			test.choiceUser=true
+			test.choiceRight=true
+			raise choosed_e
+			assert active(Code.controlRisposta)
+			raise control_e
+			assert active(Code.rightCh)
+			assert param.leftLim==2
+			raise checkR_e
+			assert active(Code.valMin)
+			assert param.value==1.0
+			assert param.maxDepth==false
+			raise changedCurr_e
+			assert active(Code.controlRisp)
+			assert param.currDepth==1
+			raise controlRisp_e
+			assert active(Code.reset)
+			assert test.fineCert=="fine_cert"
+			assert test.startTest==false
+			raise fine_e
+		exit
+	}
+	
+	@Test
+	operation testExit() {
+		enter
+			assert test.startTest==true
+			assert test.choiceRight==false
+			assert test.choiceUser==true
+			assert test.fineCert=="continua"
+			assert test.status=="non_init"
+			assert param.maxDepth==true
+			assert param.chance==1
+			assert param.rightLim==0
+			assert param.leftLim==0
+			raise init_e
+			assert active(Code.reset)
+			assert test.choiceRight==false
+			assert test.choiceUser==true
+			assert test.fineCert=="continua"
+			assert test.status=="non_init"
+			assert param.maxDepth==true
+			assert param.chance==1
+			assert param.rightLim==0
+			assert param.leftLim==0
+			param.leftLim=12
+			param.rightLim=1
+			raise start_e
+			assert active(Code.started)
+			assert test.status=="started"
+			assert param.currDepth==12
+			raise started_e
+			assert active(Code.choiceUser)
+			test.choiceUser=true
+			param.currDepth=12
+			raise choosed_e
+			assert test.status=="choosed"
+			assert active(Code.controlRisposta)
+			raise control_e
+			assert active(Code.choiceUser)
+			test.choiceRight=true
+			test.choiceUser=false
+			assert param.chance==0
+			assert param.maxDepth==true
+			raise choosed_e
+			assert test.status=="choosed"
+			assert active(Code.controlRisposta)
+			raise control_e
+			assert active(Code.reset)
+			raise fine_e
+		exit
+	}
+	
+	@Test
+	operation testFirstCorrectThenWrong() {
+		enter
+			assert test.startTest==true
+			assert test.choiceRight==false
+			assert test.choiceUser==true
+			assert test.fineCert=="continua"
+			assert test.status=="non_init"
+			assert param.maxDepth==true
+			assert param.chance==1
+			assert param.rightLim==0
+			assert param.leftLim==0
+			raise init_e
+			assert active(Code.reset)
+			assert test.choiceRight==false
+			assert test.choiceUser==true
+			assert test.fineCert=="continua"
+			assert test.status=="non_init"
+			assert param.maxDepth==true
+			assert param.chance==1
+			assert param.rightLim==0
+			assert param.leftLim==0
+			param.leftLim=12
+			param.rightLim=1
+			raise start_e
+			assert active(Code.started)
+			assert test.status=="started"
+			assert param.currDepth==12
+			raise started_e
+			assert active(Code.choiceUser)
+			test.choiceUser=false
+			param.currDepth=12
+			raise choosed_e
+			assert test.status=="choosed"
+			assert active(Code.controlRisposta)
+			raise control_e
+			assert active(Code.rightCh)
+			assert param.leftLim==12
+			raise checkR_e
+			assert active(Code.valMin)
+			assert param.value==6.0
+			assert param.maxDepth==false
+			raise changedCurr_e
+			assert active(Code.controlRisp)
+			assert param.currDepth==6
+			raise controlRisp_e
+			assert active(Code.choiceUser)
+			assert param.chance==0
+			test.choiceUser=true
+			test.choiceRight=false
+			raise choosed_e
+			assert active(Code.controlRisposta)
+			raise control_e
+			assert active(Code.wrongCh)
+			assert param.rightLim==6
+			assert param.leftLim==12
+			raise checkR_e
+			assert active(Code.valMin)
+			assert param.value==9.0
+			assert param.maxDepth==false
+			raise changedCurr_e
+			assert active(Code.controlRisp)
+			assert param.currDepth==9.0
+			raise controlRisp_e
+			assert active(Code.choiceUser)
+			assert param.chance==0
+			test.choiceUser=true
+			test.choiceRight=false
+			raise choosed_e
+			assert active(Code.controlRisposta)
+			raise control_e
+			assert active(Code.wrongCh)
+			assert param.rightLim==9
+			raise checkR_e
+			assert active(Code.valMin)
+			assert param.value==10.0
+			assert param.maxDepth==false
+			raise changedCurr_e
+			assert active(Code.controlRisp)
+			assert param.currDepth==10.0
+			raise controlRisp_e
+		exit
+	}
+}

@@ -1,0 +1,14 @@
+GeneratorModel for sctunit::java {
+
+	const PROJECT : string = "libFST_cap5"
+
+	const FOLDER : string = "src-gen"
+
+	test FreiburgTest {
+
+		feature Outlet {
+			targetProject = PROJECT
+			targetFolder = FOLDER
+		}
+	}
+}

@@ -106,7 +106,6 @@ public class BestPestElaboratorNew extends PestBase {
 	/*@ also requires solution==PestBase.Soluzione.SBAGLIATA ||
 	 				  solution==PestBase.Soluzione.GIUSTA ||
 	 				  solution==PestBase.Soluzione.STOP;
-	  
 	  @*/
 	@Override
 	public void computeNextDepth(final PestBase.Soluzione solution) {
@@ -164,7 +163,8 @@ public class BestPestElaboratorNew extends PestBase {
 		return getCertifierStatus();
 	}
 
-	public Object getRightLimit() {
+	//@ ensures \result>0;
+	public int getRightLimit() {
 		// TODO Auto-generated method stub
 		return rightLimit;
 	}

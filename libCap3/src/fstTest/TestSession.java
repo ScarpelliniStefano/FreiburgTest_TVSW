@@ -1,9 +1,14 @@
 package fstTest;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 //import java.util.Collections;
 //import java.util.Date;
 import java.util.List;
+
+import fstTest.FSTest.Scelta;
+import fstTest.PestBase.CertifierStatus;
 
 //import fstTest.FSTest.Scelta;
 //import fstTest.PestBase.CertifierStatus;
@@ -26,10 +31,15 @@ public class TestSession{
 	//PMD6: accorciamento di alcuni nomi di parametro
 	
     /** risultato */
+	//@ spec_public
+	//@ non_null
     private static DatiGenerazione risultato=new DatiGenerazione();
 	/** the tester. */
+    //@ spec_public 
 	private static BestPestElaboratorNew testElab;
 	/** the list of session story */
+	//@ spec_public
+	//@ non_null
 	private static List<RispostaSingola> sessionStory = new ArrayList</*RispostaSingola*/>();	
 		/**
 		 * @author stefa
@@ -39,17 +49,27 @@ public class TestSession{
 			/**
 			 * risposta
 			 */
+			/*@ spec_public @*/
 			private final transient String risposta; //aggiunto "transient"
-			//membro che se viene serializzata la classe, non viene trasferito ma perso
+			//membro che, se viene serializzata la classe, non viene trasferito ma perso
+			
 			/**
 			 * Costruzione della singola risposta della sessione
+			 * @param date 
 			 * 
 			 * @param timeTaken istante nel quale è stata data la risposta risposta 
 			 */
-			public RispostaSingola(final String sceltaFatta,final String sceltaCorrente,final int profCorrente,final double angolo/*,final Date timeTaken*/) {
+			/*@ requires sceltaFatta=="stop" || sceltaFatta=="forward" || sceltaFatta=="behind";
+			  @	requires sceltaCorrente=="stop" || sceltaCorrente=="forward" || sceltaCorrente=="behind";
+			  @ requires profCorrente<=risultato.getLivMax() && profCorrente>=risultato.getLivMin();
+			  @ requires angolo>0.0;
+			  @ requires timeTaken!=null;
+			  @ ensures risposta!=nullM
+			  @*/
+			public RispostaSingola(final String sceltaFatta,final String sceltaCorrente,final int profCorrente,final double angolo,final Date timeTaken) {
 				//String sceltaFattaS = (sceltaFatta == "stop") ? "skip" : sceltaFatta.toString();
-				final String sceltaFattaS = "stop".equals(sceltaFatta) ? "skip" : sceltaFatta/*.toString()*/;
-				risposta = sceltaFattaS + "," + sceltaCorrente/*.toString()*/ + "," + profCorrente + "," + angolo/* + "," + timeTaken*/;
+				final String sceltaFattaS = "stop".equals(sceltaFatta) ? "skip" : sceltaFatta.toString();
+				risposta = sceltaFattaS + "," + sceltaCorrente/*.toString()*/ + "," + profCorrente + "," + angolo + "," + timeTaken;
 			}
 
 			@Override
@@ -70,7 +90,7 @@ public class TestSession{
 		FINE_NON_CERTIFICATA // non può essere registrata profondità
 	}
 	
-	/*
+	
 	
 	
 	public TestSession() {
@@ -81,18 +101,21 @@ public class TestSession{
 	
 	
 	
-	
+	//@ ensures \result==testElab.getCurrentDepth();
 	public int getProfonditaCorrente() {
 		return testElab.getCurrentDepth();
 	}
 
-	
+	//@ ensures \result==testElab.getCurrentStatus();
 	public CertifierStatus getStatoCorrente() {
 		return testElab.getCurrentStatus();
 	}
 	
 	
-		
+	//@ requires result!=null && result.getLivMax>=0;
+	//@ ensures \result==Scelta.CORRETTO;
+	//@ ensures testElab!=null;
+	//@ ensures \old(risultato.getAngolo())!=risultato.getAngolo();
 	public static Scelta iniziaTest(final DatiGenerazione result) {
 		
 		
@@ -110,9 +133,14 @@ public class TestSession{
 				
 	}
 	
+	//@ requires result!=null && result.getLivMax>=0;
+	//@ requires rispostaData=="stop" || rispostaData=="forward" || rispostaData=="behind";
+	//@ ensures \result!=null;
+	//@ ensures sessionStory.size()>\old(sessionStory.size())
 	public Scelta controlloRisposta(final String rispostaData) {
 		Scelta res;
 		final int currentDepth = testElab.getCurrentDepth(); // Initialized before computeNextDepth()
+		//@ assert currentDepth>=0;
 		if ("stop".equals(rispostaData)) {
 			testElab.computeNextDepth(PestBase.Soluzione.STOP);
 			res = Scelta.FINISCI;
@@ -137,11 +165,10 @@ public class TestSession{
 
 		risultato.setXBar(getProfonditaCorrente());
 		sessionStory.add(new RispostaSingola(rispostaData, risultato.isPos() ? "forward" : "behind", currentDepth, risultato.getAngolo(), new Date()));
-
 		return res;
 	}
 	
-	
+	//@ ensures \result!=null;
 	public List<String> getSessionResults() {
 		final List<String> result = new ArrayList<>();
 		for (final RispostaSingola sa : sessionStory) {
@@ -150,10 +177,10 @@ public class TestSession{
 		return result;
 	}
 
-	
+	//@ ensures \result!=null;
 	public List<RispostaSingola> getSessionAnswers() {
 		return Collections.unmodifiableList(sessionStory); //static property access
 	}
 	
-	*/
+	
 }

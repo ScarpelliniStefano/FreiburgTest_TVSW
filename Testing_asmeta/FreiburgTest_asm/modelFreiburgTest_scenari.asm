@@ -1,7 +1,6 @@
 asm modelFreiburgTest_scenari
 
 import StandardLibrary
-import CTLlibrary
 
 
 signature:
@@ -230,7 +229,6 @@ definitions:
 					endif
 				endlet
 
-CTLSPEC ag(continuaTest=true or continuaTest=false)
 
 // MAIN RULE
 	main rule r_Main =

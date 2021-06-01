@@ -1,0 +1,20 @@
+Model PossibleCert
+
+Parameters:
+  leftLim : {-5 0 1 2 3 6 9 10 12 18 20 21 23}
+  rightLim : {-5 0 1 2 3 6 9 10 12 18 20 21 23}
+  soluzione : {null, giusta, sbagliata, stop, pigiama}
+  chance : [-1 .. 2]
+  maxDepth : Boolean
+  
+  certificate : {fineCertificata, fineNonCertificata, continua}
+
+Constraints:
+  # soluzione==giusta or soluzione==sbagliata or soluzione==stop #
+  # leftLim>0 && rightLim>0 && rightLim<=20 && leftLim<=20 #
+  # chance>=0 && rightLim<leftLim #
+  # soluzione=="stop" => certificate==fineNonCertificata #
+  # (soluzione=="sbagliata" && chance==0 && maxDepth) => certificate==fineNonCertificata #
+  # (soluzione=="giusta" && leftLim-rightLim<=1) => certificate==fineCertificata #
+  # (soluzione=="sbagliata" && leftLim-rightLim<=1) => certificate==fineCertificata #
+  # (soluzione=="sbagliata" && chance>0 && maxDepth) || (soluzione=="giusta" && leftLim-rightLim>1) || (soluzione=="sbagliata" && leftLim-rightLim>1 && !maxDepth) => certificate==continua #

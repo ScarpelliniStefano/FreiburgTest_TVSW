@@ -1,0 +1,102 @@
+path /C:/Users/stefa/Documents/GitHub/FreiburgTest_TVSW/Testing_asmeta/FreiburgTest_asm/scenarioCorr.avalla
+
+** Simulation C:\Users\stefa\Documents\GitHub\FreiburgTest_TVSW\Testing_asmeta\FreiburgTest_asm\scenarioCorr.avalla **
+
+check succeeded: reset = RESET_MINMAX 
+check succeeded: continuaTest = true 
+check succeeded: control=RICHIESTA_POSIZIONE 
+check succeeded: control=RICHIESTA_POSIZIONE 
+check succeeded: control=CONTROLLO_RISPOSTA 
+check succeeded: sol=GIUSTA 
+check succeeded: control=GENERA_NUOVA_RISPOSTA 
+check succeeded: controlRightWrong=CONTROLLO_FINE 
+check succeeded: currentDepth=6 
+check succeeded: posizioneGiusta=INDIETRO 
+check succeeded: control=RICHIESTA_POSIZIONE 
+check succeeded: posizioneScelta=INDIETRO 
+check succeeded: sol=GIUSTA 
+check succeeded: control=GENERA_NUOVA_RISPOSTA 
+check succeeded: controlRightWrong=CONTROLLO_FINE 
+check succeeded: currentDepth=3 
+check succeeded: posizioneGiusta=INDIETRO 
+check succeeded: control=RICHIESTA_POSIZIONE 
+check succeeded: posizioneScelta=INDIETRO 
+check succeeded: sol=GIUSTA 
+check succeeded: control=GENERA_NUOVA_RISPOSTA 
+check succeeded: controlRightWrong=CONTROLLO_FINE 
+check succeeded: currentDepth=2 
+check succeeded: outMessage(testCert)=FINE_CERTIFICATA 
+check succeeded: livelloCertificato(testCert)=2 
+
+** Simulation C:\Users\stefa\Documents\GitHub\FreiburgTest_TVSW\Testing_asmeta\FreiburgTest_asm\scenarioScorr.avalla **
+
+check succeeded: reset = RESET_MINMAX 
+check succeeded: continuaTest = true 
+check succeeded: reset = RESET_ASSIGN 
+check succeeded: continuaTest = true 
+check succeeded: leftLimit = 12 
+check succeeded: rightLimit = 1 
+check succeeded: maxDepth = 12 
+check succeeded: controlRightWrong = INIZIO_RW 
+check succeeded: currentDepth = 12 
+check succeeded: livelloTest = 12 
+check succeeded: control = RICHIESTA_POSIZIONE 
+check succeeded: posizioneGiusta = INDIETRO 
+check succeeded: reset = STARTED 
+check succeeded: control = CONTROLLO_RISPOSTA 
+check succeeded: sol = GIUSTA 
+check succeeded: controlRightWrong = CONTROLLO_FINE 
+check succeeded: currentDepth = 6 
+check succeeded: control = GENERA_NUOVA_RISPOSTA 
+check succeeded: posizioneGiusta = INDIETRO 
+check succeeded: sol = GIUSTA 
+check succeeded: control = RICHIESTA_POSIZIONE 
+check succeeded: posizioneGiusta = INDIETRO 
+check succeeded: sol = GIUSTA 
+check succeeded: sol = SBAGLIATA 
+check succeeded: currentDepth = 9 
+check succeeded: controlRightWrong = CONTROLLO_FINE 
+check succeeded: control = GENERA_NUOVA_RISPOSTA 
+check succeeded: controlRightWrong = INIZIO_RW 
+check succeeded: currentDepth = 9 
+check succeeded: control = RICHIESTA_POSIZIONE 
+check succeeded: sol = GIUSTA 
+check succeeded: leftLimit = 9 
+check succeeded: rightLimit = 6 
+check succeeded: control = CONTROLLO_RISPOSTA 
+check succeeded: currentDepth = 7 
+check succeeded: controlRightWrong = CONTROLLO_FINE 
+check succeeded: control = GENERA_NUOVA_RISPOSTA 
+check succeeded: posizioneGiusta = INDIETRO 
+check succeeded: sol = SBAGLIATA 
+check succeeded: controlRightWrong = SETTAGGI_PROF_CURR 
+check succeeded: currentDepth = 8 
+check succeeded: control = CONTROLLO_RISPOSTA 
+check succeeded: controlRightWrong = CONTROLLO_FINE 
+check succeeded: currentDepth = 8 
+check succeeded: control = GENERA_NUOVA_RISPOSTA 
+check succeeded: controlRightWrong = INIZIO_RW 
+check succeeded: control = RICHIESTA_POSIZIONE 
+check succeeded: posizioneGiusta = INDIETRO 
+check succeeded: sol = SBAGLIATA 
+check succeeded: controlRightWrong = SETTAGGI_PROF_CURR 
+check succeeded: currentDepth = 9 
+check succeeded: control = CONTROLLO_RISPOSTA 
+check succeeded: posizioneGiusta = INDIETRO 
+check succeeded: sol = SBAGLIATA 
+check succeeded: currentDepth = 9 
+check succeeded: chance = 1 
+check succeeded: outMessage(testCert) = FINE_CERTIFICATA 
+check succeeded: livelloCertificato(testCert) = 9 
+check succeeded: reset = RESET_MINMAX 
+check succeeded: continuaTest = false 
+
+** Simulation C:\Users\stefa\Documents\GitHub\FreiburgTest_TVSW\Testing_asmeta\FreiburgTest_asm\scenarioErroreInizioEUscita.avalla **
+
+check succeeded: reset = RESET_MINMAX 
+check succeeded: continuaTest = true 
+check succeeded: reset=RESET_MINMAX 
+check succeeded: continuaTest = true 
+check succeeded: control=RICHIESTA_POSIZIONE 
+check succeeded: continuaTest=false 
+check succeeded: livelloCertificato(testCert)=13 

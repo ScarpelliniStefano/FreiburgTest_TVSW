@@ -28,15 +28,21 @@ public class FSTest extends Observable {
 	//PMD5: confronti tra valori cambiati in compareTo o metodi di confronto
 	
 	/** The result. */
+	/*@ spec_public @*/
+	/*@ non_null @*/
 	private static DatiGenerazione risultato=new DatiGenerazione();
 
 	/** the tester. */
+	/*@ spec_public @*/
 	public static TestSession testSession;
 	
 	/** The stream of image */
+	/*@ spec_public @*/
 	private static ByteArrayOutputStream imagebuffer;
 	
 	/** generatore di randomici */
+	/*@ spec_public @*/
+	/*@ non_null @*/
 	static Random rnGen=new Random();
 	
 	
@@ -66,9 +72,9 @@ public class FSTest extends Observable {
 		* @return      Stream immagine
 		* @throws IOException 
 		*/	
-	/*//@requires result.livMax>0;
-	//@ensures \result!=null;*/
-	/*public static InputStream iniziaTest(final DatiGenerazione result) throws IOException {
+	//@requires result.livMax>0;
+	//@ensures \result!=null;
+	public static InputStream iniziaTest(final DatiGenerazione result) throws IOException {
 		if(risultato.getAngolo()==-1) {
 			risultato=result;
 		}
@@ -76,11 +82,12 @@ public class FSTest extends Observable {
 			risultato.setXBar(risultato.getLivMax());
 			risultato.setPos(false);
 		}
-		
+		//@assert risultato.getPos()==false;
 		testSession = new TestSession();
-		//final Scelta inizio=TestSession.iniziaTest(risultato);
+		final Scelta inizio=TestSession.iniziaTest(risultato);
 		ByteArrayInputStream imgByteArray = null;
-		//if(inizio==Scelta.CORRETTO) {
+		//@ assert inizio==Scelta.CORRETTO;
+		if(inizio==Scelta.CORRETTO) {
 			BufferedImage image;
 			if(Double.compare(risultato.getDimensione().getWidth(),1)==0) { //problema con la call chain
 		        image=GeneraImg.GeneraImmagine(risultato.getWRect(), risultato.getHRect(), risultato.getHBar(), risultato.getXBar(), risultato.getC1(), risultato.getC2());		
@@ -100,29 +107,32 @@ public class FSTest extends Observable {
 					
 				}
 		}
-		//return imgByteArray;
+		//@ assert imgByteArray!=null;
+		return imgByteArray;
 		
 				
-	}*/
-	
+	}
+
 	/**
 	 * Return the current depth (as established by the certifier), be careful the
 	 * certifier may have decided to stop
 	 *
 	 * @return the current depth
 	 */
-	/*public int getCurrentDepth() {
+	//@ ensures \result==testSession.getPofonditaCorrente();
+	public int getCurrentDepth() {
 		return testSession.getProfonditaCorrente();
-	}*/
+	}
 
 	/**
 	 * Gets the current status
 	 *
 	 * @return the current status
 	 */
-	/*public static CertifierStatus getCurrentStatus() {
+	//@ ensures \result==testSession.getStatoCorrente();
+	public static CertifierStatus getCurrentStatus() {
 		return testSession.getStatoCorrente();
-	}*/
+	}
 	
 	
 	
@@ -130,23 +140,23 @@ public class FSTest extends Observable {
 	 * @param rispostaData
 	 * @return
 	 */
-	
-	/*//@ ensures \result!=null;*/
-	//public static Scelta controlloRisposta(final /*@ non_null@*/ String rispostaData) {
-		//Scelta scelta;
-		//scelta=testSession.controlloRisposta(rispostaData); // Initialized before computeNextDepth()
-		//if(!testSession.getStatoCorrente().currentResult.equals(Result.CONTINUA)) { //call chain
-		//	if(testSession.getStatoCorrente().currentResult==Result.FINE_NON_CERTIFICATA) { //call chain
-				//risultato.setAngolo(0);
-				//risultato.setLivello(0);
-		//	}else {
-				//risultato.setAngolo(AbstractAngleCalculus.calcolaAngolo(risultato));
-			    /*call chain*///risultato.setLivello(1000* (AbstractAngleCalculus.monitorWidthMM(risultato.getMonitorSize(),(int)risultato.getDimensione().getWidth(),(int)risultato.getDimensione().getHeight())*risultato.getXBar())/(int)risultato.getDimensione().getWidth());
-		//    }
-		//}
-		//return scelta;
+	//@ requires rispostaData!=null
+	//@ ensures \result!=null;
+	public static Scelta controlloRisposta(final /*@ non_null@*/ String rispostaData) {
+		Scelta scelta;
+		scelta=testSession.controlloRisposta(rispostaData); // Initialized before computeNextDepth()
+		if(!testSession.getStatoCorrente().currentResult.equals(Result.CONTINUA)) { //call chain
+			if(testSession.getStatoCorrente().currentResult==Result.FINE_NON_CERTIFICATA) { //call chain
+				risultato.setAngolo(0);
+				risultato.setLivello(0);
+			}else {
+				risultato.setAngolo(AbstractAngleCalculus.calcolaAngolo(risultato));
+			    /*call chain*/risultato.setLivello(1000* (AbstractAngleCalculus.monitorWidthMM(risultato.getMonitorSize(),(int)risultato.getDimensione().getWidth(),(int)risultato.getDimensione().getHeight())*risultato.getXBar())/(int)risultato.getDimensione().getWidth());
+		   }
+		}
+		return scelta;
 		
-	//}
+	}
 	
 	
 	
@@ -163,7 +173,7 @@ public class FSTest extends Observable {
 	 * @return nuova immagine
 	 */
 	//@ensures \result!=null;
-	/*public static InputStream settaNuovaImg() {
+	public static InputStream settaNuovaImg() {
 		
 		assert testSession.getStatoCorrente().currentResult == TestSession.Result.CONTINUA; //call chain
 		BufferedImage image = null;
@@ -185,7 +195,7 @@ public class FSTest extends Observable {
 		
 		}
 		return imgByteArray;
-	}*/
+	}
 	
 
 }

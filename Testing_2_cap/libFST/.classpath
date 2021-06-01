@@ -13,6 +13,7 @@
 	</classpathentry>
 	<classpathentry kind="src" path="testJUnit"/>
 	<classpathentry kind="src" path="ArchTest"/>
+	<classpathentry kind="src" path="combTest"/>
 	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
 		<attributes>
 			<attribute name="maven.pomderived" value="true"/>

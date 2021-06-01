@@ -19,6 +19,7 @@ import db.Patient;
 import draw.AbstractAngleCalculus;
 import draw.GeneraImg;
 import session.TestSession;
+import session.AbstractPestBase;
 import session.AbstractPestBase.CertifierStatus;
 import session.TestSession.Result;
 
@@ -220,7 +221,6 @@ public class FSTest extends Observable {
 		image = GeneraImg.modificaM(datagen.getXBar(), datagen);
 		return image;
 	}
-
 	
 	/**
 	 * @param database
@@ -257,6 +257,5 @@ public class FSTest extends Observable {
 	public Boolean assignP(final Patient pat) {
 		return database.assignPatDoc(pat, database.getDoc());
 	}
-	
 
 }

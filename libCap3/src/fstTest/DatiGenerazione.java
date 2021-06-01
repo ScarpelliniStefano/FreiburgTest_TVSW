@@ -16,6 +16,7 @@ public class DatiGenerazione {
 	 */
 
 	//@ spec_public
+	//@ non_null
 	private Dimension dimensione=new Dimension(0,0);
 	
 	/**
@@ -23,6 +24,7 @@ public class DatiGenerazione {
 	 */
 
 	//@ spec_public
+	//@ non_null
 	private String nome="";
 	
 	/**
@@ -30,36 +32,42 @@ public class DatiGenerazione {
 	 */
 
 	//@ spec_public
+	//@ non_null
 	private String sesso="";
 	
 	/**
 	 *  dimensione del monitor in diagonale in pollici
 	 */
 	//@ spec_public
+	//@ non_null
 	private Integer monitorSize=-2;
 	
 	/**
 	 *  larghezza rettangolo immagine in pixel
 	 */
 	//@ spec_public
+	//@ non_null
 	private Integer wRect=-2;
 	
 	/**
 	 *  altezza rettangolo immagine in pixel
 	 */
 	//@ spec_public
+	//@ non_null
 	private Integer hRect=-2;
 	
 	/**
 	 * altezza barre interne
 	 */
 	//@ spec_public
+	//@ non_null
 	private Integer hBar=-2;
 	
 	/**
 	 * larghezza tra le barre attuale
 	 */
 	//@ spec_public
+	//@ non_null
 	private Integer xBar=-2;
 	
 	
@@ -67,6 +75,7 @@ public class DatiGenerazione {
 	 * livello massimo del test
 	 */
 	//@ spec_public
+	//@ non_null
 	private Integer livMax=-2;
 	
 	
@@ -74,50 +83,59 @@ public class DatiGenerazione {
 	 * livello minimo del test
 	 */
 	//@ spec_public
+	//@ non_null
 	private Integer livMin=-2;
 	
 	/**
 	 * distanza dallo schermo
 	 */
 	//@ spec_public
+	//@ non_null
 	private Integer distSchermo=-2;
 	
 	/**
 	 * colore prima barra (colore occhio sinistro solitamente)
 	 */
 	//@ spec_public
+	//@ non_null
 	private Color color1=Color.BLACK;
 	
 	/**
 	 * colore seconda barra (colore occhio destro solitamente)
 	 */
 	//@ spec_public
+	//@ non_null
 	private Color color2=Color.BLACK;
 	
 	/**
 	 * posizione (false=indietro, true=avanti)
 	 */
 	//@ spec_public
+	//@ non_null
 	private Boolean pos=false;
 	
 	/**
 	 * livello attuale del test
 	 */
 	//@ spec_public
+	//@ non_null
 	private Double livello=-2.0;
 	
 	/**
 	 * angolo di generazione
 	 */
 	//@ spec_public
+	//@ non_null
 	private Double angolo=-2.0;
 	
+	
+	//@ public invariant livMax>=livMin;
 
 	public DatiGenerazione(){
 		dimensione=new Dimension(1,1);
 		nome="Unnamed";
 		sesso="null";
-		monitorSize=0;
+		monitorSize=-1;
 		wRect=-1;
 		hRect=-1;
 		hBar=-1;
@@ -246,13 +264,14 @@ public class DatiGenerazione {
 		return wRect;
 	}
 
-	/*@ requires wRect>=0;
-	  @ ensures this.wRect==wRect || this.wRect==dimensione.width-20;
+	/*@ requires wrect>=0;
+	  @ ensures this.wRect==wrect || this.wRect==dimensione.width-20;
 	  @ assignable this.wRect;
 	  @*/
-	public void setWRect(final /*@ non_null@*/  int wRect) {
-		if(wRect<(dimensione.getWidth()-20)&&wRect>0) {/*@ assert wRect<(dimensione.getWidth()-20) && wRect>0;@*/ this.wRect = wRect;}
-		else {/*@ assert wRect>=(dimensione.getWidth()-20) || wRect<=0;@*/  this.wRect=(int) (dimensione.getWidth()-20);}
+	public void setWRect(final /*@ non_null@*/  int wrect) {
+		if(wrect<(dimensione.getWidth()-20)&&wrect>0) {/*@ assert wrect<(dimensione.getWidth()-20) && wrect>0;@*/ this.wRect = wrect;}
+		else {/*@ assert wrect>=(dimensione.width-20) || wrect<=0;@*/ this.wRect=(int) (dimensione.getWidth()-20);
+		}
 	}
 
 	//@ ensures \result == this.hRect; 

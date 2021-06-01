@@ -33,7 +33,7 @@ public class FSTest extends Observable {
 	private static DatiGenerazione risultato=new DatiGenerazione();
 
 	/** the tester. */
-	/*@ spec_public @*/
+
 	public static TestSession testSession;
 	
 	/** The stream of image */
@@ -147,8 +147,8 @@ public class FSTest extends Observable {
 		scelta=testSession.controlloRisposta(rispostaData); // Initialized before computeNextDepth()
 		if(!testSession.getStatoCorrente().currentResult.equals(Result.CONTINUA)) { //call chain
 			if(testSession.getStatoCorrente().currentResult==Result.FINE_NON_CERTIFICATA) { //call chain
-				risultato.setAngolo(0);
-				risultato.setLivello(0);
+				risultato.setAngolo(0.0);
+				risultato.setLivello(0.0);
 			}else {
 				risultato.setAngolo(AbstractAngleCalculus.calcolaAngolo(risultato));
 			    /*call chain*/risultato.setLivello(1000* (AbstractAngleCalculus.monitorWidthMM(risultato.getMonitorSize(),(int)risultato.getDimensione().getWidth(),(int)risultato.getDimensione().getHeight())*risultato.getXBar())/(int)risultato.getDimensione().getWidth());

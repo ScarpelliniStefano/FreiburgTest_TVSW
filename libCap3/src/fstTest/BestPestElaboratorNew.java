@@ -158,13 +158,13 @@ public class BestPestElaboratorNew extends PestBase {
 	/*@ also ensures certifierStatus!=null;
 	  @*/
 	@Override
-	public CertifierStatus getCurrentStatus() {
+	public /*@ pure @*/ CertifierStatus getCurrentStatus() {
 		assert maxDepth!=-1;
 		return getCertifierStatus();
 	}
 
 	//@ ensures \result>0;
-	public int getRightLimit() {
+	public /*@ pure @*/ int getRightLimit() {
 		// TODO Auto-generated method stub
 		return rightLimit;
 	}

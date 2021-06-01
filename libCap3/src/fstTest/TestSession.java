@@ -64,7 +64,7 @@ public class TestSession{
 			  @ requires profCorrente<=risultato.getLivMax() && profCorrente>=risultato.getLivMin();
 			  @ requires angolo>0.0;
 			  @ requires timeTaken!=null;
-			  @ ensures risposta!=nullM
+			  @ ensures risposta!=null;
 			  @*/
 			public RispostaSingola(final String sceltaFatta,final String sceltaCorrente,final int profCorrente,final double angolo,final Date timeTaken) {
 				//String sceltaFattaS = (sceltaFatta == "stop") ? "skip" : sceltaFatta.toString();
@@ -102,25 +102,25 @@ public class TestSession{
 	
 	
 	//@ ensures \result==testElab.getCurrentDepth();
-	public int getProfonditaCorrente() {
+	public /*@ pure @*/ int getProfonditaCorrente() {
 		return testElab.getCurrentDepth();
 	}
 
 	//@ ensures \result==testElab.getCurrentStatus();
-	public CertifierStatus getStatoCorrente() {
+	public /*@ pure @*/ CertifierStatus getStatoCorrente() {
 		return testElab.getCurrentStatus();
 	}
 	
 	
-	//@ requires result!=null && result.getLivMax>=0;
+	//@ requires risult!=null && risult.getLivMax()>=0;
 	//@ ensures \result==Scelta.CORRETTO;
 	//@ ensures testElab!=null;
 	//@ ensures \old(risultato.getAngolo())!=risultato.getAngolo();
-	public static Scelta iniziaTest(final DatiGenerazione result) {
+	public static Scelta iniziaTest(final DatiGenerazione risult) {
 		
 		
 		if(risultato.getAngolo()==-1) {
-			risultato=result;
+			risultato=risult;
 		}
 		else {
 			risultato.setXBar(risultato.getLivMax());
@@ -133,10 +133,10 @@ public class TestSession{
 				
 	}
 	
-	//@ requires result!=null && result.getLivMax>=0;
+	//@ requires risultato!=null && risultato.getLivMax()>=0;
 	//@ requires rispostaData=="stop" || rispostaData=="forward" || rispostaData=="behind";
 	//@ ensures \result!=null;
-	//@ ensures sessionStory.size()>\old(sessionStory.size())
+	//@ ensures sessionStory.size()>\old(sessionStory.size());
 	public Scelta controlloRisposta(final String rispostaData) {
 		Scelta res;
 		final int currentDepth = testElab.getCurrentDepth(); // Initialized before computeNextDepth()

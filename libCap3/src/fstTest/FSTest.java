@@ -82,7 +82,7 @@ public class FSTest extends Observable {
 			risultato.setXBar(risultato.getLivMax());
 			risultato.setPos(false);
 		}
-		//@assert risultato.getPos()==false;
+		//@assert risultato.isPos()==false;
 		testSession = new TestSession();
 		final Scelta inizio=TestSession.iniziaTest(risultato);
 		ByteArrayInputStream imgByteArray = null;
@@ -119,7 +119,7 @@ public class FSTest extends Observable {
 	 *
 	 * @return the current depth
 	 */
-	//@ ensures \result==testSession.getPofonditaCorrente();
+	//@ ensures \result==testSession.getProfonditaCorrente();
 	public int getCurrentDepth() {
 		return testSession.getProfonditaCorrente();
 	}
@@ -140,7 +140,7 @@ public class FSTest extends Observable {
 	 * @param rispostaData
 	 * @return
 	 */
-	//@ requires rispostaData!=null
+	//@ requires rispostaData!=null;
 	//@ ensures \result!=null;
 	public static Scelta controlloRisposta(final /*@ non_null@*/ String rispostaData) {
 		Scelta scelta;

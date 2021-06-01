@@ -57,7 +57,8 @@ public abstract class PestBase {
 	 *
 	 * @return la profondità corrente
 	 */
-	public int getCurrentDepth() {
+	
+	public /*@pure@*/int getCurrentDepth() {
 		return getCertifierStatus().currentDepth;
 	}
 
@@ -68,9 +69,9 @@ public abstract class PestBase {
 	 * 
 	 * @return
 	 */
-	abstract public CertifierStatus getCurrentStatus();
+	abstract public /*@pure@*/ CertifierStatus getCurrentStatus();
 
-	public CertifierStatus getCertifierStatus() {
+	public /*@pure@*/ CertifierStatus getCertifierStatus() {
 		return certifierStatus;
 	}
 

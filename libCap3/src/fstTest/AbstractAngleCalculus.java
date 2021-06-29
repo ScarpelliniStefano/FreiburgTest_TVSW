@@ -25,7 +25,7 @@ public abstract class AbstractAngleCalculus {
 	public static int calcolaAngolo(final DatiGenerazione data) {
 				
 				final int angle=calcolaAngolo(data.getMonitorSize(),data.getDimensione(),data.getXBar(),data.getDistSchermo()/10);
-				data.setAngolo(angle);
+				data.setAngolo(Double.valueOf(angle));
 				return angle;
 	}
 	

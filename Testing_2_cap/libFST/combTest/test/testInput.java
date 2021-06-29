@@ -13,11 +13,11 @@ import session.TestSession.Result;
 
 public class testInput {
 	//INPUT DOMAIN MODELING: interface-based
-	static int[] leftLim= {-10,0,13};
-	static int[] rightLim= {-5,0,12};
-	static int[] chance= {-1,0, 3};
-	static Soluzione[] sol= {null,Soluzione.GIUSTA,Soluzione.SBAGLIATA,Soluzione.STOP};
-	static Boolean[] maxDepth= {null, true, false};
+	//static int[] leftLim= {-10,0,13};
+	//static int[] rightLim= {-5,0,12};
+	//static int[] chance= {-1,0, 3};
+	//static Soluzione[] sol= {null,Soluzione.GIUSTA,Soluzione.SBAGLIATA,Soluzione.STOP};
+	//static Boolean[] maxDepth= {null, true, false};
 
 	
 	@SuppressWarnings("null")

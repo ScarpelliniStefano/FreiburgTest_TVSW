@@ -2,6 +2,7 @@ asm modelFreiburgTestCTL
 
 import StandardLibrary
 import CTLlibrary
+import LTLlibrary
 
 
 signature:
@@ -737,6 +738,7 @@ definitions:
 	CTLSPEC af(posizioneScelta!=posizioneGiusta implies ax(outMessage=FINE_NON_CERTIFICATA and af(continuaTest=false)))
 //esiste sempre un caso futuro in cui il test finisce con il livello certificato migliore
 	CTLSPEC ef(outMessage = FINE_CERTIFICATA and livelloCertificato = DUE_C)
+	
 
 // MAIN RULE
 	main rule r_Main =
